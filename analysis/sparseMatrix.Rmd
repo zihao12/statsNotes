@@ -1,0 +1,151 @@
+---
+title: "sparseMatrix"
+author: "zihao12"
+date: "2020-05-05"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+* I want to learn about `sparseMatrix` in R.\
+
+* denote our matrix $X$, with `dim(X) = c(n, p)` and number of nnzero elements `d`. 
+
+
+```{r}
+library(Matrix)
+```
+
+
+## `dgTMatrix`
+The matrix is stored in triplet $(i, j, x_{ij})$. 
+
+### basics
+```{r}
+### create a dgTMatrix
+RowIdx = c(1,1,2,3,3,4)
+ColIdx = c(2,2,7,7,9,9)
+## this creates a TRUE/FALSE matrix
+X <- sparseMatrix(
+  i = RowIdx,
+  j = ColIdx,
+  dims = c(5, 10)
+)
+summary(X)
+
+X
+## let each x_ij = 1 (note (1,2) appears twice)
+X <- sparseMatrix(
+  i = RowIdx,
+  j = ColIdx,
+  dims = c(5, 10),
+  x = 1L ## or a vector of the length as RowIdx
+)
+summary(X)
+X
+
+## see what does X have
+## note that row and col index starts from 0!
+str(X)
+```
+
+### efficient functions over elements
+[Peter](https://pcarbo.github.io/) provides a good example of efficient function
+
+```{r}
+# Apply operation f to all nonzeros of a sparse matrix.
+apply.nonzeros <- function (X, f) {
+  d <- summary(X)
+  return(sparseMatrix(i = d$i,j = d$j,x = f(d$x),dims = dim(X)))
+}
+```
+
+
+## `dgCMatrix`
+
+```{r}
+Y <- as(X, "dgCMatrix")
+Y
+str(Y)
+```
+
+*  `i` is the row index\
+
+* `p[k], k >= 1` is the number of nonzero data points counting up to column `k-1`. We can get the number of nonzero elements in each column this way:
+```{r}
+diff(Y@p)
+```
+We can get to `j` from `p` and `i` as well:
+```{r}
+rep(1:Y@Dim[2], diff(Y@p))
+## another way to do it
+summary(Y)$j
+## compare with true ColIdx
+ColIdx
+```
+
+## compare size
+```{r}
+# A large matrix
+set.seed(1)
+## use the default storage class
+m <- sparseMatrix(
+  i = sample(x = 1e4, size = 1e4),
+  j = sample(x = 1e4, size = 1e4),
+  #x = rnorm(n = 1e4)
+  x = rpois(n = 1e4, lambda = 100) 
+)
+class(m)
+dim(m)
+
+pryr::object_size(m)
+
+pryr::object_size(as(m, "dgTMatrix"))
+
+pryr::object_size(as.matrix(m))
+
+```
+
+## copare computation speed
+```{r}
+m2 <- sparseMatrix(
+  i = sample(x = 1e4, size = 1e4),
+  j = sample(x = 1e4, size = 1e4),
+  #x = rnorm(n = 1e4)
+  x = rpois(n = 1e4, lambda = 100) 
+)
+
+system.time(
+  test <- replicate(100, m %*% m2)
+)
+
+m_ = as(m, "dgTMatrix")
+m2_ = as(m2, "dgTMatrix")
+system.time(
+  test <- replicate(100, m_ %*% m2_)
+)
+
+## takes too long to run
+# system.time(
+#   test <- as.matrix(m) %*% t(as.matrix(m))
+# )
+```
+
+how to explain the performance difference and when to use which?
+
+does summary take time?
+```{r}
+class(m)
+system.time(
+  test <- replicate(100, summary(m))
+)
+
+class(m_)
+system.time(
+  test <- replicate(100, summary(m_))
+)
+
+```
+
