@@ -1,0 +1,43 @@
+---
+title: "importance_sampling"
+author: "zihao12"
+date: "2020-12-15"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+set.seed(123)
+```
+
+
+## Introduction
+Let $X \sim t_3$. WAnt to compute $\alpha = P(X > 1000)$. Use importance sampling.
+
+Theoretical result is:
+```{r}
+pt(q = 1000, df = 3, lower.tail = FALSE)
+```
+If we are to use traditional Monte Carlo, which is $\frac{1}{n} \sum_{i=1}^n 1_{[X > 1000]}$, we need a lot of samples to get any $X > 1000$
+```{r}
+n = 10000
+sum(rt(n = n, df = 3) > 1000)
+```
+
+
+Instead using Importance Sampling. I use Cauchy as it is heavy-tailed.
+THe formula is $$E_p[f(X)] = \int f(x) p(x) dx = \int f(x) \frac{p(x)}{q(x)} q(x) dx = E_q[f(x) \frac{p(x)}{q(x)}] \approx \frac{1}{n} \sum_{i=1}^n f(x_i) \frac{p(x_i)}{q(x_i)}$$
+```{r}
+## easy to get large values from cauchy
+n = 10000
+sum(rcauchy(n = n, location = 0, scale = 1) > 1000)
+
+n = 1e6
+x = rcauchy(n = n, location = 0, scale = 1)
+
+ratio = exp(  dt(x = x, df = 3, log = TRUE) - dcauchy(x = x, location = 0, scale = 1, log = TRUE))
+mean((x > 1000) * ratio)
+```
+
+
