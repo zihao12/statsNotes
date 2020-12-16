@@ -13,7 +13,7 @@ set.seed(123)
 
 
 ## Introduction
-Let $X \sim t_3$. WAnt to compute $\alpha = P(X > 1000)$. Use importance sampling.
+Let $X \sim t_3$. Want to compute $\alpha = P(X > 1000)$. Use importance sampling.
 
 Theoretical result is:
 ```{r}
@@ -39,5 +39,17 @@ x = rcauchy(n = n, location = 0, scale = 1)
 ratio = exp(  dt(x = x, df = 3, log = TRUE) - dcauchy(x = x, location = 0, scale = 1, log = TRUE))
 mean((x > 1000) * ratio)
 ```
+
+
+Compare with Monte Carlo method
+```{r}
+
+mean(rt(n = 1e4, df = 3) > 1000)
+mean(rt(n = 1e6, df = 3) > 1000)
+mean(rt(n = 1e8, df = 3) > 1000)
+
+```
+
+
 
 
