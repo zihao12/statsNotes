@@ -12,44 +12,66 @@ set.seed(123)
 ```
 
 
-## Introduction
+# Problem 2
 Let $X \sim t_3$. Want to compute $\alpha = P(X > 1000)$. Use importance sampling.
 
 Theoretical result is:
 ```{r}
 pt(q = 1000, df = 3, lower.tail = FALSE)
 ```
-If we are to use traditional Monte Carlo, which is $\frac{1}{n} \sum_{i=1}^n 1_{[X > 1000]}$, we need a lot of samples to get any $X > 1000$
+If we are to use traditional Monte Carlo, which is $\frac{1}{n} \sum_{i=1}^n 1_{[X > 1000]}$, we need a lot of samples to get any $X > 1000$. 
+
+## Importance Sampling
+I use Cauchy as it is heavy-tailed. The formula is $$E_p[f(X)] = \int f(x) p(x) dx = \int f(x) \frac{p(x)}{q(x)} q(x) dx = E_q[f(x) \frac{p(x)}{q(x)}] \approx \frac{1}{n} \sum_{i=1}^n f(x_i) \frac{p(x_i)}{q(x_i)}$$
+
+SO we can easily get the estimate below. 
 ```{r}
-n = 10000
-sum(rt(n = n, df = 3) > 1000)
-```
-
-
-Instead using Importance Sampling. I use Cauchy as it is heavy-tailed.
-THe formula is $$E_p[f(X)] = \int f(x) p(x) dx = \int f(x) \frac{p(x)}{q(x)} q(x) dx = E_q[f(x) \frac{p(x)}{q(x)}] \approx \frac{1}{n} \sum_{i=1}^n f(x_i) \frac{p(x_i)}{q(x_i)}$$
-```{r}
-## easy to get large values from cauchy
-n = 10000
-sum(rcauchy(n = n, location = 0, scale = 1) > 1000)
-
 n = 1e6
 x = rcauchy(n = n, location = 0, scale = 1)
-
-ratio = exp(  dt(x = x, df = 3, log = TRUE) - dcauchy(x = x, location = 0, scale = 1, log = TRUE))
-mean((x > 1000) * ratio)
+w = exp(  dt(x = x, df = 3, log = TRUE) - dcauchy(x = x, location = 0, scale = 1, log = TRUE))
+mean((x > 1000) * w)
 ```
 
 
-Compare with Monte Carlo method
+## Compare with Monte Carlo method. 
+I tried with $10^8$ samples, but still can't get anything above $1000$. 
 ```{r}
-
-mean(rt(n = 1e4, df = 3) > 1000)
-mean(rt(n = 1e6, df = 3) > 1000)
+# mean(rt(n = 1e4, df = 3) > 1000)
+# mean(rt(n = 1e6, df = 3) > 1000)
 mean(rt(n = 1e8, df = 3) > 1000)
+```
+So if we want to achieve the same level of accuarcy of Importance Sampling with Cauchy (around $10^{-11}$), we need more than $10^8$ samples, way more than $10^6$ samples used in Importance Sampling.
 
+# Problem 1
+Use Rejection Sampling to sample from Mises distribution. Since both $f, q$ (pdf for objective and propsal distributions) take support in $[-\pi, \pi]$, and $f(x) = C e^{K cos(x)} \leq C e^K$, $q(x) = \frac{1}{2\pi}$, we can choose $M = \frac{C e^K}{2 \pi}$. This gives us acceptance probability of $\frac{e^K cos(x)}{e^K}$ for each $x$. Turned into code below:
+```{r}
+rejection_sampler <- function(k, n = 1e3){
+  x = runif(n = n, min = -pi, max = pi)  ## proposals
+  accept_prob = exp(k * cos(x))/exp(k)
+  accept = rbinom(n = n, size = 1, prob = accept_prob)
+  return(x[accept == 1])
+}
+
+dmises <- function(x, k){
+  const = 2*pi*besselI(x = k, nu = 0)
+  return(exp(k*cos(x))/const)
+}
 ```
 
+
+```{r}
+## try when k = 1
+k = 1
+x = rejection_sampler(k = k, n = 1e6)
+hist(x, probability = TRUE, breaks = 100, main = "sampled vs theoretical (kappa = 1)")
+lines(sort(x), dmises(x = sort(x), k = k), col = "red")
+
+## try when k = 100
+k = 100
+x = rejection_sampler(k = k, n = 1e6)
+hist(x, probability = TRUE, breaks = 100, main = "sampled vs theoretical (kappa = 100)")
+lines(sort(x), dmises(x = sort(x), k = k), col = "red")
+```
 
 
 
