@@ -1,0 +1,53 @@
+---
+title: "stat343_summary"
+author: "zihao12"
+date: "2020-12-12"
+output: workflowr::wflow_html
+header-includes:
+   - \usepackage{bbm}
+   - \usepackage{amsmath}
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+I just finished the course **STAT343 Applied Linear Stat Methods** at UChicago. I think the right name for the course should be: **One Million Ways Linear Models Can Fail and How to Fix Them**. Here is a brief summary of what we have learnt.
+
+
+## Linear Model Assumptions
+\begin{align}
+& y_i = \mathbf{x}_i^{T} \mathbf{\beta} + \epsilon_i\\
+& \epsilon_i \overset{\text{iid}}{\sim} (0, \sigma^2)
+\end{align}
+where $y_i$ is the called response, $\mathbf{x}_i \in \mathbb{R}^p$ is the vector of covariates or the features (include the intercept term $1$). $\mathbf{\beta}$ if the coefficients, or effect sizes of those covariates. 
+
+The model has several important assumptions. First, linear assumption for the mean $E(y_i) = \mathbf{x}_i^{T} \mathbf{\beta}$. Second, independent and equal variance for the error: $\epsilon_i \overset{\text{iid}}{\sim} (0, \sigma^2)$. Further, we might want a third assumption for some closed-form theoretical result: $\epsilon_i \overset{\text{iid}}{\sim}  N(0, \sigma^2)$. 
+
+The first two assumptions are very important. Whenever we want to draw any conclusion from a linear model, we need to at least make sure the first two assumptions are satisfied. Violations of the third assumption are not too severe. Although tests and inference results are not exact, if the sample size is large enough, the approximation will be good enough (need to think more anbout this). Second, we can use nonparamtric methods like bootstrap or permutaton tests to construct confidence intervals or conduct tests. 
+
+If all three assumptions hold, Linear Model estimate is the Best Linear Unbiased Estimator (BLUE): If we want to estimate $\mathbf{c}^T \mathbf{\beta}$ using linear estimator of the form $\mathbf{a}^T \mathbf{y}$ that has to be unbiased, Linear Model estimate has the smallest variance.  
+
+## Estimate and Inference
+I use the matrix notation for this part: $X \in \mathbb{R}^{n \times p}, y \in \mathbb{R}^n$. 
+
+* Estimate (They are both unbiased estimates)
+
+\begin{align}
+& \hat{\mathbf{\beta}} = (X^T X)^{-1} X^T \mathbf{y}\\
+& \hat{\sigma} = \frac{\|\hat{\mathbf{y}} - X \hat{\mathbf{\beta}}\|_2^2}{n - p}\\
+\end{align}
+
+
+* Inference
+
+\begin{align}
+& \frac{\mathbf{v}^T \hat{\mathbf{\beta}}}{\text{SE}(\mathbf{v}^T \hat{\mathbf{\beta}})} \sim t_{n-p}\\
+& \text{where} \ \text{SE}(\mathbf{v}^T \hat{\mathbf{\beta}}) = \hat{\sigma} (\mathbf{v}^T (X^T X)^{-1} \mathbf{v})
+\end{align}
+
+
+
+```{r}
+
+```
+
