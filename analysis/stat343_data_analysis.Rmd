@@ -1,0 +1,300 @@
+---
+title: "stat343_data_analysis"
+author: "zihao12"
+date: "2020-12-21"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+It's the final project for `STAT343`@UChicago. We use the data set [Thoracic](https://archive.ics.uci.edu/ml/datasets/Thoracic+Surgery+Data). This data set contains data from patients who underwent lung surgery as treatment for lung cancer. The goal is to build a model to predict `FEV1` with potentially all other covariates.
+
+```{r message=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width=16, fig.height=16)
+library(MASS)
+library(faraway)
+set.seed(666)
+```
+
+## preprocess data
+* We randomly split data into `tarin` (80%), `val` (10%), `test` (10%). We will run linear regression on `train`, evaluate my each step on `val`, and finally report model performance on `test`. 
+* We should have taken more cautionary measures to split the data so that `training` data cover all rare situations. But it turns out splitting by random ordering fortunately works. 
+* We also remove `MI` and `Asthma` covariates, as each only has 2 `TRUE`. Therefore they contain too little information in this dataset, and most likely we won't see them in `test` or `val`. We need more data in order to have a meaningful study of their correlation with the response. 
+* `Status` and `TumorSize` are supposed to be ordinal variables. We used `factor(..., ordered = TRUE)` at first, but found `lm` has a rather complicated way of dealing with them (fitting linear, quadratic and even cubic for them). We end up simply fitting them as unordered factor variable, as they don't seem to be very important anyways.
+
+```{r}
+data_whole = read.table("data/thoracic.txt", header = TRUE)
+#head(data_whole)
+dim(data_whole)
+n0 = nrow(data_whole)
+
+data_whole$DGN = factor(data_whole$DGN)
+data_whole$Status = factor(data_whole$Status)
+data_whole$TumorSize = factor(data_whole$TumorSize)
+## there are two few data points for these two covariates if we want to do prediction 
+data_whole$Asthma <- NULL 
+data_whole$MI <- NULL
+
+id_shuffled = sample(x = 1:n0,size = n0, replace = FALSE)
+n_train = round(0.8*n0)
+n_val = round(0.1*n0)
+
+train_id = id_shuffled[1:n_train]
+val_id = id_shuffled[(n_train + 1):(n_train + n_val)]
+test_id = id_shuffled[(n_train + n_val + 1):n0]
+
+data = data_whole[train_id,]
+val = data_whole[val_id,]
+test = data_whole[test_id,]
+
+n = nrow(data)
+```
+
+Function to do prediction. Loss is average sum of squares.
+```{r}
+prediction <- function(model, data, idx){
+  y = data[idx,"FEV1"]
+  yhat = predict(model, newdata = data[idx, names(model$model)[-1]])
+  loss = mean((y - yhat)^2)
+  return(loss)
+}
+```
+
+## look at data
+Look at the distributions of `y` and covariates. 
+```{r}
+par(mfrow = c(4,4))
+for(name in colnames(data)){
+  if(name == "FEV1"){
+    hist(log2(data[,name]), xlab = sprintf("log2(%s)", name), main = sprintf("log(%s)", name))
+  }else{
+    hist(as.numeric(data[, name]), xlab = name, main = name)
+  }
+}
+```
+
+* `FEV1` have some suspiciously large values, way outside the range of other normal-shaped values.
+* A couple of categorical covariates have very few samples in one level. The lack of data may make it hard to establish association between `y` and those covariates. 
+
+## initial fit `lmod0`
+```{r}
+par(mfrow = c(4,4))
+lmod0 = lm(FEV1 ~ ., data = data)
+summary(lmod0)
+plot(lmod0$fitted.values, lmod0$residuals, xlab = "fitted value", ylab = "resid")
+for(name in colnames(data)[2:ncol(data)]){
+  plot(data[[name]], lmod0$residuals, xlab = name, ylab = "resid")
+}
+```
+
+Clearly there are many issues
+
+* First, there seems to be twop clusters: one has very large postive residuals.
+* For the other cluster, the residual gets smaller as fitted value gets larger. 
+
+Let's first focus on the data points that have hige residuals. 
+```{r}
+idx = which(lmod0$residuals > 20)
+## look at the `y` values for those with huge residuals
+data[idx,"FEV1"]
+## look at the quantile of `y` in the training data
+quantile(data$FEV1, probs = seq(0.9,1,0.01))
+```
+
+* Those with high residuals all have suspiciously high `FEV1`. Judge by commonsense, these values are indeed too strange. 
+* Looking at their other covariates (not shown), we can't find particularly strange things about them. 
+* There are around `15` such data points, so the model may be severely influenced by them. Let's try robust regression method like `huber` and see if the result also tells us these data points are outliers.  
+
+```{r}
+lmod_huber = rlm(FEV1 ~ ., data = data)
+quantile(lmod_huber$residuals)
+lmod_huber$residuals[data$FEV1 > 6]
+```
+
+* Indeed, result from Huber fit confirms our suspicion. We can now say it's reasonable to remove data points with too big `y` (`> 6`, the top 4%). 
+* Note that we will also evaluate prediction error only on data with `y` not too big. 
+
+## Fit `lmod1` with big outliers removed
+```{r}
+par(mfrow = c(4,4))
+data_sub = data[data$FEV1 < 6, ]
+val = val[val$FEV1 < 6,]
+test = test[test$FEV1 < 6,]
+n1 = nrow(data_sub)
+rownames(data_sub) = 1:nrow(data_sub)
+
+lmod1 = lm(FEV1 ~ ., data = data_sub)
+summary(lmod1)
+plot(lmod1$fitted.values, lmod1$residuals, xlab = "fitted value", ylab = "resid")
+for(name in colnames(data)[2:ncol(data)]){
+  plot(data_sub[,name], lmod1$residuals, xlab = name, ylab = "resid")
+}
+
+## prediction error on training data
+prediction(lmod1, data = data_sub, idx = which(data_sub$FEV1<6))
+## prediction error on validation data
+prediction(lmod1, data = val, idx = which(val$FEV1<6))
+```
+
+* The residual plot looks way better now, except a couple of points with high residuals. 
+* The gap in prediction error between `train` and `val` tells us the model overfits a bit. So we will make the model smaller. 
+
+## remove outliers and fit `lmod2`
+```{r}
+## check leverage
+X = model.matrix(lmod1)
+H = (X %*% solve(t(X) %*% X, t(X)))
+lev = diag(H)
+sort(lev, decreasing = TRUE)[1:5]
+
+## check leverage
+stud <- rstudent(lmod1)
+sort_stud = sort(abs(stud), index.return = TRUE, decreasing = TRUE)
+sort_stud$x[1:5]
+
+## threshold for outlier
+qt(p = 0.05/(n1*2), df = n1 - ncol(X) - 1)
+```
+
+* So we identify 2 more concerning data points. One is identified as outlier (which happen to be the greatest residuals) even under the conservative Bonferroni correction, and one have leverage equal exactly `1`. Since it's only 2 data points, I will remove them.
+
+```{r}
+par(mfrow = c(4,4))
+id_rm = c(which.max(abs(stud)),
+          sort(lev, index.return = TRUE, decreasing = TRUE)$ix[1])
+data_sub2 = data_sub[-id_rm,]
+n2 = nrow(data_sub2)
+rownames(data_sub2) = 1:n2
+
+lmod2 = lm(FEV1 ~ ., data = data_sub2)
+
+## prediction error on training data
+prediction(lmod2, data = data_sub2, idx = which(data_sub2$FEV1<6))
+## prediction error on validation data, only look at "right" data points"
+prediction(lmod2, data = val, idx = which(val$FEV1<6))
+```
+* The training error decreases a lot (probably because some outliers are gone) while validation error increases a bit. We think the small increase in test data is not alarming enough for us to undo this change.
+* Still the gap in prediction error between `train` and `val` suggests we need to make the model smaller for better generalization. 
+
+## Remove non-significant covariates, get `lmod3`
+* I will use backward elimination to remove covariates. 
+* It's a bit tricky when we have categorical variables withe more than 2 levels. At each step, we fine the one with the highest p-value. For those variables with multiple variables, p-value is obtained through F-tests, whereas for the others we can read it directly from `summary(lm(...))`. 
+* I can write it by hand but it is much easier and nicer to use `step` function. 
+ 
+```{r}
+lmod3 = step(lmod2, direction = "backward", trace = TRUE)
+```
+
+```{r}
+par(mfrow = c(2,2))
+plot(lmod3$fitted.values, lmod3$residuals)
+for(name in colnames(lmod3$model)[2:ncol(lmod3$model)]){
+  plot(as.numeric(lmod3$model[[name]]), lmod3$residuals, xlab = name)
+}
+
+## prediction error on training data
+prediction(lmod3, data = data_sub2, idx = which(data_sub2$FEV1 < 6))
+## prediction error on validation data, only look at "right" data points"
+prediction(lmod3, data = val, idx = which(val$FEV1<6))
+```
+
+There seems to be a few points with larger residuals. But we don't try to remove them for fear of "trying too hard".  
+
+## Check for interactions, get `lmod4`
+```{r}
+anova(lmod3, lm(FEV1 ~ FVC + Haemoptysis + Cough + FVC * Cough, data = data_sub2))[2,6]
+anova(lmod3, lm(FEV1 ~ FVC + Haemoptysis + Cough + FVC * Haemoptysis, data = data_sub2))[2,6]
+anova(lmod3, lm(FEV1 ~ FVC + Haemoptysis + Cough + Cough * Haemoptysis, data = data_sub2))[2,6]
+```
+
+By ANOVA test, we add the interaction term `FVC * Cough`. 
+```{r}
+lmod4 = lm(FEV1 ~ FVC + Haemoptysis + Cough + FVC * Cough, data = data_sub2)
+summary(lmod4)
+
+## prediction error on training data
+prediction(lmod4, data = data_sub, idx = which(data_sub$FEV1<6))
+## prediction error on validation data
+prediction(lmod4, data = val, idx = which(val$FEV1<6))
+```
+
+## Prediction using `lmod4`
+```{r fig.width=4, fig.height=4}
+## prediction error
+prediction(lmod4, data = test, idx = which(test$FEV1<6))
+
+pred_ci = predict(lmod4, newdata = test[, colnames(lmod4$model)[-1]], interval = "prediction", level = 0.95)
+
+plot(test[,"FEV1"],pred_ci[, "fit"], xlab = "y", ylab = "yhat")
+abline(a = 0, b = 1, col = "blue")
+```
+I originally also plotted the prediction interval, but realized that it may not be reliable, as the inference of $\beta$'s are not reliable, due to reasons discussed below.
+
+
+## Inference of `lmod4_refit`
+We can't actually trust the inference from `lmod4`, as it's an example of "selective inference". Thus we use test and validation to do inference. We call this model `lmod4_refit`. The result is very different. 
+```{r fig.width=4, fig.height=8}
+par(mfrow = c(2,1))
+lmod4_refit = lm(FEV1 ~ FVC + Haemoptysis + Cough + FVC * Cough, data = rbind(test, val))
+plot(lmod4_refit$fitted.values, lmod4_refit$residuals)
+
+## check for normality (hard to say whether it's normal or not)
+qqnorm(lmod4_refit$residuals)
+qqline(lmod4_refit$residuals)
+shapiro.test(residuals(lmod4_refit))
+
+summary(lmod4_refit)
+```
+
+Since we are not sure if the residual is normal, let's use Bootstrap for inference:
+```{r}
+start = proc.time()
+n_boot = 1000
+model = lmod4_refit
+beta_boot = matrix(NA, ncol = length(model$coefficients), nrow = n_boot)
+colnames(beta_boot) = names(model$coefficients)
+
+df = rbind(test, val)
+set.seed(1234)
+for(i in 1:n_boot){
+  y_boost = model$fitted.values + sample(x = model$residuals, size = length(model$residuals), replace = TRUE)
+  dat = df
+  dat$FEV1 = y_boost
+  fit = update(object = model, data = dat)
+  beta_boot[i,] = as.numeric(fit$coefficients)
+}
+
+runtime = proc.time() - start
+
+beta_boot = as.data.frame(beta_boot)
+par(mfrow = c(3,2))
+for(name in colnames(beta_boot)){
+  ci = round(quantile(beta_boot[[name]], probs = c(0.025, 0.975)), digits = 3)
+  hist(beta_boot[[name]], xlab = sprintf("beta for %s", name), 
+       main = sprintf("beta-%s \n 0.95 CI  [%.3f,%.3f] ",name, ci[[1]], ci[[2]]))
+  abline(v = lmod4_refit$coefficients[[name]], col = "red")
+  abline(v = lmod4$coefficients[[name]], col = "blue")
+  legend("topleft", legend = c("lmod4", "refit"), col = c("blue", "red"), lty = 1:1, cex=0.8)
+}
+```
+The Bootstrap distribution for $\beta$ of `HaemoptysisTRUE` shows why we shouldn't trust inference from `lmod4`. 
+
+
+## Discussion
+There are a couple of things that need further exploration.
+
+* How to split data for training, validation and test? While I use the `80-10-10` which is often used in prediction task, it might not be great if we want to do inference using the testing or valiation or both. 
+* Prediction and Inference: are they the same objective? Think about it.
+
+Below I put together the prediction accuracy of each model, on `val` and `test` combined. 
+```{r}
+test_val_err = c(prediction(lmod1, data = rbind(test, val)),
+             prediction(lmod2, data = rbind(test, val)),
+             prediction(lmod3, data = rbind(test, val)),
+             prediction(lmod4, data = rbind(test, val)))
+             
+data.frame(test_val_err = test_val_err, row.names = c("lmod1", "lmod2", "lmod3", "lmod4"))
+```
+
+
