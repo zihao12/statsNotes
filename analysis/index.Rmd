@@ -9,3 +9,5 @@ editor_options:
 ---
 
 Welcome to my research website.
+
+STAT343: [summary](https://zihao12.github.io/statsNotes/stat343_summary) and [data project](https://zihao12.github.io/statsNotes/stat343_data_analysis)
