@@ -2,6 +2,7 @@ library(microbenchmark)
 library(ebnm)
 library(stats)
 library(rgl)
+library(gtools)
 set.seed(123)
 
 ############## Functions for simulation and compute loglikelihood #############################
@@ -66,12 +67,13 @@ vloglik_point_normal = function(x, s, w, a, mu) {
 
 ## simulation and plot loglikelihood terrain
 
-data = simulate_pn(n = 1000, pn = TRUE, null_case = TRUE, homosked = TRUE, est_mu = TRUE)
+data = simulate_pn(n = 1000, pn = TRUE, null_case = TRUE, homosked = TRUE, est_mu = FALSE)
 I = 100
 J = 100
 
-pi0 = seq(0,1,length.out = I)
-v = seq(2,5,length.out = J)^2
+eps = 1e-8
+pi0 = seq(eps,1-eps,length.out = I)
+v = seq(eps,5,length.out = J)^2
 z = matrix(NA, nrow = I, ncol = J)
 for(i in 1:I){
   for(j in 1:J){
@@ -80,5 +82,5 @@ for(i in 1:I){
 }
 
 op <- par(bg = "white")
-persp3d(x = pi0, y = v, z = z, theta = 30, phi = 30, expand = 0.5, col = "lightblue")
+persp3d(x = logit(pi0), y = log(v), z = z, theta = 30, phi = 30, expand = 0.5, col = "lightblue")
 
