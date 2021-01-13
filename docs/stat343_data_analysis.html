@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="zihao12" />
+
+<meta name="date" content="2020-12-21" />
+
+<title>stat343_data_analysis</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">statsNotes</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/zihao12/statsNotes">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">stat343_data_analysis</h1>
+<h4 class="author">zihao12</h4>
+<h4 class="date">2020-12-21</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2020-12-21
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>statsNotes/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20200505code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20200505)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20200505code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20200505)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestreee5cced90185e467a4e699d7629313678d3b26d23targetblanke5cced9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/zihao12/statsNotes/tree/e5cced90185e467a4e699d7629313678d3b26d23" target="_blank">e5cced9</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestreee5cced90185e467a4e699d7629313678d3b26d23targetblanke5cced9a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/importance_sampling.html
+
+Untracked files:
+    Untracked:  .idea/
+    Untracked:  analysis/test_jb.Rmd
+    Untracked:  data/thoracic.txt
+    Untracked:  statsNotes.iml
+
+Unstaged changes:
+    Modified:   analysis/stat343_summary.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/zihao12/statsNotes/blob/e5cced90185e467a4e699d7629313678d3b26d23/analysis/stat343_data_analysis.Rmd" target="_blank">e5cced9</a>
+</td>
+<td>
+zihao12
+</td>
+<td>
+2020-12-21
+</td>
+<td>
+stat343 final project
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>It’s the final project for <code>STAT343</code><span class="citation">@UChicago</span>. We use the data set <a href="https://archive.ics.uci.edu/ml/datasets/Thoracic+Surgery+Data">Thoracic</a>. This data set contains data from patients who underwent lung surgery as treatment for lung cancer. The goal is to build a model to predict <code>FEV1</code> with potentially all other covariates.</p>
+<pre class="r"><code>knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width=16, fig.height=16)
+library(MASS)
+library(faraway)
+set.seed(666)</code></pre>
+</div>
+<div id="preprocess-data" class="section level2">
+<h2>preprocess data</h2>
+<ul>
+<li>We randomly split data into <code>tarin</code> (80%), <code>val</code> (10%), <code>test</code> (10%). We will run linear regression on <code>train</code>, evaluate my each step on <code>val</code>, and finally report model performance on <code>test</code>.</li>
+<li>We should have taken more cautionary measures to split the data so that <code>training</code> data cover all rare situations. But it turns out splitting by random ordering fortunately works.</li>
+<li>We also remove <code>MI</code> and <code>Asthma</code> covariates, as each only has 2 <code>TRUE</code>. Therefore they contain too little information in this dataset, and most likely we won’t see them in <code>test</code> or <code>val</code>. We need more data in order to have a meaningful study of their correlation with the response.</li>
+<li><code>Status</code> and <code>TumorSize</code> are supposed to be ordinal variables. We used <code>factor(..., ordered = TRUE)</code> at first, but found <code>lm</code> has a rather complicated way of dealing with them (fitting linear, quadratic and even cubic for them). We end up simply fitting them as unordered factor variable, as they don’t seem to be very important anyways.</li>
+</ul>
+<pre class="r"><code>data_whole = read.table(&quot;data/thoracic.txt&quot;, header = TRUE)
+#head(data_whole)
+dim(data_whole)</code></pre>
+<pre><code>[1] 470  16</code></pre>
+<pre class="r"><code>n0 = nrow(data_whole)
+
+data_whole$DGN = factor(data_whole$DGN)
+data_whole$Status = factor(data_whole$Status)
+data_whole$TumorSize = factor(data_whole$TumorSize)
+## there are two few data points for these two covariates if we want to do prediction 
+data_whole$Asthma &lt;- NULL 
+data_whole$MI &lt;- NULL
+
+id_shuffled = sample(x = 1:n0,size = n0, replace = FALSE)
+n_train = round(0.8*n0)
+n_val = round(0.1*n0)
+
+train_id = id_shuffled[1:n_train]
+val_id = id_shuffled[(n_train + 1):(n_train + n_val)]
+test_id = id_shuffled[(n_train + n_val + 1):n0]
+
+data = data_whole[train_id,]
+val = data_whole[val_id,]
+test = data_whole[test_id,]
+
+n = nrow(data)</code></pre>
+<p>Function to do prediction. Loss is average sum of squares.</p>
+<pre class="r"><code>prediction &lt;- function(model, data, idx){
+  y = data[idx,&quot;FEV1&quot;]
+  yhat = predict(model, newdata = data[idx, names(model$model)[-1]])
+  loss = mean((y - yhat)^2)
+  return(loss)
+}</code></pre>
+</div>
+<div id="look-at-data" class="section level2">
+<h2>look at data</h2>
+<p>Look at the distributions of <code>y</code> and covariates.</p>
+<pre class="r"><code>par(mfrow = c(4,4))
+for(name in colnames(data)){
+  if(name == &quot;FEV1&quot;){
+    hist(log2(data[,name]), xlab = sprintf(&quot;log2(%s)&quot;, name), main = sprintf(&quot;log(%s)&quot;, name))
+  }else{
+    hist(as.numeric(data[, name]), xlab = name, main = name)
+  }
+}</code></pre>
+<p><img src="figure/stat343_data_analysis.Rmd/unnamed-chunk-4-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<ul>
+<li><code>FEV1</code> have some suspiciously large values, way outside the range of other normal-shaped values.</li>
+<li>A couple of categorical covariates have very few samples in one level. The lack of data may make it hard to establish association between <code>y</code> and those covariates.</li>
+</ul>
+</div>
+<div id="initial-fit-lmod0" class="section level2">
+<h2>initial fit <code>lmod0</code></h2>
+<pre class="r"><code>par(mfrow = c(4,4))
+lmod0 = lm(FEV1 ~ ., data = data)
+summary(lmod0)</code></pre>
+<pre><code>
+Call:
+lm(formula = FEV1 ~ ., data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-22.233  -3.335  -0.885   1.154  64.480 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     16.56057   12.62772   1.311 0.190557    
+FVC             -0.07325    0.71303  -0.103 0.918237    
+DGN2             3.17207   11.35438   0.279 0.780125    
+DGN3             2.10720   11.19763   0.188 0.850841    
+DGN4             3.75742   11.29690   0.333 0.739629    
+DGN5            10.00685   11.61415   0.862 0.389486    
+DGN6             3.95879   12.94151   0.306 0.759862    
+DGN8            -1.22661   13.72487  -0.089 0.928837    
+Status1         -5.69283    1.99251  -2.857 0.004528 ** 
+Status2         -7.67348    3.52102  -2.179 0.029966 *  
+PainTRUE         9.96965    2.53922   3.926 0.000104 ***
+HaemoptysisTRUE  2.19643    1.74171   1.261 0.208111    
+DyspnoeaTRUE    11.64939    2.34416   4.970 1.05e-06 ***
+CoughTRUE        2.95482    1.91499   1.543 0.123724    
+WeaknessTRUE     0.81922    1.90662   0.430 0.667697    
+TumorSize2       0.41213    1.24703   0.330 0.741226    
+TumorSize3      -4.99710    3.02354  -1.653 0.099272 .  
+TumorSize4      -1.63780    3.16647  -0.517 0.605318    
+DiabetesTRUE     0.09249    2.14853   0.043 0.965688    
+PADTRUE         -3.97749    4.07803  -0.975 0.330054    
+Age             -0.21573    0.07358  -2.932 0.003589 ** 
+SmokingTRUE     -0.51932    1.57593  -0.330 0.741948    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 11.1 on 354 degrees of freedom
+Multiple R-squared:  0.183, Adjusted R-squared:  0.1346 
+F-statistic: 3.777 on 21 and 354 DF,  p-value: 9.753e-08</code></pre>
+<pre class="r"><code>plot(lmod0$fitted.values, lmod0$residuals, xlab = &quot;fitted value&quot;, ylab = &quot;resid&quot;)
+for(name in colnames(data)[2:ncol(data)]){
+  plot(data[[name]], lmod0$residuals, xlab = name, ylab = &quot;resid&quot;)
+}</code></pre>
+<p><img src="figure/stat343_data_analysis.Rmd/unnamed-chunk-5-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<p>Clearly there are many issues</p>
+<ul>
+<li>First, there seems to be twop clusters: one has very large postive residuals.</li>
+<li>For the other cluster, the residual gets smaller as fitted value gets larger.</li>
+</ul>
+<p>Let’s first focus on the data points that have hige residuals.</p>
+<pre class="r"><code>idx = which(lmod0$residuals &gt; 20)
+## look at the `y` values for those with huge residuals
+data[idx,&quot;FEV1&quot;]</code></pre>
+<pre><code> [1] 76.8 69.1 72.8 67.3 60.9 79.3 78.3 66.4 73.3 52.3 76.0 64.1</code></pre>
+<pre class="r"><code>## look at the quantile of `y` in the training data
+quantile(data$FEV1, probs = seq(0.9,1,0.01))</code></pre>
+<pre><code>   90%    91%    92%    93%    94%    95%    96%    97%    98%    99%   100% 
+ 3.770  3.890  3.960  4.115  4.195  4.380  4.920 41.365 66.850 73.975 79.300 </code></pre>
+<ul>
+<li>Those with high residuals all have suspiciously high <code>FEV1</code>. Judge by commonsense, these values are indeed too strange.</li>
+<li>Looking at their other covariates (not shown), we can’t find particularly strange things about them.</li>
+<li>There are around <code>15</code> such data points, so the model may be severely influenced by them. Let’s try robust regression method like <code>huber</code> and see if the result also tells us these data points are outliers.</li>
+</ul>
+<pre class="r"><code>lmod_huber = rlm(FEV1 ~ ., data = data)
+quantile(lmod_huber$residuals)</code></pre>
+<pre><code>          0%          25%          50%          75%         100% 
+-1.864133443 -0.193863965  0.001393448  0.180105777 75.248556954 </code></pre>
+<pre class="r"><code>lmod_huber$residuals[data$FEV1 &gt; 6]</code></pre>
+<pre><code>      439       320        26        99       445       216       326       256 
+73.848668 67.412404 69.214465 65.228652 58.817757  6.607799 75.123319 75.248557 
+       90       353       354       331       113 
+64.217510 70.987518 49.741658 73.729588 61.204203 </code></pre>
+<ul>
+<li>Indeed, result from Huber fit confirms our suspicion. We can now say it’s reasonable to remove data points with too big <code>y</code> (<code>&gt; 6</code>, the top 4%).</li>
+<li>Note that we will also evaluate prediction error only on data with <code>y</code> not too big.</li>
+</ul>
+</div>
+<div id="fit-lmod1-with-big-outliers-removed" class="section level2">
+<h2>Fit <code>lmod1</code> with big outliers removed</h2>
+<pre class="r"><code>par(mfrow = c(4,4))
+data_sub = data[data$FEV1 &lt; 6, ]
+val = val[val$FEV1 &lt; 6,]
+test = test[test$FEV1 &lt; 6,]
+n1 = nrow(data_sub)
+rownames(data_sub) = 1:nrow(data_sub)
+
+lmod1 = lm(FEV1 ~ ., data = data_sub)
+summary(lmod1)</code></pre>
+<pre><code>
+Call:
+lm(formula = FEV1 ~ ., data = data_sub)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.73265 -0.17642  0.00838  0.19287  1.30186 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)      0.127892   0.404170   0.316 0.751869    
+FVC              0.762519   0.022963  33.207  &lt; 2e-16 ***
+DGN2             0.185479   0.361801   0.513 0.608525    
+DGN3             0.139718   0.356651   0.392 0.695487    
+DGN4             0.210806   0.359828   0.586 0.558362    
+DGN5             0.115586   0.372277   0.310 0.756383    
+DGN6             0.173169   0.412181   0.420 0.674655    
+DGN8             0.015805   0.437173   0.036 0.971182    
+Status1          0.067134   0.069613   0.964 0.335536    
+Status2          0.086436   0.116698   0.741 0.459398    
+PainTRUE         0.089996   0.090306   0.997 0.319681    
+HaemoptysisTRUE -0.197378   0.057038  -3.460 0.000608 ***
+DyspnoeaTRUE    -0.032550   0.081742  -0.398 0.690725    
+CoughTRUE       -0.129201   0.066354  -1.947 0.052337 .  
+WeaknessTRUE    -0.064584   0.060940  -1.060 0.289984    
+TumorSize2      -0.023913   0.040379  -0.592 0.554104    
+TumorSize3      -0.156401   0.096948  -1.613 0.107614    
+TumorSize4      -0.011002   0.101061  -0.109 0.913375    
+DiabetesTRUE     0.010965   0.069759   0.157 0.875196    
+PADTRUE          0.089332   0.130349   0.685 0.493604    
+Age             -0.002081   0.002410  -0.864 0.388468    
+SmokingTRUE     -0.072533   0.051464  -1.409 0.159631    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.3535 on 341 degrees of freedom
+Multiple R-squared:  0.8044,    Adjusted R-squared:  0.7924 
+F-statistic:  66.8 on 21 and 341 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>plot(lmod1$fitted.values, lmod1$residuals, xlab = &quot;fitted value&quot;, ylab = &quot;resid&quot;)
+for(name in colnames(data)[2:ncol(data)]){
+  plot(data_sub[,name], lmod1$residuals, xlab = name, ylab = &quot;resid&quot;)
+}
+
+## prediction error on training data
+prediction(lmod1, data = data_sub, idx = which(data_sub$FEV1&lt;6))</code></pre>
+<pre><code>[1] 0.117402</code></pre>
+<pre class="r"><code>## prediction error on validation data
+prediction(lmod1, data = val, idx = which(val$FEV1&lt;6))</code></pre>
+<pre><code>[1] 0.1381653</code></pre>
+<p><img src="figure/stat343_data_analysis.Rmd/unnamed-chunk-8-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<ul>
+<li>The residual plot looks way better now, except a couple of points with high residuals.</li>
+<li>The gap in prediction error between <code>train</code> and <code>val</code> tells us the model overfits a bit. So we will make the model smaller.</li>
+</ul>
+</div>
+<div id="remove-outliers-and-fit-lmod2" class="section level2">
+<h2>remove outliers and fit <code>lmod2</code></h2>
+<pre class="r"><code>## check leverage
+X = model.matrix(lmod1)
+H = (X %*% solve(t(X) %*% X, t(X)))
+lev = diag(H)
+sort(lev, decreasing = TRUE)[1:5]</code></pre>
+<pre><code>      170        86       107        93       285 
+1.0000000 0.5047272 0.5047272 0.3689821 0.3635427 </code></pre>
+<pre class="r"><code>## check leverage
+stud &lt;- rstudent(lmod1)
+sort_stud = sort(abs(stud), index.return = TRUE, decreasing = TRUE)
+sort_stud$x[1:5]</code></pre>
+<pre><code>     127      181      331       25      140 
+5.202769 3.826491 3.772925 3.570907 3.526011 </code></pre>
+<pre class="r"><code>## threshold for outlier
+qt(p = 0.05/(n1*2), df = n1 - ncol(X) - 1)</code></pre>
+<pre><code>[1] -3.856177</code></pre>
+<ul>
+<li>So we identify 2 more concerning data points. One is identified as outlier (which happen to be the greatest residuals) even under the conservative Bonferroni correction, and one have leverage equal exactly <code>1</code>. Since it’s only 2 data points, I will remove them.</li>
+</ul>
+<pre class="r"><code>par(mfrow = c(4,4))
+id_rm = c(which.max(abs(stud)),
+          sort(lev, index.return = TRUE, decreasing = TRUE)$ix[1])
+data_sub2 = data_sub[-id_rm,]
+n2 = nrow(data_sub2)
+rownames(data_sub2) = 1:n2
+
+lmod2 = lm(FEV1 ~ ., data = data_sub2)
+
+## prediction error on training data
+prediction(lmod2, data = data_sub2, idx = which(data_sub2$FEV1&lt;6))</code></pre>
+<pre><code>[1] 0.1093468</code></pre>
+<pre class="r"><code>## prediction error on validation data, only look at &quot;right&quot; data points&quot;
+prediction(lmod2, data = val, idx = which(val$FEV1&lt;6))</code></pre>
+<pre><code>[1] 0.1346705</code></pre>
+<ul>
+<li>The training error decreases a lot (probably because some outliers are gone) while validation error increases a bit. We think the small increase in test data is not alarming enough for us to undo this change.</li>
+<li>Still the gap in prediction error between <code>train</code> and <code>val</code> suggests we need to make the model smaller for better generalization.</li>
+</ul>
+</div>
+<div id="remove-non-significant-covariates-get-lmod3" class="section level2">
+<h2>Remove non-significant covariates, get <code>lmod3</code></h2>
+<ul>
+<li>I will use backward elimination to remove covariates.</li>
+<li>It’s a bit tricky when we have categorical variables withe more than 2 levels. At each step, we fine the one with the highest p-value. For those variables with multiple variables, p-value is obtained through F-tests, whereas for the others we can read it directly from <code>summary(lm(...))</code>.</li>
+<li>I can write it by hand but it is much easier and nicer to use <code>step</code> function.</li>
+</ul>
+<pre class="r"><code>lmod3 = step(lmod2, direction = &quot;backward&quot;, trace = TRUE)</code></pre>
+<pre><code>Start:  AIC=-756.98
+FEV1 ~ FVC + DGN + Status + Pain + Haemoptysis + Dyspnoea + Cough + 
+    Weakness + TumorSize + Diabetes + PAD + Age + Smoking
+
+              Df Sum of Sq     RSS     AIC
+- DGN          5     0.217  39.691 -765.00
+- TumorSize    3     0.277  39.751 -760.45
+- Status       2     0.083  39.558 -760.22
+- Diabetes     1     0.003  39.477 -758.95
+- Dyspnoea     1     0.039  39.513 -758.62
+- PAD          1     0.047  39.521 -758.55
+- Pain         1     0.089  39.563 -758.16
+- Weakness     1     0.140  39.614 -757.70
+- Age          1     0.163  39.637 -757.49
+- Smoking      1     0.179  39.653 -757.34
+&lt;none&gt;                      39.474 -756.98
+- Cough        1     0.560  40.034 -753.90
+- Haemoptysis  1     0.864  40.338 -751.16
+- FVC          1   138.738 178.212 -214.83
+
+Step:  AIC=-765
+FEV1 ~ FVC + Status + Pain + Haemoptysis + Dyspnoea + Cough + 
+    Weakness + TumorSize + Diabetes + PAD + Age + Smoking
+
+              Df Sum of Sq     RSS     AIC
+- TumorSize    3     0.271  39.962 -768.54
+- Status       2     0.103  39.794 -768.06
+- Diabetes     1     0.002  39.693 -766.98
+- PAD          1     0.041  39.732 -766.63
+- Dyspnoea     1     0.050  39.742 -766.54
+- Pain         1     0.070  39.761 -766.36
+- Age          1     0.132  39.823 -765.80
+- Smoking      1     0.159  39.851 -765.55
+- Weakness     1     0.160  39.851 -765.55
+&lt;none&gt;                      39.691 -765.00
+- Cough        1     0.599  40.291 -761.58
+- Haemoptysis  1     0.845  40.536 -759.39
+- FVC          1   145.092 184.784 -211.76
+
+Step:  AIC=-768.54
+FEV1 ~ FVC + Status + Pain + Haemoptysis + Dyspnoea + Cough + 
+    Weakness + Diabetes + PAD + Age + Smoking
+
+              Df Sum of Sq     RSS     AIC
+- Status       2     0.100  40.063 -771.63
+- Diabetes     1     0.007  39.969 -770.48
+- Pain         1     0.031  39.994 -770.26
+- PAD          1     0.047  40.010 -770.11
+- Dyspnoea     1     0.084  40.047 -769.78
+- Age          1     0.129  40.092 -769.37
+- Smoking      1     0.155  40.117 -769.14
+- Weakness     1     0.163  40.126 -769.07
+&lt;none&gt;                      39.962 -768.54
+- Cough        1     0.665  40.628 -764.58
+- Haemoptysis  1     0.788  40.751 -763.49
+- FVC          1   145.942 185.904 -215.58
+
+Step:  AIC=-771.63
+FEV1 ~ FVC + Pain + Haemoptysis + Dyspnoea + Cough + Weakness + 
+    Diabetes + PAD + Age + Smoking
+
+              Df Sum of Sq     RSS     AIC
+- Diabetes     1     0.007  40.070 -773.57
+- PAD          1     0.051  40.114 -773.17
+- Dyspnoea     1     0.075  40.138 -772.96
+- Pain         1     0.084  40.147 -772.87
+- Weakness     1     0.112  40.175 -772.62
+- Age          1     0.128  40.191 -772.48
+- Smoking      1     0.144  40.207 -772.34
+&lt;none&gt;                      40.063 -771.63
+- Haemoptysis  1     0.777  40.840 -766.70
+- Cough        1     0.814  40.877 -766.37
+- FVC          1   145.922 185.985 -219.42
+
+Step:  AIC=-773.57
+FEV1 ~ FVC + Pain + Haemoptysis + Dyspnoea + Cough + Weakness + 
+    PAD + Age + Smoking
+
+              Df Sum of Sq     RSS     AIC
+- PAD          1     0.052  40.121 -775.11
+- Dyspnoea     1     0.076  40.146 -774.88
+- Pain         1     0.085  40.155 -774.81
+- Weakness     1     0.109  40.179 -774.59
+- Age          1     0.125  40.195 -774.45
+- Smoking      1     0.151  40.221 -774.21
+&lt;none&gt;                      40.070 -773.57
+- Haemoptysis  1     0.777  40.847 -768.64
+- Cough        1     0.809  40.879 -768.35
+- FVC          1   147.019 187.089 -219.28
+
+Step:  AIC=-775.11
+FEV1 ~ FVC + Pain + Haemoptysis + Dyspnoea + Cough + Weakness + 
+    Age + Smoking
+
+              Df Sum of Sq     RSS     AIC
+- Dyspnoea     1     0.063  40.185 -776.54
+- Pain         1     0.077  40.199 -776.41
+- Weakness     1     0.107  40.228 -776.15
+- Age          1     0.120  40.241 -776.03
+- Smoking      1     0.140  40.261 -775.85
+&lt;none&gt;                      40.121 -775.11
+- Haemoptysis  1     0.747  40.868 -770.45
+- Cough        1     0.820  40.941 -769.80
+- FVC          1   146.969 187.090 -221.28
+
+Step:  AIC=-776.54
+FEV1 ~ FVC + Pain + Haemoptysis + Cough + Weakness + Age + Smoking
+
+              Df Sum of Sq     RSS     AIC
+- Pain         1     0.069  40.254 -777.91
+- Weakness     1     0.097  40.282 -777.66
+- Age          1     0.126  40.311 -777.40
+- Smoking      1     0.132  40.317 -777.35
+&lt;none&gt;                      40.185 -776.54
+- Haemoptysis  1     0.815  41.000 -771.29
+- Cough        1     0.860  41.045 -770.89
+- FVC          1   147.464 187.649 -222.20
+
+Step:  AIC=-777.91
+FEV1 ~ FVC + Haemoptysis + Cough + Weakness + Age + Smoking
+
+              Df Sum of Sq     RSS     AIC
+- Weakness     1     0.106  40.360 -778.97
+- Age          1     0.114  40.368 -778.89
+- Smoking      1     0.147  40.401 -778.60
+&lt;none&gt;                      40.254 -777.91
+- Haemoptysis  1     0.753  41.008 -773.22
+- Cough        1     0.889  41.143 -772.03
+- FVC          1   148.081 188.335 -222.89
+
+Step:  AIC=-778.97
+FEV1 ~ FVC + Haemoptysis + Cough + Age + Smoking
+
+              Df Sum of Sq     RSS     AIC
+- Age          1     0.152  40.512 -779.61
+- Smoking      1     0.164  40.524 -779.50
+&lt;none&gt;                      40.360 -778.97
+- Haemoptysis  1     0.790  41.150 -773.97
+- Cough        1     0.988  41.348 -772.24
+- FVC          1   149.755 190.115 -221.49
+
+Step:  AIC=-779.61
+FEV1 ~ FVC + Haemoptysis + Cough + Smoking
+
+              Df Sum of Sq     RSS     AIC
+- Smoking      1     0.187  40.698 -779.95
+&lt;none&gt;                      40.512 -779.61
+- Haemoptysis  1     0.822  41.334 -774.36
+- Cough        1     1.105  41.617 -771.90
+- FVC          1   165.698 206.209 -194.15
+
+Step:  AIC=-779.95
+FEV1 ~ FVC + Haemoptysis + Cough
+
+              Df Sum of Sq     RSS     AIC
+&lt;none&gt;                      40.698 -779.95
+- Haemoptysis  1     0.800  41.498 -774.93
+- Cough        1     1.342  42.040 -770.24
+- FVC          1   165.540 206.238 -196.11</code></pre>
+<pre class="r"><code>par(mfrow = c(2,2))
+plot(lmod3$fitted.values, lmod3$residuals)
+for(name in colnames(lmod3$model)[2:ncol(lmod3$model)]){
+  plot(as.numeric(lmod3$model[[name]]), lmod3$residuals, xlab = name)
+}</code></pre>
+<p><img src="figure/stat343_data_analysis.Rmd/unnamed-chunk-12-1.png" width="1536" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## prediction error on training data
+prediction(lmod3, data = data_sub2, idx = which(data_sub2$FEV1 &lt; 6))</code></pre>
+<pre><code>[1] 0.1127373</code></pre>
+<pre class="r"><code>## prediction error on validation data, only look at &quot;right&quot; data points&quot;
+prediction(lmod3, data = val, idx = which(val$FEV1&lt;6))</code></pre>
+<pre><code>[1] 0.1298429</code></pre>
+<p>There seems to be a few points with larger residuals. But we don’t try to remove them for fear of “trying too hard”.</p>
+</div>
+<div id="check-for-interactions-get-lmod4" class="section level2">
+<h2>Check for interactions, get <code>lmod4</code></h2>
+<pre class="r"><code>anova(lmod3, lm(FEV1 ~ FVC + Haemoptysis + Cough + FVC * Cough, data = data_sub2))[2,6]</code></pre>
+<pre><code>[1] 0.00788617</code></pre>
+<pre class="r"><code>anova(lmod3, lm(FEV1 ~ FVC + Haemoptysis + Cough + FVC * Haemoptysis, data = data_sub2))[2,6]</code></pre>
+<pre><code>[1] 0.1768311</code></pre>
+<pre class="r"><code>anova(lmod3, lm(FEV1 ~ FVC + Haemoptysis + Cough + Cough * Haemoptysis, data = data_sub2))[2,6]</code></pre>
+<pre><code>[1] 0.8503055</code></pre>
+<p>By ANOVA test, we add the interaction term <code>FVC * Cough</code>.</p>
+<pre class="r"><code>lmod4 = lm(FEV1 ~ FVC + Haemoptysis + Cough + FVC * Cough, data = data_sub2)
+summary(lmod4)</code></pre>
+<pre><code>
+Call:
+lm(formula = FEV1 ~ FVC + Haemoptysis + Cough + FVC * Cough, 
+    data = data_sub2)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.15622 -0.18506  0.01263  0.18854  1.37474 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     -0.14768    0.11244  -1.313  0.18989    
+FVC              0.84075    0.03218  26.128  &lt; 2e-16 ***
+HaemoptysisTRUE -0.14334    0.05211  -2.751  0.00624 ** 
+CoughTRUE        0.23082    0.14122   1.634  0.10306    
+FVC:CoughTRUE   -0.10978    0.04109  -2.672  0.00789 ** 
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.3348 on 356 degrees of freedom
+Multiple R-squared:  0.8149,    Adjusted R-squared:  0.8129 
+F-statistic: 391.9 on 4 and 356 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>## prediction error on training data
+prediction(lmod4, data = data_sub, idx = which(data_sub$FEV1&lt;6))</code></pre>
+<pre><code>[1] 0.1197153</code></pre>
+<pre class="r"><code>## prediction error on validation data
+prediction(lmod4, data = val, idx = which(val$FEV1&lt;6))</code></pre>
+<pre><code>[1] 0.1318382</code></pre>
+</div>
+<div id="prediction-using-lmod4" class="section level2">
+<h2>Prediction using <code>lmod4</code></h2>
+<pre class="r"><code>## prediction error
+prediction(lmod4, data = test, idx = which(test$FEV1&lt;6))</code></pre>
+<pre><code>[1] 0.0966166</code></pre>
+<pre class="r"><code>pred_ci = predict(lmod4, newdata = test[, colnames(lmod4$model)[-1]], interval = &quot;prediction&quot;, level = 0.95)
+
+plot(test[,&quot;FEV1&quot;],pred_ci[, &quot;fit&quot;], xlab = &quot;y&quot;, ylab = &quot;yhat&quot;)
+abline(a = 0, b = 1, col = &quot;blue&quot;)</code></pre>
+<p><img src="figure/stat343_data_analysis.Rmd/unnamed-chunk-15-1.png" width="384" style="display: block; margin: auto;" /> I originally also plotted the prediction interval, but realized that it may not be reliable, as the inference of <span class="math inline">\(\beta\)</span>’s are not reliable, due to reasons discussed below.</p>
+</div>
+<div id="inference-of-lmod4_refit" class="section level2">
+<h2>Inference of <code>lmod4_refit</code></h2>
+<p>We can’t actually trust the inference from <code>lmod4</code>, as it’s an example of “selective inference”. Thus we use test and validation to do inference. We call this model <code>lmod4_refit</code>. The result is very different.</p>
+<pre class="r"><code>par(mfrow = c(2,1))
+lmod4_refit = lm(FEV1 ~ FVC + Haemoptysis + Cough + FVC * Cough, data = rbind(test, val))
+plot(lmod4_refit$fitted.values, lmod4_refit$residuals)
+
+## check for normality (hard to say whether it&#39;s normal or not)
+qqnorm(lmod4_refit$residuals)
+qqline(lmod4_refit$residuals)</code></pre>
+<p><img src="figure/stat343_data_analysis.Rmd/unnamed-chunk-16-1.png" width="384" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>shapiro.test(residuals(lmod4_refit))</code></pre>
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  residuals(lmod4_refit)
+W = 0.9795, p-value = 0.1566</code></pre>
+<pre class="r"><code>summary(lmod4_refit)</code></pre>
+<pre><code>
+Call:
+lm(formula = FEV1 ~ FVC + Haemoptysis + Cough + FVC * Cough, 
+    data = rbind(test, val))
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.88285 -0.15669 -0.01317  0.17879  0.96983 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     -0.24991    0.29870  -0.837    0.405    
+FVC              0.88374    0.08266  10.691   &lt;2e-16 ***
+HaemoptysisTRUE  0.04374    0.10821   0.404    0.687    
+CoughTRUE        0.25186    0.34316   0.734    0.465    
+FVC:CoughTRUE   -0.11881    0.09755  -1.218    0.227    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.3357 on 87 degrees of freedom
+Multiple R-squared:  0.8097,    Adjusted R-squared:  0.8009 
+F-statistic: 92.53 on 4 and 87 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Since we are not sure if the residual is normal, let’s use Bootstrap for inference:</p>
+<pre class="r"><code>start = proc.time()
+n_boot = 1000
+model = lmod4_refit
+beta_boot = matrix(NA, ncol = length(model$coefficients), nrow = n_boot)
+colnames(beta_boot) = names(model$coefficients)
+
+df = rbind(test, val)
+set.seed(1234)
+for(i in 1:n_boot){
+  y_boost = model$fitted.values + sample(x = model$residuals, size = length(model$residuals), replace = TRUE)
+  dat = df
+  dat$FEV1 = y_boost
+  fit = update(object = model, data = dat)
+  beta_boot[i,] = as.numeric(fit$coefficients)
+}
+
+runtime = proc.time() - start
+
+beta_boot = as.data.frame(beta_boot)
+par(mfrow = c(3,2))
+for(name in colnames(beta_boot)){
+  ci = round(quantile(beta_boot[[name]], probs = c(0.025, 0.975)), digits = 3)
+  hist(beta_boot[[name]], xlab = sprintf(&quot;beta for %s&quot;, name), 
+       main = sprintf(&quot;beta-%s \n 0.95 CI  [%.3f,%.3f] &quot;,name, ci[[1]], ci[[2]]))
+  abline(v = lmod4_refit$coefficients[[name]], col = &quot;red&quot;)
+  abline(v = lmod4$coefficients[[name]], col = &quot;blue&quot;)
+  legend(&quot;topleft&quot;, legend = c(&quot;lmod4&quot;, &quot;refit&quot;), col = c(&quot;blue&quot;, &quot;red&quot;), lty = 1:1, cex=0.8)
+}</code></pre>
+<p><img src="figure/stat343_data_analysis.Rmd/unnamed-chunk-17-1.png" width="1536" style="display: block; margin: auto;" /> The Bootstrap distribution for <span class="math inline">\(\beta\)</span> of <code>HaemoptysisTRUE</code> shows why we shouldn’t trust inference from <code>lmod4</code>.</p>
+</div>
+<div id="discussion" class="section level2">
+<h2>Discussion</h2>
+<p>There are a couple of things that need further exploration.</p>
+<ul>
+<li>How to split data for training, validation and test? While I use the <code>80-10-10</code> which is often used in prediction task, it might not be great if we want to do inference using the testing or valiation or both.</li>
+<li>Prediction and Inference: are they the same objective? Think about it.</li>
+</ul>
+<p>Below I put together the prediction accuracy of each model, on <code>val</code> and <code>test</code> combined.</p>
+<pre class="r"><code>test_val_err = c(prediction(lmod1, data = rbind(test, val)),
+             prediction(lmod2, data = rbind(test, val)),
+             prediction(lmod3, data = rbind(test, val)),
+             prediction(lmod4, data = rbind(test, val)))
+             
+data.frame(test_val_err = test_val_err, row.names = c(&quot;lmod1&quot;, &quot;lmod2&quot;, &quot;lmod3&quot;, &quot;lmod4&quot;))</code></pre>
+<pre><code>      test_val_err
+lmod1    0.1226213
+lmod2    0.1184250
+lmod3    0.1148427
+lmod4    0.1146102</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.3 (2020-02-29)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 18.04.5 LTS
+
+Matrix products: default
+BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.7.1
+LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.7.1
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] faraway_1.0.7   MASS_7.3-53     workflowr_1.6.0
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.5      knitr_1.28      whisker_0.4     magrittr_1.5   
+ [5] splines_3.6.3   statmod_1.4.35  lattice_0.20-41 R6_2.4.1       
+ [9] rlang_0.4.9     minqa_1.2.4     stringr_1.4.0   tools_3.6.3    
+[13] grid_3.6.3      nlme_3.1-149    xfun_0.12       git2r_0.26.1   
+[17] htmltools_0.4.0 yaml_2.2.1      lme4_1.1-26     digest_0.6.23  
+[21] rprojroot_1.3-2 Matrix_1.2-18   nloptr_1.2.2.2  later_1.0.0    
+[25] promises_1.1.0  fs_1.3.1        glue_1.4.2      evaluate_0.14  
+[29] rmarkdown_2.1   stringi_1.4.5   compiler_3.6.3  backports_1.1.5
+[33] boot_1.3-25     httpuv_1.5.2   </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

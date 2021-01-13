@@ -30,14 +30,6 @@
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
-<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
-<!-- Add a small amount of space between sections. -->
-<style type="text/css">
-div.section {
-  padding-top: 12px;
-}
-</style>
-
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
   pre:not([class]) {
@@ -382,6 +374,13 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
 <div class="fluid-row" id="header">
 
 
@@ -416,14 +415,14 @@ div.tocify {
 <strong>Last updated:</strong> 2020-12-21
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>statsNotes/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
 </p>
 <p>
 This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
-  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
 </p>
 <hr>
 </div>
@@ -444,90 +443,27 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestree369856fcd80908e56d12f3d8d96a47e816e40257targetblank369856fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/zihao12/statsNotes/tree/369856fcd80908e56d12f3d8d96a47e816e40257" target="_blank">369856f</a> </a>
 </p>
 </div>
-<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
-<div class="panel-body">
-<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
-</div>
-</div>
-</div>
-<div class="panel panel-default">
-<div class="panel-heading">
-<p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20200505code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20200505)</code> </a>
-</p>
-</div>
-<div id="strongSeedstrongcodesetseed20200505code" class="panel-collapse collapse">
-<div class="panel-body">
-<p>The command <code>set.seed(20200505)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
-</div>
-</div>
-</div>
-<div class="panel panel-default">
-<div class="panel-heading">
-<p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
-</p>
-</div>
-<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
-<div class="panel-body">
-<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
-</div>
-</div>
-</div>
-<div class="panel panel-default">
-<div class="panel-heading">
-<p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
-</p>
-</div>
-<div id="strongCachestrongnone" class="panel-collapse collapse">
-<div class="panel-body">
-<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
-</div>
-</div>
-</div>
-<div class="panel panel-default">
-<div class="panel-heading">
-<p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
-</p>
-</div>
-<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
-<div class="panel-body">
-<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
-</div>
-</div>
-</div>
-<div class="panel panel-default">
-<div class="panel-heading">
-<p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestree710f695a7338e6f1d98d72f533220f3b97f32c47targetblank710f695a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/zihao12/statsNotes/tree/710f695a7338e6f1d98d72f533220f3b97f32c47" target="_blank">710f695</a> </a>
-</p>
-</div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestree710f695a7338e6f1d98d72f533220f3b97f32c47targetblank710f695a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestree369856fcd80908e56d12f3d8d96a47e816e40257targetblank369856fa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
-Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
-</p>
-<p>
-The results in this page were generated with repository version <a href="https://github.com/zihao12/statsNotes/tree/710f695a7338e6f1d98d72f533220f3b97f32c47" target="_blank">710f695</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
-</p>
-<p>
-Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 </p>
 <pre><code>
 Ignored files:
-    Ignored:    .DS_Store
-    Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/importance_sampling.html
 
 Untracked files:
-    Untracked:  analysis/draft.Rmd
-    Untracked:  analysis/vaccine_trial.Rmd
-    Untracked:  infect-chance/
+    Untracked:  .idea/
+    Untracked:  analysis/test_jb.Rmd
+    Untracked:  data/thoracic.txt
+    Untracked:  statsNotes.iml
+
+Unstaged changes:
+    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -542,7 +478,7 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <div id="versions" class="tab-pane fade">
 
 <p>
-These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/stat343_summary.Rmd</code>) and HTML (<code>docs/stat343_summary.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
 </p>
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
@@ -571,6 +507,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/zihao12/statsNotes/blob/369856fcd80908e56d12f3d8d96a47e816e40257/analysis/stat343_summary.Rmd" target="_blank">369856f</a>
+</td>
+<td>
+zihao12
+</td>
+<td>
+2020-12-21
+</td>
+<td>
+stat343 summary
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/zihao12/statsNotes/30c6758d2474c28824d8a87a4074352c6a11a293/docs/stat343_summary.html" target="_blank">30c6758</a>
+</td>
+<td>
+zihao12
+</td>
+<td>
+2020-12-21
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/zihao12/statsNotes/blob/710f695a7338e6f1d98d72f533220f3b97f32c47/analysis/stat343_summary.Rmd" target="_blank">710f695</a>
 </td>
 <td>
@@ -590,71 +560,66 @@ begin stat343 summary
 </div>
 </div>
 </div>
-<div id="introduction" class="section level2">
-<h2>Introduction</h2>
-<p>I just finished the course <strong>STAT343 Applied Linear Stat Methods</strong> at UChicago. I think the right name for the course should be: <strong>One Million Ways Linear Models Can Fail and How to Fix Them</strong>. Here is a brief summary of what we have learnt.</p>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>I just finished the course <strong>STAT343 Applied Linear Stat Methods</strong> at UChicago. While Linear Model seems simple and well-studied, I learnt that it still takes lots of knowledge and experience to properly use it. Below I made a brief summary of what we learnt, and then demonstrated how to use them in my course data analysis project.</p>
 </div>
+<div id="course-summary" class="section level1">
+<h1>Course Summary</h1>
 <div id="linear-model-assumptions" class="section level2">
 <h2>Linear Model Assumptions</h2>
-<span class="math display">\[\begin{align}
+<p><span class="math display">\[\begin{align}
 &amp; y_i = \mathbf{x}_i^{T} \mathbf{\beta} + \epsilon_i\\
 &amp; \epsilon_i \overset{\text{iid}}{\sim} (0, \sigma^2)
-\end{align}\]</span>
-<p>where <span class="math inline">\(y_i\)</span> is the called response, <span class="math inline">\(\mathbf{x}_i \in \mathbb{R}^p\)</span> is the vector of covariates or the features (include the intercept term <span class="math inline">\(1\)</span>). <span class="math inline">\(\mathbf{\beta}\)</span> if the coefficients, or effect sizes of those covariates.</p>
+\end{align}\]</span> where <span class="math inline">\(y_i\)</span> is the called response, <span class="math inline">\(\mathbf{x}_i \in \mathbb{R}^p\)</span> is the vector of covariates or the features (include the intercept term <span class="math inline">\(1\)</span>). <span class="math inline">\(\mathbf{\beta}\)</span> if the coefficients, or effect sizes of those covariates.</p>
 <p>The model has several important assumptions. First, linear assumption for the mean <span class="math inline">\(E(y_i) = \mathbf{x}_i^{T} \mathbf{\beta}\)</span>. Second, independent and equal variance for the error: <span class="math inline">\(\epsilon_i \overset{\text{iid}}{\sim} (0, \sigma^2)\)</span>. Further, we might want a third assumption for some closed-form theoretical result: <span class="math inline">\(\epsilon_i \overset{\text{iid}}{\sim} N(0, \sigma^2)\)</span>.</p>
 <p>The first two assumptions are very important. Whenever we want to draw any conclusion from a linear model, we need to at least make sure the first two assumptions are satisfied. Violations of the third assumption are not too severe. Although tests and inference results are not exact, if the sample size is large enough, the approximation will be good enough (need to think more anbout this). Second, we can use nonparamtric methods like bootstrap or permutaton tests to construct confidence intervals or conduct tests.</p>
 <p>If all three assumptions hold, Linear Model estimate is the Best Linear Unbiased Estimator (BLUE): If we want to estimate <span class="math inline">\(\mathbf{c}^T \mathbf{\beta}\)</span> using linear estimator of the form <span class="math inline">\(\mathbf{a}^T \mathbf{y}\)</span> that has to be unbiased, Linear Model estimate has the smallest variance.</p>
 </div>
-<div id="estimate-and-inference" class="section level2">
-<h2>Estimate and Inference</h2>
+<div id="estimation-and-inference" class="section level2">
+<h2>Estimation and Inference</h2>
 <p>I use the matrix notation for this part: <span class="math inline">\(X \in \mathbb{R}^{n \times p}, y \in \mathbb{R}^n\)</span>.</p>
 <ul>
 <li>Estimate (They are both unbiased estimates)</li>
 </ul>
-<span class="math display">\[\begin{align}
+<p><span class="math display">\[\begin{align}
 &amp; \hat{\mathbf{\beta}} = (X^T X)^{-1} X^T \mathbf{y}\\
 &amp; \hat{\sigma} = \frac{\|\hat{\mathbf{y}} - X \hat{\mathbf{\beta}}\|_2^2}{n - p}\\
-\end{align}\]</span>
+\end{align}\]</span></p>
 <ul>
 <li>Inference</li>
 </ul>
-<span class="math display">\[\begin{align}
+<p><span class="math display">\[\begin{align}
 &amp; \frac{\mathbf{v}^T \hat{\mathbf{\beta}}}{\text{SE}(\mathbf{v}^T \hat{\mathbf{\beta}})} \sim t_{n-p}\\
 &amp; \text{where} \ \text{SE}(\mathbf{v}^T \hat{\mathbf{\beta}}) = \hat{\sigma} (\mathbf{v}^T (X^T X)^{-1} \mathbf{v})
-\end{align}\]</span>
-<br>
-<p>
-<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
-<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
-</button>
-</p>
-<div id="workflowr-sessioninfo" class="collapse">
-<pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>R version 3.5.1 (2018-07-02)
-Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS  10.15.7
-
-Matrix products: default
-BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
-LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
-
-locale:
-[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
-
-attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base     
-
-other attached packages:
-[1] workflowr_1.6.2
-
-loaded via a namespace (and not attached):
- [1] Rcpp_1.0.5      rprojroot_1.3-2 digest_0.6.25   later_1.1.0.1  
- [5] R6_2.4.1        backports_1.1.7 git2r_0.26.1    magrittr_1.5   
- [9] evaluate_0.14   stringi_1.4.3   rlang_0.4.6     fs_1.3.1       
-[13] promises_1.1.1  whisker_0.3-2   rmarkdown_2.1   tools_3.5.1    
-[17] stringr_1.4.0   glue_1.4.1      httpuv_1.5.4    xfun_0.8       
-[21] yaml_2.2.0      compiler_3.5.1  htmltools_0.5.0 knitr_1.28     </code></pre>
+\end{align}\]</span></p>
+<p>We derived more closed-form distributions for test statistics. But in order for them to hold, we need the 3 assumptions mentioned previously. When some of those assumptions are violated, we might use Bootstrap (there are many of them) to get empirical distributions for those test statistics.</p>
 </div>
+<div id="diagnostics" class="section level2">
+<h2>Diagnostics</h2>
+<p>So we need to check whether a fitted linear model satisfies those assumptions. Here is a partial checklist. * Check if <code>Y</code> has linear dependence on <code>X</code>. * Check if the errors appear to have equal variance and no correlation and are roughly normally distributed (optional) * Check for outliers / high leverage / influential points * Check for clusters or other underlying population/batch structure</p>
+</div>
+<div id="model-selection" class="section level2">
+<h2>Model Selection</h2>
+<p>How to decide which covariates to include in the model? First, there is a bias &amp; variance trade-off between big models (larger variance) and small models (biasd). Or in the fundamental theorem of learning thoery, for a model <span class="math inline">\(h\)</span> of a linear model with <span class="math inline">\(p\)</span> covariates <span class="math inline">\(\mathcal{H}\)</span>, we have w.p. <span class="math inline">\(\geq 1 - \delta\)</span>, <span class="math inline">\(L_D(h) \leq \text{inf}_{h^{*} \in \mathcal{H}}L_D(h^{*}) + \sqrt{\frac{\text{VCdim}(\mathcal{H}) + log(2/\delta)}{m}}\)</span>, where <span class="math inline">\(L_D(h)\)</span> is the loss on the distribution. Larger model class <span class="math inline">\(\mathcal{H}\)</span> has less “approximation error”, and more generalization error.</p>
+<p>Second, it’s often computationally infeasible to globally find the best <span class="math inline">\(k\)</span> covariates, we normally use greedy approaches: forward selection and backward elimination. At each step we decide which covariate to add (remove), based on how much change in RSS they contribute (in practice we look at p-values which are equivalent).</p>
+<p>Third, it’s dangerous to blindly trust the inference after model selection. There is issue of multiple testing / selection inference</p>
+</div>
+<div id="rubust-regression" class="section level2">
+<h2>Rubust Regression</h2>
+</div>
+<div id="ridge-and-lasso-regression" class="section level2">
+<h2>Ridge and Lasso Regression</h2>
+</div>
+<div id="missing-data" class="section level2">
+<h2>Missing Data</h2>
+</div>
+<div id="categorical-data-and-anova" class="section level2">
+<h2>Categorical Data and ANOVA</h2>
+</div>
+</div>
+<div id="data-project" class="section level1">
+<h1><a href="https://zihao12.github.io/statsNotes/stat343_data_analysis">Data Project</a></h1>
 </div>
 
 

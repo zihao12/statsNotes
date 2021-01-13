@@ -10,9 +10,10 @@ editor_options:
   chunk_output_type: console
 ---
 
-## Introduction
-I just finished the course **STAT343 Applied Linear Stat Methods** at UChicago. I think the right name for the course should be: **One Million Ways Linear Models Can Fail and How to Fix Them**. Here is a brief summary of what we have learnt.
+# Introduction
+I just finished the course **STAT343 Applied Linear Stat Methods** at UChicago. While Linear Model seems simple and well-studied, I learnt that it still takes lots of knowledge and experience to properly use it. Below I made a brief summary of what we learnt, and then demonstrated how to use them in my course data analysis project.  
 
+# Course Summary 
 
 ## Linear Model Assumptions
 \begin{align}
@@ -27,7 +28,7 @@ The first two assumptions are very important. Whenever we want to draw any concl
 
 If all three assumptions hold, Linear Model estimate is the Best Linear Unbiased Estimator (BLUE): If we want to estimate $\mathbf{c}^T \mathbf{\beta}$ using linear estimator of the form $\mathbf{a}^T \mathbf{y}$ that has to be unbiased, Linear Model estimate has the smallest variance.  
 
-## Estimate and Inference
+## Estimation and Inference
 I use the matrix notation for this part: $X \in \mathbb{R}^{n \times p}, y \in \mathbb{R}^n$. 
 
 * Estimate (They are both unbiased estimates)
@@ -45,9 +46,32 @@ I use the matrix notation for this part: $X \in \mathbb{R}^{n \times p}, y \in \
 & \text{where} \ \text{SE}(\mathbf{v}^T \hat{\mathbf{\beta}}) = \hat{\sigma} (\mathbf{v}^T (X^T X)^{-1} \mathbf{v})
 \end{align}
 
+We derived more closed-form distributions for test statistics. But in order for them to hold, we need the 3 assumptions mentioned previously. When some of those assumptions are violated, we might use Bootstrap (there are many of them) to get empirical distributions for those test statistics. 
+
+## Diagnostics
+So we need to check whether a fitted linear model satisfies those assumptions. Here is a partial checklist. 
+* Check if `Y` has linear dependence on `X`. 
+* Check if the errors appear to have equal variance and no correlation and are roughly normally distributed (optional)
+* Check for outliers / high leverage / influential points
+* Check for clusters or other underlying population/batch structure
+
+## Model Selection
+How to decide which covariates to include in the model? First, there is a bias & variance trade-off between big models (larger variance) and small models (biasd). Or in the fundamental theorem of learning thoery, for a model $h$ of a linear model with $p$ covariates $\mathcal{H}$, we have w.p. $\geq 1 - \delta$,  $L_D(h) \leq \text{inf}_{h^{*} \in \mathcal{H}}L_D(h^{*}) + \sqrt{\frac{\text{VCdim}(\mathcal{H}) + log(2/\delta)}{m}}$, where $L_D(h)$ is the loss on the distribution. Larger model class $\mathcal{H}$ has less "approximation error", and more generalization error. 
+
+Second, it's often computationally infeasible to globally find the best $k$ covariates, we normally use greedy approaches: forward selection and backward elimination. At each step we decide which covariate to add (remove), based on how much change in RSS they contribute (in practice we look at p-values which are equivalent). 
+
+Third, it's dangerous to blindly trust the inference after model selection. There is issue of multiple testing / selection inference
+
+## Rubust Regression
+
+## Ridge and Lasso Regression
+
+## Missing Data 
+
+## Categorical Data and ANOVA
+
+# [Data Project](https://zihao12.github.io/statsNotes/stat343_data_analysis)
 
 
-```{r}
 
-```
 
