@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="zihao12" />
+
+<meta name="date" content="2021-01-18" />
+
+<title>STAT 220 Lab 2 — Exploring Numerical Data</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">statsNotes</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/zihao12/statsNotes">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">STAT 220 Lab 2 — Exploring Numerical Data</h1>
+<h4 class="author">zihao12</h4>
+<h4 class="date">2021-01-18</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2021-01-18
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>statsNotes/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20200505code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20200505)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20200505code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20200505)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestree3514d6aec864a4aec40842031dcaab6efae33b07targetblank3514d6aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/zihao12/statsNotes/tree/3514d6aec864a4aec40842031dcaab6efae33b07" target="_blank">3514d6a</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestree3514d6aec864a4aec40842031dcaab6efae33b07targetblank3514d6aa" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/zihao12/statsNotes/tree/3514d6aec864a4aec40842031dcaab6efae33b07" target="_blank">3514d6a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Unstaged changes:
+    Modified:   analysis/stat234_lab2.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/stat234_lab2.Rmd</code>) and HTML (<code>docs/stat234_lab2.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/zihao12/statsNotes/blob/b3abdbd1875813f00e58df7811e4cf971539c072/analysis/stat234_lab2.Rmd" target="_blank">b3abdbd</a>
+</td>
+<td>
+zihao12
+</td>
+<td>
+2021-01-18
+</td>
+<td>
+analysis/stat234_lab2.Rmd
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="the-diamonds-dataset" class="section level2">
+<h2>The Diamonds Dataset</h2>
+<pre class="r"><code>library(lattice)
+library(mosaic)
+library(dplyr)
+#install.packages(&quot;openintro&quot;)
+library(openintro)
+load(&quot;data/diamonds.Rdata&quot;)</code></pre>
+<pre class="r"><code>dim(diamonds)</code></pre>
+<pre><code>[1] 53940    10</code></pre>
+<pre class="r"><code>str(diamonds)</code></pre>
+<pre><code>Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   53940 obs. of  10 variables:
+ $ carat  : num  0.23 0.21 0.23 0.29 0.31 0.24 0.24 0.26 0.22 0.23 ...
+ $ cut    : Ord.factor w/ 5 levels &quot;Fair&quot;&lt;&quot;Good&quot;&lt;..: 5 4 2 4 2 3 3 3 1 3 ...
+ $ color  : Ord.factor w/ 7 levels &quot;D&quot;&lt;&quot;E&quot;&lt;&quot;F&quot;&lt;&quot;G&quot;&lt;..: 2 2 2 6 7 7 6 5 2 5 ...
+ $ clarity: Ord.factor w/ 8 levels &quot;I1&quot;&lt;&quot;SI2&quot;&lt;&quot;SI1&quot;&lt;..: 2 3 5 4 2 6 7 3 4 5 ...
+ $ depth  : num  61.5 59.8 56.9 62.4 63.3 62.8 62.3 61.9 65.1 59.4 ...
+ $ table  : num  55 61 65 58 58 57 57 55 61 61 ...
+ $ price  : int  326 326 327 334 335 336 336 337 337 338 ...
+ $ x      : num  3.95 3.89 4.05 4.2 4.34 3.94 3.95 4.07 3.87 4 ...
+ $ y      : num  3.98 3.84 4.07 4.23 4.35 3.96 3.98 4.11 3.78 4.05 ...
+ $ z      : num  2.43 2.31 2.31 2.63 2.75 2.48 2.47 2.53 2.49 2.39 ...</code></pre>
+<p>Using the dplyr package one can find the mean price of diamonds by quality of cut. First we group the data and then apply the function summarise</p>
+<pre class="r"><code>summarise(group_by(diamonds,cut), mean(price))</code></pre>
+<pre><code># A tibble: 5 x 2
+  cut       `mean(price)`
+  &lt;ord&gt;             &lt;dbl&gt;
+1 Fair              4359.
+2 Good              3929.
+3 Very Good         3982.
+4 Premium           4584.
+5 Ideal             3458.</code></pre>
+</div>
+<div id="numerical-summary-of-data" class="section level2">
+<h2>Numerical Summary of Data</h2>
+<div id="with-dlpyr" class="section level3">
+<h3>With <code>dlpyr</code></h3>
+<p>To calculate the mean, median, SD, variance, five-number summary, IQR, minimum, maximum of the price variable in the diamonds dataset</p>
+<pre class="r"><code>mean(diamonds$price)</code></pre>
+<pre><code>[1] 3932.8</code></pre>
+<pre class="r"><code>with(diamonds,mean(price))</code></pre>
+<pre><code>[1] 3932.8</code></pre>
+<pre class="r"><code>## ETC ...</code></pre>
+<p>Find average price by <code>cut</code> (<code>summarise</code> + <code>group_by</code> is powerful)</p>
+<pre class="r"><code>## summarise(group_by(diamonds, cut), mean(price))
+by_cut = group_by(diamonds, cut) ## becomes a grouped_df
+# str(by_cut)
+summarise(by_cut, ave_price = mean(price))</code></pre>
+<pre><code># A tibble: 5 x 2
+  cut       ave_price
+  &lt;ord&gt;         &lt;dbl&gt;
+1 Fair          4359.
+2 Good          3929.
+3 Very Good     3982.
+4 Premium       4584.
+5 Ideal         3458.</code></pre>
+<p>Find average price by <code>cut</code> and clarity</p>
+<pre class="r"><code>summarise(group_by(diamonds, cut, clarity), mean(price))</code></pre>
+<pre><code># A tibble: 40 x 3
+# Groups:   cut [5]
+   cut   clarity `mean(price)`
+   &lt;ord&gt; &lt;ord&gt;           &lt;dbl&gt;
+ 1 Fair  I1              3704.
+ 2 Fair  SI2             5174.
+ 3 Fair  SI1             4208.
+ 4 Fair  VS2             4175.
+ 5 Fair  VS1             4165.
+ 6 Fair  VVS2            3350.
+ 7 Fair  VVS1            3871.
+ 8 Fair  IF              1912.
+ 9 Good  I1              3597.
+10 Good  SI2             4580.
+# … with 30 more rows</code></pre>
+</div>
+<div id="with-mosaic" class="section level3">
+<h3>With `mosaic</h3>
+<pre class="r"><code>mean(~price, data = diamonds)</code></pre>
+<pre><code>[1] 3932.8</code></pre>
+<pre class="r"><code>### ETC ...</code></pre>
+<p>The mosaic command favstats, allows us to compute all of this information (and more) at once.</p>
+<pre class="r"><code>favstats(~price, data=diamonds)</code></pre>
+<pre><code> min  Q1 median      Q3   max   mean      sd     n missing
+ 326 950   2401 5324.25 18823 3932.8 3989.44 53940       0</code></pre>
+<p>The centerpiece of the mosaic syntax is the use of the modeling language. This involves the use of a tilde (~), which can be read as “is a function of”. For example, one can find the mean price of diamonds by quality of cut</p>
+<pre class="r"><code>mean(price ~ cut , data=diamonds)</code></pre>
+<pre><code>     Fair      Good Very Good   Premium     Ideal 
+ 4358.758  3928.864  3981.760  4584.258  3457.542 </code></pre>
+<p>Surprisingly, higher quality cut diamonds are not necessarily more expensive (e.g., mean price of diamonds with the best cut (Ideal) is $3457.5, lower than that of the worst cut (Fair), $4358.7). This is because we didn’t take weight (carat) of diamonds into account. Diamonds with Ideal cut tend to be smaller than diamonds with Fair cut.</p>
+<pre class="r"><code>mean(carat ~ cut , data=diamonds)</code></pre>
+<pre><code>     Fair      Good Very Good   Premium     Ideal 
+1.0461366 0.8491847 0.8063814 0.8919549 0.7028370 </code></pre>
+<p>We can find the mean price of diamonds grouped by cut and clarity</p>
+<pre class="r"><code>mean(carat ~ cut + clarity , data=diamonds)</code></pre>
+<pre><code>       Fair.I1        Good.I1   Very Good.I1     Premium.I1       Ideal.I1 
+     1.3610000      1.2030208      1.2819048      1.2870244      1.2226712 
+      Fair.SI2       Good.SI2  Very Good.SI2    Premium.SI2      Ideal.SI2 
+     1.2038412      1.0352266      1.0643381      1.1441607      1.0079253 
+      Fair.SI1       Good.SI1  Very Good.SI1    Premium.SI1      Ideal.SI1 
+     0.9646324      0.8303974      0.8459784      0.9086014      0.8018076 
+      Fair.VS2       Good.VS2  Very Good.VS2    Premium.VS2      Ideal.VS2 
+     0.8852490      0.8507873      0.8111810      0.8337742      0.6705660 
+      Fair.VS1       Good.VS1  Very Good.VS1    Premium.VS1      Ideal.VS1 
+     0.8798235      0.7576852      0.7333070      0.7933082      0.6747144 
+     Fair.VVS2      Good.VVS2 Very Good.VVS2   Premium.VVS2     Ideal.VVS2 
+     0.6915942      0.6149301      0.5663887      0.6547241      0.5862126 
+     Fair.VVS1      Good.VVS1 Very Good.VVS1   Premium.VVS1     Ideal.VVS1 
+     0.6647059      0.5023118      0.4945881      0.5348214      0.4959599 
+       Fair.IF        Good.IF   Very Good.IF     Premium.IF       Ideal.IF 
+     0.4744444      0.6163380      0.6187687      0.6034783      0.4550413 </code></pre>
+<p>The tilde (~) syntax also works for median(), sd() , var() , min() , max() , sum() , IQR(), favstats(), etc, e.g.,</p>
+</div>
+</div>
+<div id="graphical-display-of-data" class="section level2">
+<h2>Graphical Display of Data</h2>
+<div id="histogram" class="section level3">
+<h3>Histogram</h3>
+<p>Histogram of the carat variable: (You can adjust the number of intervals (nint))</p>
+<pre class="r"><code>histogram(~carat, data = diamonds, nint = 50)</code></pre>
+<p><img src="figure/stat234_lab2.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>histogram(~carat, data = diamonds, nint = 500)</code></pre>
+<p><img src="figure/stat234_lab2.Rmd/unnamed-chunk-12-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>split the diamonds by the quality of cut and make separate histograms for each level of cut</p>
+<pre class="r"><code>histogram(~price | cut, data = diamonds)</code></pre>
+<p><img src="figure/stat234_lab2.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="boxplot" class="section level3">
+<h3>Boxplot</h3>
+<p>Box-Whisker plot</p>
+<pre class="r"><code>## use base r command
+boxplot(diamonds$price, horizontal = TRUE)</code></pre>
+<p><img src="figure/stat234_lab2.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## bwplot() function in the lattice library is more versatile
+bwplot(~price, data=diamonds)</code></pre>
+<p><img src="figure/stat234_lab2.Rmd/unnamed-chunk-14-2.png" width="672" style="display: block; margin: auto;" /> * The Box is Q1, Q2 (median, the dot), Q3. * From above the upper quartile, a distance of 1.5 times the IQR is measured out and a whisker is drawn up to the largest observed point from the dataset that falls within this distance. Similarly, a distance of 1.5 times the IQR is measured out below the lower quartile and a whisker is drawn up to the lower observed point from the dataset that falls within this distance. All other observed points are plotted as outliers.</p>
+<p>Side-by-Side Boxplots</p>
+<pre class="r"><code>bwplot(clarity ~ price , data = diamonds)</code></pre>
+<p><img src="figure/stat234_lab2.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>It might seem surprising that diamonds with the better clarity (IF, VVS1) have lower price than those with lower clarity. This is because we didn’t adjust for the size of carat, since larger diamonds are more valuable and are more likely to have defects or impurities. If we take diamonds of similar size (e.g., 0.7 to 1 carat), and make a side-by-side boxplot between price and clarity, then diamonds with better generally have higher price.</p>
+<pre class="r"><code>bwplot(clarity~ price, data=subset(diamonds, carat &gt;= 0.7 &amp; carat &lt; 1))</code></pre>
+<p><img src="figure/stat234_lab2.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>You can change the range of carat and see if the same relationship persists. Or one can create a categorical variable, grouping diamonds of similar size together, and create</p>
+<pre class="r"><code>carat.grp = cut(diamonds$carat, breaks=c(0.2, 0.5, 0.7, 1, 1.5, 2, Inf), right=FALSE)
+bwplot(clarity~ price | carat.grp, data=diamonds, layout=c(6,1))</code></pre>
+<p><img src="figure/stat234_lab2.Rmd/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="scatterplots" class="section level3">
+<h3>Scatterplots</h3>
+<pre class="r"><code>xyplot(price ~ carat, data = diamonds)</code></pre>
+<p><img src="figure/stat234_lab2.Rmd/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>xyplot(log(price)~log(carat), data=diamonds)</code></pre>
+<p><img src="figure/stat234_lab2.Rmd/unnamed-chunk-18-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Coded scatterplot between carat and price, with the clarity of diamonds represented by the color of dots. This is achieved with the group command. The alpha parameter sets the transparency of the dots (alpha=1.) is no transparency. pch - type of dot, cex - scaling of dot, auto.key = placement and other display parameters of the legend.</p>
+<pre class="r"><code>xyplot(log(price)~log(carat),group=clarity,data=diamonds,alpha=.2,pch=19,cex= .5,auto.key=list(space=&quot;left&quot;))</code></pre>
+<p><img src="figure/stat234_lab2.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="on-your-own" class="section level2">
+<h2>On Your Own</h2>
+<p>Use the dataset countyComplete in library openintro. Find the quartiles of the population size of the counties. Define a new variable quart in the countyComplete data frame that identifies which of the four quartile ranges the county belongs to ([0, Q1], [Q1,Q2],[Q2,Q3],[Q3,max]).</p>
+<pre class="r"><code>dim(county_complete)</code></pre>
+<pre><code>[1] 3142  142</code></pre>
+<pre class="r"><code>#str(county_complete)</code></pre>
+<pre class="r"><code># (quartile &lt;- quantile(county_complete$pop2017, na.rm = TRUE))
+# quart = cut(county_complete$pop2017, breaks = quartile, labels = c(&quot;1&quot;,&quot;2&quot;, &quot;3&quot;, &quot;4&quot;))
+county_complete = mutate(county_complete, 
+       quart = cut(pop2017, breaks = quantile(county_complete$pop2017, na.rm = TRUE), labels = c(&quot;1&quot;,&quot;2&quot;, &quot;3&quot;, &quot;4&quot;)))</code></pre>
+<p>Print means and sds of median_household_income split based on the variable quart.</p>
+<pre class="r"><code>summarise(group_by(county_complete, quart), mean(median_household_income_2017, na.rm = TRUE))</code></pre>
+<pre><code>Warning: Factor `quart` contains implicit NA, consider using
+`forcats::fct_explicit_na`</code></pre>
+<pre><code># A tibble: 5 x 2
+  quart `mean(median_household_income_2017, na.rm = TRUE)`
+  &lt;fct&gt;                                              &lt;dbl&gt;
+1 1                                                 46614.
+2 2                                                 45206.
+3 3                                                 48632.
+4 4                                                 58534.
+5 &lt;NA&gt;                                              61604.</code></pre>
+<p>Plot histograms of median_household_income split based on the variable quart.</p>
+<pre class="r"><code>histogram(~median_household_income_2017 | quart, data = county_complete)</code></pre>
+<p><img src="figure/stat234_lab2.Rmd/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Plot scatterplots of bachelors against median_household_income. Now split the scatterplot based on the quart variable.</p>
+<pre class="r"><code>xyplot(bachelors_2017 ~ median_household_income_2017, data = county_complete)</code></pre>
+<p><img src="figure/stat234_lab2.Rmd/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>xyplot(bachelors_2017 ~ median_household_income_2017 | quart, data = county_complete)</code></pre>
+<p><img src="figure/stat234_lab2.Rmd/unnamed-chunk-24-2.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Scientific Linux 7.4 (Nitrogen)
+
+Matrix products: default
+BLAS/LAPACK: /software/openblas-0.2.19-el7-x86_64/lib/libopenblas_haswellp-r0.2.19.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] openintro_2.0.0     usdata_0.1.0        cherryblossom_0.1.0
+ [4] airports_0.1.0      mosaic_1.8.3        ggridges_0.5.1     
+ [7] mosaicData_0.20.2   ggformula_0.10.1    ggstance_0.3.5     
+[10] dplyr_0.8.3         Matrix_1.2-18       ggplot2_3.3.3      
+[13] lattice_0.20-38    
+
+loaded via a namespace (and not attached):
+ [1] ggrepel_0.8.1    Rcpp_1.0.5       tidyr_1.1.0      utf8_1.1.4      
+ [5] assertthat_0.2.1 rprojroot_1.3-2  digest_0.6.20    ggforce_0.2.2   
+ [9] mime_0.7         R6_2.4.0         plyr_1.8.4       backports_1.1.4 
+[13] labelled_2.2.1   evaluate_0.14    pillar_1.4.2     rlang_0.4.10    
+[17] whisker_0.3-2    rmarkdown_1.13   splines_3.6.1    readr_1.3.1     
+[21] stringr_1.4.0    htmlwidgets_1.3  polyclip_1.10-0  munsell_0.5.0   
+[25] shiny_1.3.2      broom_0.5.2      compiler_3.6.1   httpuv_1.5.1    
+[29] xfun_0.8         pkgconfig_2.0.2  htmltools_0.3.6  tidyselect_1.1.0
+[33] tibble_2.1.3     gridExtra_2.3    mosaicCore_0.9.0 workflowr_1.6.2 
+[37] fansi_0.4.0      crayon_1.3.4     withr_2.1.2      later_0.8.0     
+[41] MASS_7.3-51.4    grid_3.6.1       nlme_3.1-140     xtable_1.8-4    
+[45] gtable_0.3.0     lifecycle_0.1.0  git2r_0.26.1     magrittr_1.5    
+[49] scales_1.1.0     cli_2.2.0        stringi_1.4.3    farver_2.0.1    
+[53] fs_1.3.1         promises_1.0.1   leaflet_2.0.3    ggdendro_0.1.22 
+[57] vctrs_0.3.1      generics_0.0.2   tools_3.6.1      forcats_0.4.0   
+[61] glue_1.3.1       tweenr_1.0.1     purrr_0.3.4      hms_0.5.3       
+[65] crosstalk_1.0.0  yaml_2.2.0       colorspace_1.4-1 knitr_1.23      
+[69] haven_2.3.1     </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

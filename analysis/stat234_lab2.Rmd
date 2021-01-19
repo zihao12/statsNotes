@@ -29,6 +29,8 @@ summarise(group_by(diamonds,cut), mean(price))
 ```
 
 ## Numerical Summary of Data
+
+### With `dlpyr`
 To calculate the mean, median, SD, variance, five-number summary, IQR, minimum, maximum of the price variable in the diamonds dataset
 ```{r}
 mean(diamonds$price)
@@ -49,6 +51,37 @@ Find average price by `cut` and clarity
 ```{r}
 summarise(group_by(diamonds, cut, clarity), mean(price))
 ```
+
+
+### With `mosaic
+
+```{r}
+mean(~price, data = diamonds)
+### ETC ...
+```
+
+The mosaic command favstats, allows us to compute all of this information (and more) at once.
+```{r}
+favstats(~price, data=diamonds)
+```
+
+The centerpiece of the mosaic syntax is the use of the modeling language. This involves the use of a tilde (~), which can be read as "is a function of". For example, one can find the mean price of diamonds by quality of cut
+```{r}
+mean(price ~ cut , data=diamonds)
+```
+
+Surprisingly, higher quality cut diamonds are not necessarily more expensive (e.g., mean price of diamonds with the best cut (Ideal) is $3457.5, lower than that of the worst cut (Fair), $4358.7). This is because we didn’t take weight (carat) of diamonds into account. Diamonds with Ideal cut tend to be smaller than diamonds with Fair cut.
+
+```{r}
+mean(carat ~ cut , data=diamonds)
+```
+
+We can find the mean price of diamonds grouped by cut and clarity
+```{r}
+mean(carat ~ cut + clarity , data=diamonds)
+```
+
+The tilde (~) syntax also works for median(), sd() , var() , min() , max() , sum() , IQR(), favstats(), etc, e.g.,
 
 ## Graphical Display of Data
 
