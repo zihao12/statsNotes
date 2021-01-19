@@ -1,0 +1,147 @@
+---
+title: "STAT 220 Lab 2 — Exploring Numerical Data"
+author: "zihao12"
+date: "2021-01-18"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## The Diamonds Dataset
+```{r warning=FALSE, message=FALSE}
+library(lattice)
+library(mosaic)
+library(dplyr)
+#install.packages("openintro")
+library(openintro)
+load("data/diamonds.Rdata")
+```
+
+
+```{r}
+dim(diamonds)
+str(diamonds)
+```
+
+Using the dplyr package one can find the mean price of diamonds by quality of cut. First we group the data and then apply the function summarise
+```{r}
+summarise(group_by(diamonds,cut), mean(price))
+```
+
+## Numerical Summary of Data
+To calculate the mean, median, SD, variance, five-number summary, IQR, minimum, maximum of the price variable in the diamonds dataset
+```{r}
+mean(diamonds$price)
+with(diamonds,mean(price))
+## ETC ...
+```
+
+
+Find average price by `cut` (`summarise` + `group_by` is powerful)
+```{r}
+## summarise(group_by(diamonds, cut), mean(price))
+by_cut = group_by(diamonds, cut) ## becomes a grouped_df
+# str(by_cut)
+summarise(by_cut, ave_price = mean(price))
+```
+
+Find average price by `cut` and clarity
+```{r}
+summarise(group_by(diamonds, cut, clarity), mean(price))
+```
+
+## Graphical Display of Data
+
+### Histogram
+Histogram of the carat variable:
+(You can adjust the number of intervals (nint))
+```{r}
+histogram(~carat, data = diamonds, nint = 50)
+histogram(~carat, data = diamonds, nint = 500)
+```
+
+split the diamonds by the quality of cut and make separate histograms for each level of cut
+```{r}
+histogram(~price | cut, data = diamonds)
+```
+
+### Boxplot
+Box-Whisker plot
+```{r}
+## use base r command
+boxplot(diamonds$price, horizontal = TRUE)
+## bwplot() function in the lattice library is more versatile
+bwplot(~price, data=diamonds)
+```
+* The Box is Q1, Q2 (median, the dot), Q3. 
+* From above the upper quartile, a distance of 1.5 times the IQR is measured out and a whisker is drawn up to the largest observed point from the dataset that falls within this distance. Similarly, a distance of 1.5 times the IQR is measured out below the lower quartile and a whisker is drawn up to the lower observed point from the dataset that falls within this distance. All other observed points are plotted as outliers.
+
+
+Side-by-Side Boxplots
+```{r}
+bwplot(clarity ~ price , data = diamonds)
+```
+
+
+
+
+It might seem surprising that diamonds with the better clarity (IF, VVS1) have lower price than those with lower clarity. This is because we didn’t adjust for the size of carat, since larger diamonds are more valuable and are more likely to have defects or impurities. If we take diamonds of similar size (e.g., 0.7 to 1 carat), and make a side-by-side boxplot between price and clarity, then diamonds with better generally have higher price.
+```{r}
+bwplot(clarity~ price, data=subset(diamonds, carat >= 0.7 & carat < 1))
+```
+
+
+You can change the range of carat and see if the same relationship persists. Or one can create a categorical variable, grouping diamonds of similar size together, and create
+
+```{r}
+carat.grp = cut(diamonds$carat, breaks=c(0.2, 0.5, 0.7, 1, 1.5, 2, Inf), right=FALSE)
+bwplot(clarity~ price | carat.grp, data=diamonds, layout=c(6,1))
+```
+
+### Scatterplots
+```{r}
+xyplot(price ~ carat, data = diamonds)
+xyplot(log(price)~log(carat), data=diamonds)
+```
+
+Coded scatterplot between carat and price, with the clarity of diamonds represented by the color of dots. This is achieved with the group command. The alpha parameter sets the transparency of the dots (alpha=1.) is no transparency. pch - type of dot, cex - scaling of dot, auto.key = placement and other display parameters of the legend.
+```{r}
+xyplot(log(price)~log(carat),group=clarity,data=diamonds,alpha=.2,pch=19,cex= .5,auto.key=list(space="left"))
+```
+
+
+## On Your Own
+
+Use the dataset countyComplete in library openintro. Find the quartiles of the population size of the counties. Define a new variable quart in the countyComplete data frame that identifies which of the four quartile ranges the county belongs to ([0, Q1], [Q1,Q2],[Q2,Q3],[Q3,max]).
+
+```{r}
+dim(county_complete)
+#str(county_complete)
+```
+
+
+```{r}
+# (quartile <- quantile(county_complete$pop2017, na.rm = TRUE))
+# quart = cut(county_complete$pop2017, breaks = quartile, labels = c("1","2", "3", "4"))
+county_complete = mutate(county_complete, 
+       quart = cut(pop2017, breaks = quantile(county_complete$pop2017, na.rm = TRUE), labels = c("1","2", "3", "4")))
+```
+
+Print means and sds of median_household_income split based on the variable quart.
+```{r}
+summarise(group_by(county_complete, quart), mean(median_household_income_2017, na.rm = TRUE))
+```
+
+Plot histograms of median_household_income split based on the variable quart.
+```{r}
+histogram(~median_household_income_2017 | quart, data = county_complete)
+```
+
+Plot scatterplots of bachelors against median_household_income. Now split the scatterplot based on the quart variable.
+```{r}
+xyplot(bachelors_2017 ~ median_household_income_2017, data = county_complete)
+
+xyplot(bachelors_2017 ~ median_household_income_2017 | quart, data = county_complete)
+
+```
+
