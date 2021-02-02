@@ -1,0 +1,74 @@
+---
+title: "stat234_lab4: Law of Large Numbers"
+author: "zihao12"
+date: "2021-02-01"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+Most of us have heard about the Law of Large Numbers (LLN), in particular in the context of coin tossing, that after many tosses, the number of heads should be about half the number of tosses. Precisely, what does this mean? In this Lab, let’s simulate tossing a coin and investigate the precise meaning of LLN.
+
+Let $H(n)$ be the number of heads that occur in $n$ tosses. By the law of large numbers, we expect heads to occur in about half of the tosses, i.e., $H(n) ~ n/2$. 
+
+There are two interpretations of $H(n) ~ n/2$.  
+
+** Interpretation I: $H(n) - n/2$ will approach 0 as n gets large. 
+
+** Interpretation II: The proportion of heads in n tosses (i.e. $H(n)/n$) will approach $0.5$ as $n$ gets large. 
+
+It’s not hard to see that if Interpretation I is true, so is Interpretation II, but not vice versa (Why?)
+
+Remark: $1 = \text{lim}_n \frac{H(n)}{n/2} = \text{lim}_n \frac{H(n)/n}{1/2}$
+
+We can simulate tossing a fair coin once with the following
+```{r}
+set.seed(123)
+```
+
+
+```{r}
+coin_outcomes = c("H", "T")
+sample(coin_outcomes, size = 1, replace=TRUE)
+```
+
+The vector `coin_outcomes` can be thought of as a hat with two slips of paper in it: one slip says H and the other says T. The function sample draws one slip from the hat and tells us if it was a head or a tail.
+
+Run the second command `sample(coin_outcomes, size = 1, replace=TRUE)` several times. Just like when flipping a coin, sometimes you’ll get a heads, sometimes you’ll get a tails.
+
+Now let’s toss the coin many times, say `N = 10000`, and record the result.
+
+
+
+```{r}
+N = 10000
+tosses = sample(coin_outcomes, size = N, replace=TRUE)
+tosses[1:20]
+```
+
+The number of heads obtained up to the $n$th toss, for ($n = 1,2,...,N$) can be computed using the R comand `cumsum`, which stands for the cumulative sum. The computed cumulative sums $H(n)$ are stored in the variable `numheads`
+
+```{r}
+numheads = cumsum(tosses=="H")
+numheads[1:20]
+```
+
+Compare with the result of `tosses[1:20]` you obtained earlier. You can see the value of $H(n)$ (`numheads[n]`) always goes up by 1 whenever `tosses[n]` is an “H”, meaning the coin lands heads in a toss.
+
+Now we can check the validity Interpretation I by plotting the difference between the number of heads and half the number of tosses ($H(n)-n/2$) against the number of tosses n. Does the difference $H(n)-n/2$ approach 0 as the number of tosses $n$ gets large?
+
+```{r}
+# library(mosaic)
+# qplot(1:N, numheads - (1:N)/2, geom="line", ylab="H(n)-n/2", xlab="n")
+plot(1:N, numheads - (1:N)/2)
+```
+
+```{r}
+# qplot(1:N, numheads/(1:N)-0.5, geom="line", ylab="H(n)/n-0.5", xlab="n", ylim=c(-0.1,0.1))
+plot(1:N, numheads/(1:N) - 0.5)
+```
+
+
+
+
