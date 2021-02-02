@@ -10,9 +10,11 @@ editor_options:
 ## Introduction
 Most of us have heard about the Law of Large Numbers (LLN), in particular in the context of coin tossing, that after many tosses, the number of heads should be about half the number of tosses. Precisely, what does this mean? In this Lab, let’s simulate tossing a coin and investigate the precise meaning of LLN.
 
-Let $H(n)$ be the number of heads that occur in $n$ tosses. By the law of large numbers, we expect heads to occur in about half of the tosses, i.e., $H(n) ~ n/2$. 
+## Tossing a fair coin
 
-There are two interpretations of $H(n) ~ n/2$.  
+Let $H(n)$ be the number of heads that occur in $n$ tosses. By the law of large numbers, we expect heads to occur in about half of the tosses, i.e., $H(n) \sim n/2$. 
+
+There are two interpretations of $H(n) \sim n/2$.  
 
 ** Interpretation I: $H(n) - n/2$ will approach 0 as n gets large. 
 
@@ -20,10 +22,13 @@ There are two interpretations of $H(n) ~ n/2$.
 
 It’s not hard to see that if Interpretation I is true, so is Interpretation II, but not vice versa (Why?)
 
-Remark: $1 = \text{lim}_n \frac{H(n)}{n/2} = \text{lim}_n \frac{H(n)/n}{1/2}$
+Remark: 
+* I ==> II: $\text{lim}_n \frac{H(n)}{n} - 0.5 = \text{lim}_n \frac{1}{n}(H(n) - n/2) = 0$. 
+* II cannot get I: say $H(n) - n/2 = \sqrt{n}$. Then II satifies, but I does not hold. 
 
 We can simulate tossing a fair coin once with the following
-```{r}
+```{r warning=FALSE, message=FALSE}
+library(mosaic)
 set.seed(123)
 ```
 
@@ -50,6 +55,10 @@ tosses[1:20]
 The number of heads obtained up to the $n$th toss, for ($n = 1,2,...,N$) can be computed using the R comand `cumsum`, which stands for the cumulative sum. The computed cumulative sums $H(n)$ are stored in the variable `numheads`
 
 ```{r}
+## what does cumsum do
+cumsum(c(1,5,2, 17,102))
+(tosses == "H")[1:20]
+
 numheads = cumsum(tosses=="H")
 numheads[1:20]
 ```
@@ -59,16 +68,98 @@ Compare with the result of `tosses[1:20]` you obtained earlier. You can see the 
 Now we can check the validity Interpretation I by plotting the difference between the number of heads and half the number of tosses ($H(n)-n/2$) against the number of tosses n. Does the difference $H(n)-n/2$ approach 0 as the number of tosses $n$ gets large?
 
 ```{r}
-# library(mosaic)
-# qplot(1:N, numheads - (1:N)/2, geom="line", ylab="H(n)-n/2", xlab="n")
-plot(1:N, numheads - (1:N)/2)
+qplot(1:N, numheads - (1:N)/2, geom="line", ylab="H(n)-n/2", xlab="n")
+#plot(1:N, numheads - (1:N)/2)
+```
+
+
+The argument `geom="line"` in `qplot` askes R to make a line plot.
+
+Next, let’s check Interpretation II by plotting the difference between the proportion of heads and $0.5 (H(n)/n-0.5)$ against the number of tosses n. Does the difference seem to be approaching 0 as the number of tosses increase to a large number?
+
+```{r}
+qplot(1:N, numheads/(1:N)-0.5, geom="line", ylab="H(n)/n-0.5", xlab="n", ylim=c(-0.1,0.1))
+#plot(1:N, numheads/(1:N) - 0.5)
+```
+
+In the plot above, the difference in proportion for the first draw is very large (either 0.5 or -0.5) compared to the differeces for other draws, making it difficult to gauge whether the difference approaches 0 visually. I restrict the y-range of the plot to -0.1 and 0.1 by the argument `ylim=c(-0.1,0.1)` so that the plot is not affected by the large differences in the first draw. You will get a warning message saying that a few data points are removed be cause they are outside of the range -0.1 and 0.1.
+
+Repeat the simulation above a couple of times. For every repetition, make a new $N = 10000$ tosses, recompute numheads H(n) for the new sequence of tosses, and make the two plots for checking the validity of the two interpretations. What do you observe and conclude about the validity of the two interpretations?
+
+```{r}
+## p is the probbaility of head
+## N is the number of tosses
+## seed for reproducibility (get the same output with the same input) 
+coin_tosser <- function(p, N, seed = 123){
+  set.seed(seed)
+  tosses = sample(coin_outcomes, size = N, replace=TRUE, prob = c(p, 1-p))
+  numheads = cumsum(tosses=="H")
+  return(numheads)
+}
 ```
 
 ```{r}
-# qplot(1:N, numheads/(1:N)-0.5, geom="line", ylab="H(n)/n-0.5", xlab="n", ylim=c(-0.1,0.1))
-plot(1:N, numheads/(1:N) - 0.5)
+num_experi = 4
+N = 10000
+p = 0.5
+Numheads = matrix(,nrow = num_experi, ncol = N)
+for(k in 1:num_experi){
+  Numheads[k,] = coin_tosser(p = p, N = N, seed = k)
+}
 ```
 
+```{r}
+par(mfrow = c(2,2))
+for(k in 1:num_experi){
+  plot(1:N, Numheads[k,] - (1:N)/2, type = "l", ylab="H(n)-n/2", xlab="n")
+}
+```
+
+```{r}
+par(mfrow = c(2,2))
+for(k in 1:num_experi){
+  plot(1:N, Numheads[k,]/(1:N) - 0.5, type = "l", ylab="H(n)/n-0.5", xlab="n", ylim=c(-0.1,0.1))
+}
+```
+
+## Tossing an unfair coin
+In the simulation above, you should be able to see that:
+Interpretation I of the Law of Large Number is WRONG, but Interpretation II is CORRECT.
+
+What if the coin is unfair? What does the law of large number say about tossing an unfair coin? We can simulate tossing an unfair coin with only 0.2 probability to land heads as follows.
+
+```{r}
+N = 10000
+tosses = sample(coin_outcomes, size = N, prob = c(0.2, 0.8), replace=TRUE)
+```
+
+Simulate tossing an unfair coin with only 0.2 probability to land heads 10000 times, and compute the values of H(n). This time we expect $H(n) \sim 0.2 n$ so please plot $H(n)-0.2n$ vs. $n$, and plot $H(n)/n-0.2$ vs. $n$. Repeat this simulation 4 times (so 8 plots in total). As n gets large, $does H(n)-0.2n$ seem to approach 0, and does $H(n)/n-0.2$ seem to approach 0? What’s the right statement of the Law of Large Numbers when tossing an unfair coin?
+
+
+
+```{r}
+num_experi = 4
+N = 10000
+p = 0.2
+Numheads = matrix(,nrow = num_experi, ncol = N)
+for(k in 1:num_experi){
+  Numheads[k,] = coin_tosser(p = p, N = N, seed = k) ## remember to change seed every iteration
+}
+```
+
+```{r}
+par(mfrow = c(2,2))
+for(k in 1:num_experi){
+  plot(1:N, Numheads[k,] - (1:N)*p, type = "l", ylab="H(n)-n*p", xlab="n")
+}
+```
+
+```{r}
+par(mfrow = c(2,2))
+for(k in 1:num_experi){
+  plot(1:N, Numheads[k,]/(1:N) - p, type = "l", ylab="H(n)/n-p", xlab="n", ylim=c(-0.1,0.1))
+}
+```
 
 
 
