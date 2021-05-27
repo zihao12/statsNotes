@@ -1,0 +1,88 @@
+---
+title: "AnchorPCA0"
+author: "zihao12"
+date: "2021-05-27"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+
+* Goal is try "anchor PCA" : https://drive.google.com/file/d/1cmFQ9YV_5vptZD8m8IpQcljmfkmqKsj-/view?usp=sharing
+* I first run vanilla PCA on IRIS dataset, then create artificial batch effects. Then I try AnchorPCA with various $\gamma$
+
+
+```{r}
+rm(list =ls())
+set.seed(123)
+
+perturb <- function(Y, A, gam){
+  Y = as.matrix(Y)
+  fit =lm(Y ~ A)
+  Ytilde = sqrt(gam) * fit$fitted.values + fit$residuals
+  return(Ytilde)
+}
+```
+
+
+
+```{r}
+data("iris")
+n= nrow(iris)
+df <- iris[sample(x = 1:n,size = n,replace = FALSE),]
+
+
+fit.svd= svd(x = df[,1:4],nu = 2,nv = 2)
+fit.svd$d
+plot(fit.svd$u[,1], fit.svd$u[,2],col = df$Species)
+```
+There is clear structure to separate species. 
+
+
+## Create artifical batch effect and try PCA
+I give different shifts for different batch ids.
+
+### Batch ID randomly assigned
+```{r}
+par(mfrow = c(2,2))
+df_ = df
+df_[,"batch"] = sample(as.integer(df_$Species),size = n, replace = FALSE)
+batch_shift = c(0.5, 2,3)
+for(i in 1:3){
+  l = sum(df_$batch == i)
+  df_[df_$batch == i, 1:4] = df_[df_$batch == i, 1:4] + 
+    rnorm(l*4,mean = batch_shift[i],sd = 1) 
+}
+
+## anchor PCA 
+for(gam in c(10, 1, 0.3, 0)){
+  Ytilde = perturb(Y = df_[,1:4], A = df_$batch,gam= gam)
+  fit.svd= svd(x = Ytilde,nu = 4,nv = 4)
+  fit.svd$d
+  plot(fit.svd$u[,1], fit.svd$u[,2],col = df_$Species, main = sprintf("gam = %.2f", gam))
+}
+```
+
+
+### if the batch id is highly correlated with species 
+Just a proof of concept... it's cheating as batch id is just species id here
+```{r}
+par(mfrow = c(2,2))
+df_ = df
+df_[,"batch"] = as.integer(df_$Species)
+batch_shift = c(0.5, 2,3)
+for(i in 1:3){
+  l = sum(df_$batch == i)
+  df_[df_$batch == i, 1:4] = df_[df_$batch == i, 1:4] +
+    rnorm(l*4,mean = batch_shift[i],sd = 1)
+}
+
+## anchor PCA 
+for(gam in c(10, 1, 0.3, 0)){
+  Ytilde = perturb(Y = df_[,1:4], A = df_$batch,gam= gam)
+  fit.svd= svd(x = Ytilde,nu = 4,nv = 4)
+  fit.svd$d
+  plot(fit.svd$u[,1], fit.svd$u[,2],col = df_$Species, main = sprintf("gam = %.2f", gam))
+}
+
+```
