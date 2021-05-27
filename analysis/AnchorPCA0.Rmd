@@ -9,7 +9,7 @@ editor_options:
 
 
 * Goal is try "AnchorPCA" : https://drive.google.com/file/d/1cmFQ9YV_5vptZD8m8IpQcljmfkmqKsj-/view?usp=sharing. The motivation is from anchor regression https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssb.12398
-* Basic idea is, we observe matrix $Y \in R^{n \times p}$ and anchor variables $A \in R^{n \times L}$ (eacy to think of $A$ as encoding Batch ID), then to learn "useful" structure,  we can apply PCA to perturbed $\tilde{Y} = (I - \Pi_A) Y + \sqrt{\gamma} \Pi_A Y$, where $\Pi_A = A (A^T A)^{-1} A^T$ is projection onto the anchor subspace. So $\tilde{Y} = X B + E$
+* Basic idea is, we observe matrix $Y \in R^{n \times p}$ and anchor variables $A \in R^{n \times L}$ (eacy to think of $A$ as encoding Batch ID), then to learn "useful" structure,  we can apply PCA to perturbed $\tilde{Y} = (I - \Pi_A) Y + \sqrt{\gamma} \Pi_A Y$, where $\Pi_A = A (A^T A)^{-1} A^T$ is projection onto the anchor subspace. So with $\tilde{Y} = X B + E$ we hope $X, B$ captures the useful structure. 
 * I first run vanilla PCA on IRIS dataset, then create artificial batch effects. Then I try AnchorPCA with various $\gamma$. 
 * The goal is proof of concept: I want to test for the extreme cases when $\gamma = 0, \infty$ makes sense. Next step is to find more realistic case where extropolation between the two extremes work better. 
 
