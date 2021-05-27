@@ -29,6 +29,7 @@ perturb <- function(Y, A, gam){
 
 ```{r}
 data("iris")
+summary(iris)
 n= nrow(iris)
 df <- iris[sample(x = 1:n,size = n,replace = FALSE),]
 
@@ -37,7 +38,7 @@ fit.svd= svd(x = df[,1:4],nu = 2,nv = 2)
 fit.svd$d
 plot(fit.svd$u[,1], fit.svd$u[,2],col = df$Species)
 ```
-There is clear structure to separate species. 
+We can identify 3 clusters by PC1 &PC2 that correspond to the 3 species. 
 
 
 ## Create artifical batch effect and try PCA
