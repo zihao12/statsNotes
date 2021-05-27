@@ -504,16 +504,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestreecc8da8e5bf6912249a802f0eb572782bc1c04da4targetblankcc8da8ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/zihao12/statsNotes/tree/cc8da8e5bf6912249a802f0eb572782bc1c04da4" target="_blank">cc8da8e</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestreec9cb6b5cd84894cbe5a7abf458730a78213509fatargetblankc9cb6b5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/zihao12/statsNotes/tree/c9cb6b5cd84894cbe5a7abf458730a78213509fa" target="_blank">c9cb6b5</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestreecc8da8e5bf6912249a802f0eb572782bc1c04da4targetblankcc8da8ea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestreec9cb6b5cd84894cbe5a7abf458730a78213509fatargetblankc9cb6b5a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/zihao12/statsNotes/tree/cc8da8e5bf6912249a802f0eb572782bc1c04da4" target="_blank">cc8da8e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/zihao12/statsNotes/tree/c9cb6b5cd84894cbe5a7abf458730a78213509fa" target="_blank">c9cb6b5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -575,6 +575,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/zihao12/statsNotes/blob/c9cb6b5cd84894cbe5a7abf458730a78213509fa/analysis/AnchorPCA0.Rmd" target="_blank">c9cb6b5</a>
+</td>
+<td>
+zihao12
+</td>
+<td>
+2021-05-27
+</td>
+<td>
+anchorpca
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/zihao12/statsNotes/24f169e0274c3753ad7f25ada4a7406ded0ada0a/docs/AnchorPCA0.html" target="_blank">24f169e</a>
+</td>
+<td>
+zihao12
+</td>
+<td>
+2021-05-27
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -669,7 +703,7 @@ anchorpca
 </div>
 <ul>
 <li>Goal is try “AnchorPCA” : <a href="https://drive.google.com/file/d/1cmFQ9YV_5vptZD8m8IpQcljmfkmqKsj-/view?usp=sharing" class="uri">https://drive.google.com/file/d/1cmFQ9YV_5vptZD8m8IpQcljmfkmqKsj-/view?usp=sharing</a>. The motivation is from anchor regression <a href="https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssb.12398" class="uri">https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssb.12398</a></li>
-<li>Basic idea is, we observe matrix <span class="math inline">\(Y \in R^{n \times p}\)</span> and anchor variables <span class="math inline">\(A \in R^{n \times L}\)</span> (eacy to think of <span class="math inline">\(A\)</span> as encoding Batch ID), then to learn “useful” structure, we can apply PCA to perturbed <span class="math inline">\(\tilde{Y} = (I - \Pi_A) Y + \sqrt{\gamma} \Pi_A Y\)</span>, where <span class="math inline">\(\Pi_A = A (A^T A)^{-1} A^T\)</span> is projection onto the anchor subspace. So <span class="math inline">\(\tilde{Y} = X B + E\)</span></li>
+<li>Basic idea is, we observe matrix <span class="math inline">\(Y \in R^{n \times p}\)</span> and anchor variables <span class="math inline">\(A \in R^{n \times L}\)</span> (eacy to think of <span class="math inline">\(A\)</span> as encoding Batch ID), then to learn “useful” structure, we can apply PCA to perturbed <span class="math inline">\(\tilde{Y} = (I - \Pi_A) Y + \sqrt{\gamma} \Pi_A Y\)</span>, where <span class="math inline">\(\Pi_A = A (A^T A)^{-1} A^T\)</span> is projection onto the anchor subspace. So with <span class="math inline">\(\tilde{Y} = X B + E\)</span> we hope <span class="math inline">\(X, B\)</span> captures the useful structure.</li>
 <li>I first run vanilla PCA on IRIS dataset, then create artificial batch effects. Then I try AnchorPCA with various <span class="math inline">\(\gamma\)</span>.</li>
 <li>The goal is proof of concept: I want to test for the extreme cases when <span class="math inline">\(\gamma = 0, \infty\)</span> makes sense. Next step is to find more realistic case where extropolation between the two extremes work better.</li>
 </ul>
