@@ -8,9 +8,10 @@ editor_options:
 ---
 
 
-* Goal is try "anchor PCA" : https://drive.google.com/file/d/1cmFQ9YV_5vptZD8m8IpQcljmfkmqKsj-/view?usp=sharing
-* I first run vanilla PCA on IRIS dataset, then create artificial batch effects. Then I try AnchorPCA with various $\gamma$
-
+* Goal is try "AnchorPCA" : https://drive.google.com/file/d/1cmFQ9YV_5vptZD8m8IpQcljmfkmqKsj-/view?usp=sharing. The motivation is from anchor regression https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssb.12398
+* Basic idea is, we observe matrix $Y \in R^{n \times p}$ and anchor variables $A \in R^{n \times L}$ (eacy to think of $A$ as encoding Batch ID), then to learn "useful" structure,  we can apply PCA to perturbed $\tilde{Y} = (I - \Pi_A) Y + \sqrt{\gamma} \Pi_A Y$, where $\Pi_A = A (A^T A)^{-1} A^T$ is projection onto the anchor subspace. So $\tilde{Y} = X B + E$
+* I first run vanilla PCA on IRIS dataset, then create artificial batch effects. Then I try AnchorPCA with various $\gamma$. 
+* The goal is proof of concept: I want to test for the extreme cases when $\gamma = 0, \infty$ makes sense. Next step is to find more realistic case where extropolation between the two extremes work better. 
 
 ```{r}
 rm(list =ls())
@@ -40,9 +41,11 @@ There is clear structure to separate species.
 
 
 ## Create artifical batch effect and try PCA
-I give different shifts for different batch ids.
+For each observation in IRIS, suppose we have an artificial batch effect
 
 ### Batch ID randomly assigned
+In this case $a_i \in \{1,2,..., L\}$ is independent of $x_i$. Therefore it makes sense to partialize out the effect of $A$ on $Y$ first, which means centering by $Y_{ij} - \mu_{a_ij}$ first, then apply PCA. in the AnchorPCA framework, this corresponds to $\gamma = 0$. 
+
 ```{r}
 par(mfrow = c(2,2))
 df_ = df
@@ -62,10 +65,11 @@ for(gam in c(10, 1, 0.3, 0)){
   plot(fit.svd$u[,1], fit.svd$u[,2],col = df_$Species, main = sprintf("gam = %.2f", gam))
 }
 ```
-
+Indeed we can see with smaller $\gamma$, the biological structure seems clearer
 
 ### if the batch id is highly correlated with species 
-Just a proof of concept... it's cheating as batch id is just species id here
+* Just a proof of concept... it's cheating as batch id is just species id here. Here the role of $A$ is(?check) instrumental variable. 
+* We can see removing supposedly "bacth effects" also remove useful biological information. 
 ```{r}
 par(mfrow = c(2,2))
 df_ = df
@@ -86,3 +90,7 @@ for(gam in c(10, 1, 0.3, 0)){
 }
 
 ```
+
+
+These two extreme cases show that indeed we might need to extroplate between $\gamma = 0$ and $\gamma = \infty$ to recover useful structure. 
+
