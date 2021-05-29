@@ -413,7 +413,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-05-27
+<strong>Last updated:</strong> 2021-05-29
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -504,16 +504,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestree5a4e25bf2fc819295b2c05183ecf02f43d749250targetblank5a4e25ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/zihao12/statsNotes/tree/5a4e25bf2fc819295b2c05183ecf02f43d749250" target="_blank">5a4e25b</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestree7126986ed876fa8a9660a71627f42000e2c4c33ftargetblank7126986a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/zihao12/statsNotes/tree/7126986ed876fa8a9660a71627f42000e2c4c33f" target="_blank">7126986</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestree5a4e25bf2fc819295b2c05183ecf02f43d749250targetblank5a4e25ba" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestree7126986ed876fa8a9660a71627f42000e2c4c33ftargetblank7126986a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/zihao12/statsNotes/tree/5a4e25bf2fc819295b2c05183ecf02f43d749250" target="_blank">5a4e25b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/zihao12/statsNotes/tree/7126986ed876fa8a9660a71627f42000e2c4c33f" target="_blank">7126986</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -525,6 +525,7 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Untracked files:
+    Untracked:  analysis/AnchorPCA1.Rmd
     Untracked:  analysis/dplyr_tutorial.Rmd
     Untracked:  analysis/draft.Rmd
     Untracked:  analysis/draft2.Rmd
@@ -575,6 +576,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/zihao12/statsNotes/blob/7126986ed876fa8a9660a71627f42000e2c4c33f/analysis/AnchorPCA0.Rmd" target="_blank">7126986</a>
+</td>
+<td>
+zihao12
+</td>
+<td>
+2021-05-29
+</td>
+<td>
+anchor pca 0
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/zihao12/statsNotes/c6db9d9114fa4f5a03c034681be10cc5977853ed/docs/AnchorPCA0.html" target="_blank">c6db9d9</a>
+</td>
+<td>
+zihao12
+</td>
+<td>
+2021-05-27
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -736,10 +771,26 @@ anchorpca
 </div>
 </div>
 <ul>
-<li>Goal is try “AnchorPCA” : <a href="https://drive.google.com/file/d/1cmFQ9YV_5vptZD8m8IpQcljmfkmqKsj-/view?usp=sharing" class="uri">https://drive.google.com/file/d/1cmFQ9YV_5vptZD8m8IpQcljmfkmqKsj-/view?usp=sharing</a>. The motivation is from anchor regression <a href="https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssb.12398" class="uri">https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssb.12398</a></li>
-<li>Basic idea is, we observe matrix <span class="math inline">\(Y \in R^{n \times p}\)</span> and anchor variables <span class="math inline">\(A \in R^{n \times L}\)</span> (eacy to think of <span class="math inline">\(A\)</span> as encoding Batch ID), then to learn “useful” structure, we can apply PCA to perturbed <span class="math inline">\(\tilde{Y} = (I - \Pi_A) Y + \sqrt{\gamma} \Pi_A Y\)</span>, where <span class="math inline">\(\Pi_A = A (A^T A)^{-1} A^T\)</span> is projection onto the anchor subspace. So with <span class="math inline">\(\tilde{Y} = X B + E\)</span> we hope <span class="math inline">\(X, B\)</span> captures the useful structure.</li>
-<li>I first run vanilla PCA on IRIS dataset, then create artificial batch effects. Then I try AnchorPCA with various <span class="math inline">\(\gamma\)</span>.</li>
-<li>The goal is proof of concept: I want to test for the extreme cases when <span class="math inline">\(\gamma = 0, \infty\)</span> makes sense. Next step is to find more realistic case where extropolation between the two extremes work better.</li>
+<li>Goal is try “AnchorPCA” : (TODO: put link). The motivation is from anchor regression <a href="https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssb.12398" class="uri">https://rss.onlinelibrary.wiley.com/doi/full/10.1111/rssb.12398</a></li>
+<li>Model:</li>
+</ul>
+For <span class="math inline">\(Y\)</span>, the data generating process .
+<span class="math display">\[\begin{align}
+    &amp; Y = B X + M H + \epsilon \\
+    &amp; X \sim N(0, I_k)\\
+    &amp; H \sim N(0, \Sigma_H)\\
+    &amp; \epsilon \sim N(0, \sigma^2 I_p)\\
+    &amp; X, H, \epsilon \ \text{are independent}
+\end{align}\]</span>
+<p>For anchor variable <span class="math inline">\(A\)</span>, it’s generated by the same <span class="math inline">\((X, H)\)</span>.</p>
+<span class="math display">\[\begin{align}
+    &amp; A = W_1 X + W_2 H + \epsilon_A\\
+    &amp; \epsilon_A \sim N(0, \sigma^2 I_L)\\
+\end{align}\]</span>
+<ul>
+<li>Basic idea is use <span class="math inline">\(A\)</span> to create perturbed <span class="math inline">\(Y\)</span>: <span class="math display">\[\tilde{Y} = (Id - PA)(Y) + \sqrt{\gamma} PA(Y)\]</span> with <span class="math inline">\(PA(Z) = E(Z|A)\)</span> here. Then apply PCA on observation matrix of <span class="math inline">\(\tilde{Y}\)</span></li>
+<li>I first run vanilla PCA on IRIS dataset (assuming here indeed <span class="math inline">\(Y = BX + \epsilon\)</span>), then add artificial <span class="math inline">\(H, A\)</span> to create <code>case 1</code> and <code>case 2</code> as in the write-up.</li>
+<li>The goal is proof of concept: I want to test for the extreme cases when <span class="math inline">\(\gamma = 0, \infty\)</span> makes sense. Next step is to find more realistic cases where interpolation between the two extremes work better.</li>
 </ul>
 <pre class="r"><code>rm(list =ls())
 set.seed(123)
@@ -767,12 +818,14 @@ summary(iris)</code></pre>
                 
                 </code></pre>
 <pre class="r"><code>n= nrow(iris)
-df &lt;- iris[sample(x = 1:n,size = n,replace = FALSE),]
+df &lt;- iris
+#df &lt;- iris[sample(x = 1:n,size = n,replace = FALSE),]
+df[,1:4] = scale(df[,1:4])
 
 
 fit.svd= svd(x = df[,1:4],nu = 2,nv = 2)
 fit.svd$d</code></pre>
-<pre><code>[1] 95.959914 17.761034  3.460931  1.884826</code></pre>
+<pre><code>[1] 20.853205 11.670070  4.676192  1.756847</code></pre>
 <pre class="r"><code>plot(fit.svd$u[,1], fit.svd$u[,2],col = df$Species)</code></pre>
 <p><img src="figure/AnchorPCA0.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -813,16 +866,23 @@ zihao12
 </div>
 </div>
 <p>We can identify 3 clusters by PC1 &amp;PC2 that correspond to the 3 species.</p>
-<div id="create-artifical-batch-effect-and-try-pca" class="section level2">
-<h2>Create artifical batch effect and try PCA</h2>
-<p>For each observation in IRIS, suppose we have an artificial batch effect</p>
-<div id="batch-id-randomly-assigned" class="section level3">
-<h3>Batch ID randomly assigned</h3>
-<p>In this case <span class="math inline">\(a_i \in \{1,2,..., L\}\)</span> is independent of <span class="math inline">\(x_i\)</span>. Therefore it makes sense to partialize out the effect of <span class="math inline">\(A\)</span> on <span class="math inline">\(Y\)</span> first, which means centering by <span class="math inline">\(Y_{ij} - \mu_{a_ij}\)</span> first, then apply PCA. in the AnchorPCA framework, this corresponds to <span class="math inline">\(\gamma = 0\)</span>.</p>
-<pre class="r"><code>par(mfrow = c(2,2))
-df_ = df
-df_[,&quot;batch&quot;] = sample(as.integer(df_$Species),size = n, replace = FALSE)
-batch_shift = c(0, 0.5,1)
+<div id="case-i" class="section level2">
+<h2>Case I:</h2>
+<ul>
+<li>In this case we can think of <span class="math inline">\(a_i \in \{1,2,..., L\}\)</span> as independent of <span class="math inline">\(x_i\)</span>, as I assign the same number of samples within each species to the same batch ID. *Therefore it makes sense to partialize out the effect of <span class="math inline">\(A\)</span> on <span class="math inline">\(Y\)</span> first, then apply PCA. In the AnchorPCA framework, this corresponds to <span class="math inline">\(\gamma = 0\)</span>.</li>
+<li>Indeed we can see <span class="math inline">\(\gamma = 0\)</span> works better than other cases.</li>
+</ul>
+<pre class="r"><code>df_ = df
+#df_[,&quot;batch&quot;] = sample(as.integer(df_$Species),size = n, replace = FALSE)
+for(i in 1:3){
+  start_idx = (i-1)*17 + 1
+  end_idx = min(i*17, 50)
+  ixs &lt;- start_idx:end_idx
+  ixs &lt;- c(ixs, ixs + 50, ixs + 100)
+  df_[ixs,&quot;batch&quot;] &lt;- i
+}
+
+batch_shift = c(0, 1,2)
 for(i in 1:3){
   l = sum(df_$batch == i)
   df_[df_$batch == i, 1:4] = df_[df_$batch == i, 1:4] + 
@@ -830,6 +890,7 @@ for(i in 1:3){
 }
 
 ## anchor PCA 
+par(mfrow = c(2,2))
 for(gam in c(10, 1, 0.3, 0)){
   Ytilde = perturb(Y = df_[,1:4], A = df_$batch,gam= gam)
   fit.svd= svd(x = Ytilde,nu = 4,nv = 4)
@@ -887,25 +948,27 @@ zihao12
 </div>
 <p>Indeed we can see with smaller <span class="math inline">\(\gamma\)</span>, the biological structure seems clearer</p>
 </div>
-<div id="if-the-batch-id-is-highly-correlated-with-species" class="section level3">
-<h3>if the batch id is highly correlated with species</h3>
+<div id="case-ii" class="section level2">
+<h2>Case II</h2>
 <ul>
-<li>Just a proof of concept… it’s cheating as batch id is just species id here. Here the role of <span class="math inline">\(A\)</span> is(?check) instrumental variable.</li>
-<li>We can see removing supposedly “bacth effects” also remove useful biological information.</li>
+<li>I let <span class="math inline">\(Y = A + H + \epsilon\)</span> and <span class="math inline">\(A = BX\)</span>. So it makes sense to do PCA on <span class="math inline">\(A\)</span> instead of <span class="math inline">\(H\)</span>. This is equavelent to work on <span class="math inline">\(\tilde{Y} = PA(Y) = A\)</span>, corresponding to <span class="math inline">\(\gamma = \infty\)</span>.</li>
+<li>Indeed it can find structure when <span class="math inline">\(\gamma\)</span> is large.</li>
 </ul>
-<pre class="r"><code>par(mfrow = c(2,2))
-df_ = df
-df_[,&quot;batch&quot;] = as.integer(df_$Species)
+<pre class="r"><code>df_ = df
+A = df_[,1:4]
+H = matrix(, nrow = nrow(A), ncol = ncol(A))
+df_[,&quot;batch&quot;] = sample(as.integer(df_$Species),size = n, replace = FALSE)
 batch_shift = c(0, 0.5,1)
 for(i in 1:3){
   l = sum(df_$batch == i)
-  df_[df_$batch == i, 1:4] = df_[df_$batch == i, 1:4] +
-    rnorm(l*4,mean = batch_shift[i],sd = 1)
+  H[df_$batch == i, ] = rnorm(l*4,mean = batch_shift[i],sd = 1)
 }
+Y = H + A
 
 ## anchor PCA 
-for(gam in c(10, 1, 0.3, 0)){
-  Ytilde = perturb(Y = df_[,1:4], A = df_$batch,gam= gam)
+par(mfrow = c(2,2))
+for(gam in c(100000, 1, 0.3, 0)){
+  Ytilde = perturb(Y = Y, A = as.matrix(A), gam= gam)
   fit.svd= svd(x = Ytilde,nu = 4,nv = 4)
   fit.svd$d
   plot(fit.svd$u[,1], fit.svd$u[,2],col = df_$Species, main = sprintf(&quot;gam = %.2f&quot;, gam))
@@ -959,7 +1022,6 @@ zihao12
 </table>
 </div>
 </div>
-<p>These two extreme cases show that indeed we might need to extroplate between <span class="math inline">\(\gamma = 0\)</span> and <span class="math inline">\(\gamma = \infty\)</span> to recover useful structure.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -992,7 +1054,6 @@ loaded via a namespace (and not attached):
 [13] promises_1.1.1  whisker_0.3-2   rmarkdown_2.1   tools_3.5.1    
 [17] stringr_1.4.0   glue_1.4.1      httpuv_1.5.4    xfun_0.8       
 [21] yaml_2.2.0      compiler_3.5.1  htmltools_0.5.0 knitr_1.28     </code></pre>
-</div>
 </div>
 </div>
 
