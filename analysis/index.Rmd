@@ -16,6 +16,7 @@ STAT343: [summary](https://zihao12.github.io/statsNotes/stat343_summary) and [da
 Paper Reading:
 
 Read: 
+
 * [Biwhitening Reveals the Rank of a Count Matrix](https://arxiv.org/pdf/2103.13840.pdf)
 
 
