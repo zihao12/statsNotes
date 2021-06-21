@@ -23,8 +23,9 @@ Read:
 To read:
 
 * [Non-negative Principal Component Analysis: Message Passing Algorithms and Sharp Asymptotics](https://arxiv.org/pdf/1406.4775.pdf)
-* [Nonconvex Optimization Meets Low-Rank Matrix Factorization: An Overview](https://www.princeton.edu/~yc5/publications/NcxOverview_Arxiv.pdf) and related paper on no spurious local optima: [http://proceedings.mlr.press/v70/ge17a/ge17a-supp.pdf](http://proceedings.mlr.press/v70/ge17a/ge17a-supp.pdf), [Exact Guarantees on the Absence of Spurious Local Minima for Non-negative Rank-1 Robust Principal Component Analysis](https://www.jmlr.org/papers/volume21/18-884/18-884.pdf)
+* [Nonconvex Optimization Meets Low-Rank Matrix Factorization: An Overview](https://www.princeton.edu/~yc5/publications/NcxOverview_Arxiv.pdf) and related paper on no spurious local optima: [No Spurious Local Minima in Nonconvex Low Rank Problems: A Unified Geometric Analysis](http://proceedings.mlr.press/v70/ge17a/ge17a-supp.pdf), [Exact Guarantees on the Absence of Spurious Local Minima for Non-negative Rank-1 Robust Principal Component Analysis](https://www.jmlr.org/papers/volume21/18-884/18-884.pdf)
 * [Beyond Alternating Updates for Matrix Factorization with Inertial Bregman Proximal Gradient Algorithms](https://proceedings.neurips.cc/paper/2019/file/bc7f621451b4f5df308a8e098112185d-Paper.pdf)
+* About alternative to VB approach in EBPMF: several papers mentioned at the discussion of [Bayesian Inference for Nonnegative Matrix Factorisation Models](https://downloads.hindawi.com/journals/cin/2009/785152.pdf): Block structure in Hessian matrix in [A Unified View of Matrix Factorization Models](http://www.cs.cmu.edu/~ggordon/singh-gordon-unified-factorization-ecml.pdf); Expectation Propogation approach [Expectation Propagation for Approximate Bayesian Inference](https://tminka.github.io/papers/ep/minka-ep-uai.pdf); expectation consistent (EC) inference in [Bayesian Independent Component Analysis: Variational Methods and Non-negative Decompositions](https://backend.orbit.dtu.dk/ws/portalfiles/portal/6406540/specialissueICA.pdf)
 
 
 Want to learn:
