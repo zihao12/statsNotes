@@ -364,16 +364,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestreebd5b9bec0aa0fd3d7c5d924c8e313e07ea7057c4targetblankbd5b9bea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/zihao12/statsNotes/tree/bd5b9bec0aa0fd3d7c5d924c8e313e07ea7057c4" target="_blank">bd5b9be</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestreeb12edbd78d1f6fb50151ebb4c9b3b636b333fa40targetblankb12edbda"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/zihao12/statsNotes/tree/b12edbd78d1f6fb50151ebb4c9b3b636b333fa40" target="_blank">b12edbd</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestreebd5b9bec0aa0fd3d7c5d924c8e313e07ea7057c4targetblankbd5b9bea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestreeb12edbd78d1f6fb50151ebb4c9b3b636b333fa40targetblankb12edbda" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/zihao12/statsNotes/tree/bd5b9bec0aa0fd3d7c5d924c8e313e07ea7057c4" target="_blank">bd5b9be</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/zihao12/statsNotes/tree/b12edbd78d1f6fb50151ebb4c9b3b636b333fa40" target="_blank">b12edbd</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -387,6 +387,7 @@ Ignored files:
 Untracked files:
     Untracked:  Untitled.R
     Untracked:  analysis/AnchorPCA1.Rmd
+    Untracked:  analysis/cdgs_lib.Rmd
     Untracked:  analysis/dplyr_tutorial.Rmd
     Untracked:  analysis/draft.Rmd
     Untracked:  analysis/draft2.Rmd
@@ -458,6 +459,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/zihao12/statsNotes/blob/b12edbd78d1f6fb50151ebb4c9b3b636b333fa40/analysis/index.Rmd" target="_blank">b12edbd</a>
+</td>
+<td>
+zihao12
+</td>
+<td>
+2021-06-21
+</td>
+<td>
+index
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/zihao12/statsNotes/21fa25e708dc30887107ff4e84a35c1fa6f656b5/docs/index.html" target="_blank">21fa25e</a>
+</td>
+<td>
+zihao12
+</td>
+<td>
+2021-06-21
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -591,8 +626,9 @@ Start workflowr project.
 <p>To read:</p>
 <ul>
 <li><a href="https://arxiv.org/pdf/1406.4775.pdf">Non-negative Principal Component Analysis: Message Passing Algorithms and Sharp Asymptotics</a></li>
-<li><a href="https://www.princeton.edu/~yc5/publications/NcxOverview_Arxiv.pdf">Nonconvex Optimization Meets Low-Rank Matrix Factorization: An Overview</a> and related paper on no spurious local optima: <a href="http://proceedings.mlr.press/v70/ge17a/ge17a-supp.pdf" class="uri">http://proceedings.mlr.press/v70/ge17a/ge17a-supp.pdf</a>, <a href="https://www.jmlr.org/papers/volume21/18-884/18-884.pdf">Exact Guarantees on the Absence of Spurious Local Minima for Non-negative Rank-1 Robust Principal Component Analysis</a></li>
+<li><a href="https://www.princeton.edu/~yc5/publications/NcxOverview_Arxiv.pdf">Nonconvex Optimization Meets Low-Rank Matrix Factorization: An Overview</a> and related paper on no spurious local optima: <a href="http://proceedings.mlr.press/v70/ge17a/ge17a-supp.pdf">No Spurious Local Minima in Nonconvex Low Rank Problems: A Unified Geometric Analysis</a>, <a href="https://www.jmlr.org/papers/volume21/18-884/18-884.pdf">Exact Guarantees on the Absence of Spurious Local Minima for Non-negative Rank-1 Robust Principal Component Analysis</a></li>
 <li><a href="https://proceedings.neurips.cc/paper/2019/file/bc7f621451b4f5df308a8e098112185d-Paper.pdf">Beyond Alternating Updates for Matrix Factorization with Inertial Bregman Proximal Gradient Algorithms</a></li>
+<li>About alternative to VB approach in EBPMF: several papers mentioned at the discussion of <a href="https://downloads.hindawi.com/journals/cin/2009/785152.pdf">Bayesian Inference for Nonnegative Matrix Factorisation Models</a>: Block structure in Hessian matrix in <a href="http://www.cs.cmu.edu/~ggordon/singh-gordon-unified-factorization-ecml.pdf">A Unified View of Matrix Factorization Models</a>; Expectation Propogation approach <a href="https://tminka.github.io/papers/ep/minka-ep-uai.pdf">Expectation Propagation for Approximate Bayesian Inference</a>; expectation consistent (EC) inference in <a href="https://backend.orbit.dtu.dk/ws/portalfiles/portal/6406540/specialissueICA.pdf">Bayesian Independent Component Analysis: Variational Methods and Non-negative Decompositions</a></li>
 </ul>
 <p>Want to learn:</p>
 <ul>
