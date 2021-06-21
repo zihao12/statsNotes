@@ -11,3 +11,17 @@ editor_options:
 Welcome to my research website.
 
 STAT343: [summary](https://zihao12.github.io/statsNotes/stat343_summary) and [data project](https://zihao12.github.io/statsNotes/stat343_data_analysis)
+
+
+Paper Reading:
+
+Read: 
+* [Biwhitening Reveals the Rank of a Count Matrix](https://arxiv.org/pdf/2103.13840.pdf)
+
+
+
+To read:
+
+* [Non-negative Principal Component Analysis: Message Passing Algorithms and Sharp Asymptotics](https://arxiv.org/pdf/1406.4775.pdf)
+* [Nonconvex Optimization Meets Low-Rank Matrix Factorization: An Overview](https://www.princeton.edu/~yc5/publications/NcxOverview_Arxiv.pdf) and related paper on no spurious local optima: [http://proceedings.mlr.press/v70/ge17a/ge17a-supp.pdf](http://proceedings.mlr.press/v70/ge17a/ge17a-supp.pdf), [Exact Guarantees on the Absence of Spurious Local Minima for Non-negative Rank-1 Robust Principal Component Analysis](https://www.jmlr.org/papers/volume21/18-884/18-884.pdf)
+* [Beyond Alternating Updates for Matrix Factorization with Inertial Bregman Proximal Gradient Algorithms](https://proceedings.neurips.cc/paper/2019/file/bc7f621451b4f5df308a8e098112185d-Paper.pdf)
