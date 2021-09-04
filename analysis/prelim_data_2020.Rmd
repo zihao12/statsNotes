@@ -1,0 +1,255 @@
+---
+title: "prelim_data_2020"
+author: "zihao12"
+date: "2021-08-19"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+```{r}
+rm(list = ls())
+library(dplyr)
+library(lme4)
+species = read.csv("data/73_species.csv")
+traits = read.csv("data/Traits_73_species.csv")
+```
+
+## Problem 1
+
+Statistical Issues: look at the data processing part. The raw data records individual ringing events. Authors aggregate them into event for a nest. There are a lot of assumptions and ad hoc decisions. Moreover, the possible bias and variance introduced by preprocessing is not modeled. 
+
+
+## problem 2
+Below I only show 1 species as an example...
+```{r}
+spec.names <- c("FICHYP", "VANVAN", "PASDOM", "BUTBUT")
+
+spec.name = 'BUTBUT'
+data1 = species[species$Species ==  spec.name & species$BZ == "HB" & species$Year == 1980 ,]
+data2 = species[species$Species ==  spec.name & species$BZ == "HB" & species$Year == 2013,]
+xlim = c(150, 195)
+ylim = c(0, 0.065)
+
+plot(density(data1$Dayofyear), col = "grey", 
+     xlim = xlim, ylim = ylim, main = spec.name)
+lines(density(data2$Dayofyear), col = "blue")
+```
+
+Next let's look at density estimates with mult-modals. One example below (i didn't attempt to make the density plot similar to the one in paper)
+```{r}
+combo = c("PASDOM", "SB", 1979)
+data1 = species[species$Species ==  combo[1] & species$BZ == combo[2] & species$Year == combo[3],]
+
+hist(data1$Dayofyear, prob = TRUE, breaks = 50)
+lines(density(data1$Dayofyear))
+```
+
+In this example i don't think the density estimates represent raw data well. The  smaller mode is due to only one very productive ringing days, whereas the desnity plot seems to give the impression of many consecutive higher ringing days. In this case it may not represent nesting bahavior of birds, but rather probably a lucky bird watcher on that day. (Can say more if i understand the data preprocessing part)
+
+## problem 3
+
+Why examining wing length? We use ringing events as a proxy for nesting events. If ringers start earlier every year, and there is no actual change in nestling events, we can expect to see the "fake" advancement in the data. If recorded wing length remains unchanged, that means the relative time interval between ringing and nesting remain unchanged. Thus ringing events are valid proxy for analysing nesting events. 
+
+Ringer bahavior & effort is an important confounder, and if it changes with time, it can make our conclusion about nesting invalid. If they spend more effort in the beginning versus the end, we might see artificial advancement of the ending of nesting events, simply because the sampling efforts is too small (also biased to underestimation) to estimate the 95% percentile
+
+Their arguments: annual effort levels stabilized in all zones by 1990 and remained relatively constant thereafter; the proportions of nests observed in the beginning and end of the breeding season are relatively constant over the study period.
+
+Strength: 
+
+Weakness: Efforts decrease to 1990 and later stabilize. Then the estimate of 5% and 95% would have different variance/uncertainty. However this uncertainty is not reflected in the model. 
+
+
+What assumption to distinguish? If there is one type of bird that don't change behavior for sure, then we can use it to distinguish changes from ringer behavior. 
+
+## Problem 4
+```{r}
+compute_duration <- function(dataset, year){
+  x = quantile(dataset[dataset$Year == year,"Dayofyear"], probs = c(0.05, 0.95))
+  return(as.numeric(x[2] - x[1]))
+} 
+
+
+dataset = species[species$Species == "CORRAX", ]
+compute_duration(dataset, 1997)
+
+Years = sort(unique(dataset$Year))
+y = sapply(Years, FUN = compute_duration, dataset = dataset)
+
+fit = lm(y ~ Years)
+summary(fit)
+plot(Years, y, col = "black")
+lines(Years, fit$fitted.values, col = "blue")
+plot(fit$fitted.values, fit$residuals)
+```
+
+The decreasing trend is obvious by looking at the data. The linear model confirms this.
+
+Let's look at the two BZ where CORRAX is present
+```{r}
+table(dataset$BZ)
+
+compute_duration_BZ <- function(dataset, year, BZ){
+  x = quantile(dataset[dataset$Year == year & dataset$BZ == BZ,"Dayofyear"], probs = c(0.05, 0.95))
+  return(as.numeric(x[2] - x[1]))
+} 
+
+year_ = c()
+BZ_ = c()
+Duration_ = c()
+for(i in Years){
+  for(bz in c("MB", "SB")){
+    year_ = c(year_, i) 
+    BZ_ = c(BZ_, bz)
+    Duration_ = c(Duration_, compute_duration_BZ(dataset, i, bz))
+  }
+}
+out = na.omit(data.frame(year = year_, BZ = BZ_, Duration = Duration_))
+
+attach(out)
+fit1 = lm(Duration ~ BZ,data = out)
+fit2 = lm(Duration ~ year + BZ,data = out)
+fit3 = lm(Duration ~ year * BZ,data = out)
+anova(fit1, fit2) ## actually no need; directly read from summary(fit2)
+anova(fit2, fit3)
+
+summary(fit2)
+confint(fit2)
+plot(year, Duration, col = c("blue", "red")[BZ])
+legend(x="topright", legend = levels(BZ), col=c("blue", "red"), pch=1)
+detach(out)
+```
+
+So year effects are siginifant; among two models with BZ & Year effects, anova preferred the simple one. We can see the decrease trend is significant with 95% CI $[-0.2496099, -0.03828765]$. BZ is also significant. That `fit3` is not favored means the slope for two BZs are the same. 
+
+## Problem 5
+We know $\sqrt{n} (X_{[np]} - x_p) \longrightarrow N(0, \frac{p(1-p)}{f^2(x_p)})$. If we assume the $f$ only changes location but not its shape, then here $\text{Var}(y_i) \propto \frac{1}{n_i}$, where $n_i$ is the number of estimations for year $i$. Thus the equal variance assumption is violated. 
+
+We can fix this by weighted least square, with weight $W = \text{diag}(n_1, ..., n_n)$
+
+```{r}
+compute_count_BZ <- function(dataset, year, BZ){
+  return(nrow(dataset[dataset$Year == year & dataset$BZ == BZ,]))
+} 
+
+dataset = species[species$Species == "HIRRUS",]
+Years = sort(unique(dataset$Year))
+
+counts = sapply(Years, compute_count_BZ, dataset = dataset, BZ = "SB")
+Duration = sapply(Years, compute_duration_BZ, dataset = dataset, BZ = "SB")
+
+out <- data.frame(Years = Years, Duration = Duration, counts = counts)
+
+fit4 = lm(Duration ~ Years, data = out)
+fit5 = lm(Duration ~ Years, weights = counts, data = out)
+
+plot(Years, fit4$residuals)
+points(Years, fit5$residuals * sqrt(counts), col = "blue")
+```
+From the residual plot we can see clearly that weighted least square gets more constant variance, whereas OLS has more variance with smaller counts, less variance with bigger counts. 
+
+```{r}
+summary(fit4)
+summary(fit5)
+```
+
+
+## Problem 6
+
+First process data
+```{r}
+traits2 <- data.frame(Broods = traits$Broods, 
+                      Mig = !(traits$Mig == "R" | traits$Mig == "S")) ## Mig: TRUE means long distance migration
+rownames(traits2) <- traits$Abbreviation
+
+by_pair = group_by(species, Year, Species, BZ)
+dataset <- summarise(by_pair,
+                   count = n(),
+                   n_early = sum(Dayofyear < 170),
+                   n_late = count - n_early,
+                   p = n_early/count)
+dataset$broods <- traits2[dataset$Species,"Broods"]
+dataset$mig <- traits2[dataset$Species,"Mig"]
+dataset$Year_scaled <- scale(dataset$Year, center = TRUE, scale = TRUE)
+head(dataset)
+```
+
+### Linear model or Binary GLM?
+
+If $np, nq$ are bith large (say $> 10$), then $Bin(n, p)$ is well approximated by gaussian. Let's look at how many data points do not satisfy this. 
+```{r}
+sum((dataset$count - dataset$n_early) < 10) / nrow(dataset)
+sum(dataset$n_early < 10) / nrow(dataset)
+```
+There is quite a lot of data points not well approximated by gaussian. Thus I will go with binary GLM below (I will just try logistic link). 
+
+```{r}
+lrt <- function(fit1, fit2){
+  1 - pchisq(2 * as.numeric(logLik(fit2) - logLik(fit1)), df = df.residual(fit1) - df.residual(fit2))
+}
+```
+
+
+### Simple model
+
+\begin{align}
+ & g(p_{ijs}) = \beta_0 + \beta_1 x_i
+\end{align}
+
+```{r}
+attach(dataset)
+response = matrix(append(n_early, n_late), ncol = 2)
+model1.1 = glm(response ~ Year_scaled, family = "binomial")
+summary(model1.1)
+```
+
+Adding BZ
+
+```{r}
+model1.2 = glm(response ~ Year_scaled + BZ, family = "binomial")
+model1.3 = glm(response ~ Year_scaled * BZ, family = "binomial")
+
+lrt(model1.1, model1.2)
+lrt(model1.2, model1.3)
+```
+Obviously we use `model1.3` 
+
+### Do different species have different year effects?
+
+First, use fixed effects for species. Compare with species intercept only model, we can see there are differences in year effects among species
+```{r}
+model2.1 = glm(response ~ Year_scaled * BZ + Species, family = "binomial")
+model2.2 = glm(response ~ Year_scaled * BZ + Year_scaled *  Species, family = "binomial")
+lrt(model1.3, model2.1)
+lrt(model2.1, model2.2)
+#summary(model3)
+```
+
+### Do species with different number of broods have different year effects?
+
+\begin{align}
+  & H_0 : g(p_{ijs}) = \beta_0 + \beta_{0s} + \beta_{0 m_i} +  (\beta_1 + \beta_{1s}) x_i\\
+  & H_1 : g(p_{ijs}) = \beta_0 + \beta_{0s} + \beta_{0 m_i} + (\beta_1 + \beta_{1s} + \beta_{1 m_i}) x_i
+\end{align}
+
+```{r}
+model3.1 = glm(response ~ BZ + broods + Year_scaled + Year_scaled:BZ, family = "binomial")
+model3.2 = glm(response ~ BZ + broods + Year_scaled + Year_scaled:BZ:broods, family = "binomial")
+lrt(model1.3, model3.1)
+lrt(model3.1, model3.2)
+```
+The answer is yes. 
+
+### Do species with different migration patterns have different year effects?
+```{r}
+model4.1 = glm(response ~ BZ + mig + Year_scaled + Year_scaled:BZ, family = "binomial")
+model4.2 = glm(response ~ BZ + mig + Year_scaled + Year_scaled:BZ:mig, family = "binomial")
+lrt(model1.3, model4.1)
+lrt(model4.1, model4.2)
+```
+
+
+
+
