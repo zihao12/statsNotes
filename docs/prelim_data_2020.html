@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="zihao12" />
+
+<meta name="date" content="2021-08-19" />
+
+<title>prelim_data_2020</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">statsNotes</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/zihao12/statsNotes">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">prelim_data_2020</h1>
+<h4 class="author">zihao12</h4>
+<h4 class="date">2021-08-19</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2021-09-04
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>statsNotes/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20200505code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20200505)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20200505code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20200505)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestree8c7eae5449d363ab99c46657afffe9f1681809fbtargetblank8c7eae5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/zihao12/statsNotes/tree/8c7eae5449d363ab99c46657afffe9f1681809fb" target="_blank">8c7eae5</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestree8c7eae5449d363ab99c46657afffe9f1681809fbtargetblank8c7eae5a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/zihao12/statsNotes/tree/8c7eae5449d363ab99c46657afffe9f1681809fb" target="_blank">8c7eae5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+
+Untracked files:
+    Untracked:  Untitled.R
+    Untracked:  analysis/AnchorPCA1.Rmd
+    Untracked:  analysis/dplyr_tutorial.Rmd
+    Untracked:  analysis/draft.Rmd
+    Untracked:  analysis/draft2.Rmd
+    Untracked:  analysis/ebnm_explore.Rmd
+    Untracked:  analysis/hw8_sol.Rmd
+    Untracked:  analysis/jasons_code.Rmd
+    Untracked:  analysis/prelim_data_2018.Rmd
+    Untracked:  analysis/seurat_example.Rmd
+    Untracked:  analysis/sinkhorn.Rmd
+    Untracked:  analysis/stat377_final_project.Rmd
+    Untracked:  analysis/vaccine_trial.Rmd
+    Untracked:  data/73_species.csv
+    Untracked:  data/COVID-19_Cases_US.csv
+    Untracked:  data/SC3_v3_NextGem_DI_Nuclei_5K_Multiplex_count_raw_cloupe.cloupe
+    Untracked:  data/SC3_v3_NextGem_DI_Nuclei_5K_Multiplex_count_raw_feature_bc_matrix.h5
+    Untracked:  data/Traits_73_species.csv
+    Untracked:  data/cell_data.csv
+    Untracked:  data/neural.rda
+    Untracked:  data/pbmc3k/
+    Untracked:  data/time_series_covid19_confirmed_US.csv
+    Untracked:  data/time_series_covid19_deaths_US.csv
+    Untracked:  hw/348-hw-final-written.pdf
+    Untracked:  hw/AnchorPCA-full.pdf
+    Untracked:  hw/AnchorPCA-writeup.pdf
+    Untracked:  hw/AnchorPCA0.Rmd
+    Untracked:  hw/AnchorPCA0.pdf
+    Untracked:  hw/stat348-final-full.pdf
+    Untracked:  hw/stat348-final-p1.Rmd
+    Untracked:  hw/stat348-final-p1.pdf
+    Untracked:  hw/stat348-final-p2.Rmd
+    Untracked:  hw/stat348-final-p2.pdf
+    Untracked:  hw/stat348_finalp1.RData
+    Untracked:  hw/stat348_finalp1_2.RData
+    Untracked:  hw/stat348_finalp2_1.RData
+    Untracked:  hw/stat348_finalp2_2.RData
+    Untracked:  infect-chance/
+
+Unstaged changes:
+    Modified:   analysis/AnchorPCA0.Rmd
+    Modified:   hw/stat348-final-script.R
+    Modified:   script/plot_ebnm_objective.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/prelim_data_2020.Rmd</code>) and HTML (<code>docs/prelim_data_2020.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/zihao12/statsNotes/blob/8c7eae5449d363ab99c46657afffe9f1681809fb/analysis/prelim_data_2020.Rmd" target="_blank">8c7eae5</a>
+</td>
+<td>
+zihao12
+</td>
+<td>
+2021-09-04
+</td>
+<td>
+2020 data
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<pre class="r"><code>rm(list = ls())
+library(dplyr)</code></pre>
+<pre><code>Warning: package &#39;dplyr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>
+Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:stats&#39;:
+
+    filter, lag</code></pre>
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(lme4)</code></pre>
+<pre><code>Warning: package &#39;lme4&#39; was built under R version 3.5.2</code></pre>
+<pre><code>Loading required package: Matrix</code></pre>
+<pre><code>Warning: package &#39;Matrix&#39; was built under R version 3.5.2</code></pre>
+<pre class="r"><code>species = read.csv(&quot;data/73_species.csv&quot;)
+traits = read.csv(&quot;data/Traits_73_species.csv&quot;)</code></pre>
+</div>
+<div id="problem-1" class="section level2">
+<h2>Problem 1</h2>
+<p>Statistical Issues: look at the data processing part. The raw data records individual ringing events. Authors aggregate them into event for a nest. There are a lot of assumptions and ad hoc decisions. Moreover, the possible bias and variance introduced by preprocessing is not modeled.</p>
+</div>
+<div id="problem-2" class="section level2">
+<h2>problem 2</h2>
+<p>Below I only show 1 species as an example…</p>
+<pre class="r"><code>spec.names &lt;- c(&quot;FICHYP&quot;, &quot;VANVAN&quot;, &quot;PASDOM&quot;, &quot;BUTBUT&quot;)
+
+spec.name = &#39;BUTBUT&#39;
+data1 = species[species$Species ==  spec.name &amp; species$BZ == &quot;HB&quot; &amp; species$Year == 1980 ,]
+data2 = species[species$Species ==  spec.name &amp; species$BZ == &quot;HB&quot; &amp; species$Year == 2013,]
+xlim = c(150, 195)
+ylim = c(0, 0.065)
+
+plot(density(data1$Dayofyear), col = &quot;grey&quot;, 
+     xlim = xlim, ylim = ylim, main = spec.name)
+lines(density(data2$Dayofyear), col = &quot;blue&quot;)</code></pre>
+<p><img src="figure/prelim_data_2020.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Next let’s look at density estimates with mult-modals. One example below (i didn’t attempt to make the density plot similar to the one in paper)</p>
+<pre class="r"><code>combo = c(&quot;PASDOM&quot;, &quot;SB&quot;, 1979)
+data1 = species[species$Species ==  combo[1] &amp; species$BZ == combo[2] &amp; species$Year == combo[3],]
+
+hist(data1$Dayofyear, prob = TRUE, breaks = 50)
+lines(density(data1$Dayofyear))</code></pre>
+<p><img src="figure/prelim_data_2020.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>In this example i don’t think the density estimates represent raw data well. The smaller mode is due to only one very productive ringing days, whereas the desnity plot seems to give the impression of many consecutive higher ringing days. In this case it may not represent nesting bahavior of birds, but rather probably a lucky bird watcher on that day. (Can say more if i understand the data preprocessing part)</p>
+</div>
+<div id="problem-3" class="section level2">
+<h2>problem 3</h2>
+<p>Why examining wing length? We use ringing events as a proxy for nesting events. If ringers start earlier every year, and there is no actual change in nestling events, we can expect to see the “fake” advancement in the data. If recorded wing length remains unchanged, that means the relative time interval between ringing and nesting remain unchanged. Thus ringing events are valid proxy for analysing nesting events.</p>
+<p>Ringer bahavior &amp; effort is an important confounder, and if it changes with time, it can make our conclusion about nesting invalid. If they spend more effort in the beginning versus the end, we might see artificial advancement of the ending of nesting events, simply because the sampling efforts is too small (also biased to underestimation) to estimate the 95% percentile</p>
+<p>Their arguments: annual effort levels stabilized in all zones by 1990 and remained relatively constant thereafter; the proportions of nests observed in the beginning and end of the breeding season are relatively constant over the study period.</p>
+<p>Strength:</p>
+<p>Weakness: Efforts decrease to 1990 and later stabilize. Then the estimate of 5% and 95% would have different variance/uncertainty. However this uncertainty is not reflected in the model.</p>
+<p>What assumption to distinguish? If there is one type of bird that don’t change behavior for sure, then we can use it to distinguish changes from ringer behavior.</p>
+</div>
+<div id="problem-4" class="section level2">
+<h2>Problem 4</h2>
+<pre class="r"><code>compute_duration &lt;- function(dataset, year){
+  x = quantile(dataset[dataset$Year == year,&quot;Dayofyear&quot;], probs = c(0.05, 0.95))
+  return(as.numeric(x[2] - x[1]))
+} 
+
+
+dataset = species[species$Species == &quot;CORRAX&quot;, ]
+compute_duration(dataset, 1997)</code></pre>
+<pre><code>[1] 35</code></pre>
+<pre class="r"><code>Years = sort(unique(dataset$Year))
+y = sapply(Years, FUN = compute_duration, dataset = dataset)
+
+fit = lm(y ~ Years)
+summary(fit)</code></pre>
+<pre><code>
+Call:
+lm(formula = y ~ Years)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.0529 -3.0285 -0.7607  2.9388 10.2893 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept) 328.09809  104.78351   3.131  0.00334 **
+Years        -0.15192    0.05246  -2.896  0.00624 **
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 3.913 on 38 degrees of freedom
+Multiple R-squared:  0.1808,    Adjusted R-squared:  0.1592 
+F-statistic: 8.386 on 1 and 38 DF,  p-value: 0.006237</code></pre>
+<pre class="r"><code>plot(Years, y, col = &quot;black&quot;)
+lines(Years, fit$fitted.values, col = &quot;blue&quot;)</code></pre>
+<p><img src="figure/prelim_data_2020.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plot(fit$fitted.values, fit$residuals)</code></pre>
+<p><img src="figure/prelim_data_2020.Rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The decreasing trend is obvious by looking at the data. The linear model confirms this.</p>
+<p>Let’s look at the two BZ where CORRAX is present</p>
+<pre class="r"><code>table(dataset$BZ)</code></pre>
+<pre><code>
+  HB   MB   NB   SB 
+   0 1032    0 2858 </code></pre>
+<pre class="r"><code>compute_duration_BZ &lt;- function(dataset, year, BZ){
+  x = quantile(dataset[dataset$Year == year &amp; dataset$BZ == BZ,&quot;Dayofyear&quot;], probs = c(0.05, 0.95))
+  return(as.numeric(x[2] - x[1]))
+} 
+
+year_ = c()
+BZ_ = c()
+Duration_ = c()
+for(i in Years){
+  for(bz in c(&quot;MB&quot;, &quot;SB&quot;)){
+    year_ = c(year_, i) 
+    BZ_ = c(BZ_, bz)
+    Duration_ = c(Duration_, compute_duration_BZ(dataset, i, bz))
+  }
+}
+out = na.omit(data.frame(year = year_, BZ = BZ_, Duration = Duration_))
+
+attach(out)
+fit1 = lm(Duration ~ BZ,data = out)
+fit2 = lm(Duration ~ year + BZ,data = out)
+fit3 = lm(Duration ~ year * BZ,data = out)
+anova(fit1, fit2) ## actually no need; directly read from summary(fit2)</code></pre>
+<pre><code>Analysis of Variance Table
+
+Model 1: Duration ~ BZ
+Model 2: Duration ~ year + BZ
+  Res.Df    RSS Df Sum of Sq      F   Pr(&gt;F)   
+1     62 1287.0                                
+2     61 1147.5  1     139.6 7.4213 0.008397 **
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>anova(fit2, fit3)</code></pre>
+<pre><code>Analysis of Variance Table
+
+Model 1: Duration ~ year + BZ
+Model 2: Duration ~ year * BZ
+  Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+1     61 1147.5                           
+2     60 1140.6  1    6.8471 0.3602 0.5507</code></pre>
+<pre class="r"><code>summary(fit2)</code></pre>
+<pre><code>
+Call:
+lm(formula = Duration ~ year + BZ, data = out)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-10.0212  -2.6949  -0.7176   3.6836  12.4909 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept) 309.37581  105.65610   2.928  0.00479 **
+year         -0.14395    0.05284  -2.724  0.00840 **
+BZSB          2.39901    1.12537   2.132  0.03706 * 
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 4.337 on 61 degrees of freedom
+Multiple R-squared:  0.1784,    Adjusted R-squared:  0.1515 
+F-statistic: 6.623 on 2 and 61 DF,  p-value: 0.002495</code></pre>
+<pre class="r"><code>confint(fit2)</code></pre>
+<pre><code>                 2.5 %       97.5 %
+(Intercept) 98.1033932 520.64823611
+year        -0.2496099  -0.03828765
+BZSB         0.1486933   4.64932268</code></pre>
+<pre class="r"><code>plot(year, Duration, col = c(&quot;blue&quot;, &quot;red&quot;)[BZ])
+legend(x=&quot;topright&quot;, legend = levels(BZ), col=c(&quot;blue&quot;, &quot;red&quot;), pch=1)</code></pre>
+<p><img src="figure/prelim_data_2020.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>detach(out)</code></pre>
+<p>So year effects are siginifant; among two models with BZ &amp; Year effects, anova preferred the simple one. We can see the decrease trend is significant with 95% CI <span class="math inline">\([-0.2496099, -0.03828765]\)</span>. BZ is also significant. That <code>fit3</code> is not favored means the slope for two BZs are the same.</p>
+</div>
+<div id="problem-5" class="section level2">
+<h2>Problem 5</h2>
+<p>We know <span class="math inline">\(\sqrt{n} (X_{[np]} - x_p) \longrightarrow N(0, \frac{p(1-p)}{f^2(x_p)})\)</span>. If we assume the <span class="math inline">\(f\)</span> only changes location but not its shape, then here <span class="math inline">\(\text{Var}(y_i) \propto \frac{1}{n_i}\)</span>, where <span class="math inline">\(n_i\)</span> is the number of estimations for year <span class="math inline">\(i\)</span>. Thus the equal variance assumption is violated.</p>
+<p>We can fix this by weighted least square, with weight <span class="math inline">\(W = \text{diag}(n_1, ..., n_n)\)</span></p>
+<pre class="r"><code>compute_count_BZ &lt;- function(dataset, year, BZ){
+  return(nrow(dataset[dataset$Year == year &amp; dataset$BZ == BZ,]))
+} 
+
+dataset = species[species$Species == &quot;HIRRUS&quot;,]
+Years = sort(unique(dataset$Year))
+
+counts = sapply(Years, compute_count_BZ, dataset = dataset, BZ = &quot;SB&quot;)
+Duration = sapply(Years, compute_duration_BZ, dataset = dataset, BZ = &quot;SB&quot;)
+
+out &lt;- data.frame(Years = Years, Duration = Duration, counts = counts)
+
+fit4 = lm(Duration ~ Years, data = out)
+fit5 = lm(Duration ~ Years, weights = counts, data = out)
+
+plot(Years, fit4$residuals)
+points(Years, fit5$residuals * sqrt(counts), col = &quot;blue&quot;)</code></pre>
+<p><img src="figure/prelim_data_2020.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /> From the residual plot we can see clearly that weighted least square gets more constant variance, whereas OLS has more variance with smaller counts, less variance with bigger counts.</p>
+<pre class="r"><code>summary(fit4)</code></pre>
+<pre><code>
+Call:
+lm(formula = Duration ~ Years, data = out)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-23.909  -3.201   1.208   3.786  12.684 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -707.39446  173.19153  -4.084    2e-04 ***
+Years          0.37902    0.08677   4.368 8.32e-05 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 7.061 on 41 degrees of freedom
+Multiple R-squared:  0.3176,    Adjusted R-squared:  0.301 
+F-statistic: 19.08 on 1 and 41 DF,  p-value: 8.322e-05</code></pre>
+<pre class="r"><code>summary(fit5)</code></pre>
+<pre><code>
+Call:
+lm(formula = Duration ~ Years, data = out, weights = counts)
+
+Weighted Residuals:
+     Min       1Q   Median       3Q      Max 
+-206.695  -51.409   -8.898   27.252  141.623 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -662.09032  170.96999  -3.873 0.000380 ***
+Years          0.35728    0.08541   4.183 0.000148 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 81.23 on 41 degrees of freedom
+Multiple R-squared:  0.2991,    Adjusted R-squared:  0.282 
+F-statistic:  17.5 on 1 and 41 DF,  p-value: 0.0001478</code></pre>
+</div>
+<div id="problem-6" class="section level2">
+<h2>Problem 6</h2>
+<p>First process data</p>
+<pre class="r"><code>traits2 &lt;- data.frame(Broods = traits$Broods, 
+                      Mig = !(traits$Mig == &quot;R&quot; | traits$Mig == &quot;S&quot;)) ## Mig: TRUE means long distance migration
+rownames(traits2) &lt;- traits$Abbreviation
+
+by_pair = group_by(species, Year, Species, BZ)
+dataset &lt;- summarise(by_pair,
+                   count = n(),
+                   n_early = sum(Dayofyear &lt; 170),
+                   n_late = count - n_early,
+                   p = n_early/count)
+dataset$broods &lt;- traits2[dataset$Species,&quot;Broods&quot;]
+dataset$mig &lt;- traits2[dataset$Species,&quot;Mig&quot;]
+dataset$Year_scaled &lt;- scale(dataset$Year, center = TRUE, scale = TRUE)
+head(dataset)</code></pre>
+<pre><code># A tibble: 6 x 10
+# Groups:   Year, Species [4]
+   Year Species BZ    count n_early n_late     p broods mig   Year_scaled[,1]
+  &lt;int&gt; &lt;fct&gt;   &lt;fct&gt; &lt;int&gt;   &lt;int&gt;  &lt;int&gt; &lt;dbl&gt;  &lt;int&gt; &lt;lgl&gt;           &lt;dbl&gt;
+1  1975 ACCGEN  HB       78      47     31 0.603      1 FALSE           -1.78
+2  1975 ACCGEN  MB       35       8     27 0.229      1 FALSE           -1.78
+3  1975 ACCGEN  SB      165      59    106 0.358      1 FALSE           -1.78
+4  1975 ACCNIS  SB       34       0     34 0          1 FALSE           -1.78
+5  1975 AEGFUN  SB       84      69     15 0.821      1 FALSE           -1.78
+6  1975 ALCTOR  HB       36       0     36 0          1 FALSE           -1.78</code></pre>
+<div id="linear-model-or-binary-glm" class="section level3">
+<h3>Linear model or Binary GLM?</h3>
+<p>If <span class="math inline">\(np, nq\)</span> are bith large (say <span class="math inline">\(&gt; 10\)</span>), then <span class="math inline">\(Bin(n, p)\)</span> is well approximated by gaussian. Let’s look at how many data points do not satisfy this.</p>
+<pre class="r"><code>sum((dataset$count - dataset$n_early) &lt; 10) / nrow(dataset)</code></pre>
+<pre><code>[1] 0.1718197</code></pre>
+<pre class="r"><code>sum(dataset$n_early &lt; 10) / nrow(dataset)</code></pre>
+<pre><code>[1] 0.3500118</code></pre>
+<p>There is quite a lot of data points not well approximated by gaussian. Thus I will go with binary GLM below (I will just try logistic link).</p>
+<pre class="r"><code>lrt &lt;- function(fit1, fit2){
+  1 - pchisq(2 * as.numeric(logLik(fit2) - logLik(fit1)), df = df.residual(fit1) - df.residual(fit2))
+}</code></pre>
+</div>
+<div id="simple-model" class="section level3">
+<h3>Simple model</h3>
+<span class="math display">\[\begin{align}
+ &amp; g(p_{ijs}) = \beta_0 + \beta_1 x_i
+\end{align}\]</span>
+<pre class="r"><code>attach(dataset)
+response = matrix(append(n_early, n_late), ncol = 2)
+model1.1 = glm(response ~ Year_scaled, family = &quot;binomial&quot;)
+summary(model1.1)</code></pre>
+<pre><code>
+Call:
+glm(formula = response ~ Year_scaled, family = &quot;binomial&quot;)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-38.954   -7.824   -2.382    7.632   45.493  
+
+Coefficients:
+             Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -0.423836   0.002280 -185.93   &lt;2e-16 ***
+Year_scaled  0.184141   0.002311   79.68   &lt;2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 565528  on 4236  degrees of freedom
+Residual deviance: 559124  on 4235  degrees of freedom
+AIC: 572771
+
+Number of Fisher Scoring iterations: 4</code></pre>
+<p>Adding BZ</p>
+<pre class="r"><code>model1.2 = glm(response ~ Year_scaled + BZ, family = &quot;binomial&quot;)
+model1.3 = glm(response ~ Year_scaled * BZ, family = &quot;binomial&quot;)
+
+lrt(model1.1, model1.2)</code></pre>
+<pre><code>[1] 0</code></pre>
+<pre class="r"><code>lrt(model1.2, model1.3)</code></pre>
+<pre><code>[1] 0</code></pre>
+<p>Obviously we use <code>model1.3</code></p>
+</div>
+<div id="do-different-species-have-different-year-effects" class="section level3">
+<h3>Do different species have different year effects?</h3>
+<p>First, use fixed effects for species. Compare with species intercept only model, we can see there are differences in year effects among species</p>
+<pre class="r"><code>model2.1 = glm(response ~ Year_scaled * BZ + Species, family = &quot;binomial&quot;)
+model2.2 = glm(response ~ Year_scaled * BZ + Year_scaled *  Species, family = &quot;binomial&quot;)
+lrt(model1.3, model2.1)</code></pre>
+<pre><code>[1] 0</code></pre>
+<pre class="r"><code>lrt(model2.1, model2.2)</code></pre>
+<pre><code>[1] 0</code></pre>
+<pre class="r"><code>#summary(model3)</code></pre>
+</div>
+<div id="do-species-with-different-number-of-broods-have-different-year-effects" class="section level3">
+<h3>Do species with different number of broods have different year effects?</h3>
+<span class="math display">\[\begin{align}
+  &amp; H_0 : g(p_{ijs}) = \beta_0 + \beta_{0s} + \beta_{0 m_i} +  (\beta_1 + \beta_{1s}) x_i\\
+  &amp; H_1 : g(p_{ijs}) = \beta_0 + \beta_{0s} + \beta_{0 m_i} + (\beta_1 + \beta_{1s} + \beta_{1 m_i}) x_i
+\end{align}\]</span>
+<pre class="r"><code>model3.1 = glm(response ~ BZ + broods + Year_scaled + Year_scaled:BZ, family = &quot;binomial&quot;)
+model3.2 = glm(response ~ BZ + broods + Year_scaled + Year_scaled:BZ:broods, family = &quot;binomial&quot;)
+lrt(model1.3, model3.1)</code></pre>
+<pre><code>[1] 0</code></pre>
+<pre class="r"><code>lrt(model3.1, model3.2)</code></pre>
+<pre><code>[1] 0</code></pre>
+<p>The answer is yes.</p>
+</div>
+<div id="do-species-with-different-migration-patterns-have-different-year-effects" class="section level3">
+<h3>Do species with different migration patterns have different year effects?</h3>
+<pre class="r"><code>model4.1 = glm(response ~ BZ + mig + Year_scaled + Year_scaled:BZ, family = &quot;binomial&quot;)
+model4.2 = glm(response ~ BZ + mig + Year_scaled + Year_scaled:BZ:mig, family = &quot;binomial&quot;)
+lrt(model1.3, model4.1)</code></pre>
+<pre><code>[1] 0</code></pre>
+<pre class="r"><code>lrt(model4.1, model4.2)</code></pre>
+<pre><code>[1] 0</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS  10.15.7
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] lme4_1.1-21     Matrix_1.2-17   dplyr_0.8.5     workflowr_1.6.2
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.5       pillar_1.4.4     compiler_3.5.1   later_1.1.0.1   
+ [5] nloptr_1.2.1     git2r_0.26.1     tools_3.5.1      boot_1.3-22     
+ [9] digest_0.6.25    evaluate_0.14    tibble_2.1.3     nlme_3.1-140    
+[13] lattice_0.20-38  pkgconfig_2.0.3  rlang_0.4.5      cli_2.0.2       
+[17] yaml_2.2.0       xfun_0.8         stringr_1.4.0    knitr_1.28      
+[21] vctrs_0.2.4      fs_1.3.1         rprojroot_1.3-2  grid_3.5.1      
+[25] tidyselect_1.0.0 glue_1.4.1       R6_2.4.1         fansi_0.4.1     
+[29] rmarkdown_2.1    minqa_1.2.4      purrr_0.3.4      magrittr_1.5    
+[33] whisker_0.3-2    backports_1.1.7  promises_1.1.1   htmltools_0.5.0 
+[37] splines_3.5.1    MASS_7.3-51.4    assertthat_0.2.1 httpuv_1.5.4    
+[41] utf8_1.1.4       stringi_1.6.2    crayon_1.3.4    </code></pre>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
