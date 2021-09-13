@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="zihao12" />
+
+<meta name="date" content="2021-09-03" />
+
+<title>prelim_data_2018</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">statsNotes</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/zihao12/statsNotes">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">prelim_data_2018</h1>
+<h4 class="author">zihao12</h4>
+<h4 class="date">2021-09-03</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2021-09-12
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>statsNotes/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20200505code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20200505)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20200505code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20200505)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestreed0fa107c87364e4a92e6f7579e7cc552a9e6c187targetblankd0fa107a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/zihao12/statsNotes/tree/d0fa107c87364e4a92e6f7579e7cc552a9e6c187" target="_blank">d0fa107</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomzihao12statsNotestreed0fa107c87364e4a92e6f7579e7cc552a9e6c187targetblankd0fa107a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/zihao12/statsNotes/tree/d0fa107c87364e4a92e6f7579e7cc552a9e6c187" target="_blank">d0fa107</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+
+Untracked files:
+    Untracked:  Untitled.R
+    Untracked:  analysis/AnchorPCA1.Rmd
+    Untracked:  analysis/dplyr_tutorial.Rmd
+    Untracked:  analysis/draft.Rmd
+    Untracked:  analysis/draft2.Rmd
+    Untracked:  analysis/ebnm_explore.Rmd
+    Untracked:  analysis/hw8_sol.Rmd
+    Untracked:  analysis/jasons_code.Rmd
+    Untracked:  analysis/prelim_data_2019.Rmd
+    Untracked:  analysis/seurat_example.Rmd
+    Untracked:  analysis/sinkhorn.Rmd
+    Untracked:  analysis/stat377_final_project.Rmd
+    Untracked:  analysis/vaccine_trial.Rmd
+    Untracked:  data/73_species.csv
+    Untracked:  data/COVID-19_Cases_US.csv
+    Untracked:  data/SC3_v3_NextGem_DI_Nuclei_5K_Multiplex_count_raw_cloupe.cloupe
+    Untracked:  data/SC3_v3_NextGem_DI_Nuclei_5K_Multiplex_count_raw_feature_bc_matrix.h5
+    Untracked:  data/Traits_73_species.csv
+    Untracked:  data/borealwarming.csv
+    Untracked:  data/cell_data.csv
+    Untracked:  data/neural.rda
+    Untracked:  data/pbmc3k/
+    Untracked:  data/time_series_covid19_confirmed_US.csv
+    Untracked:  data/time_series_covid19_deaths_US.csv
+    Untracked:  hw/348-hw-final-written.pdf
+    Untracked:  hw/AnchorPCA-full.pdf
+    Untracked:  hw/AnchorPCA-writeup.pdf
+    Untracked:  hw/AnchorPCA0.Rmd
+    Untracked:  hw/AnchorPCA0.pdf
+    Untracked:  hw/stat348-final-full.pdf
+    Untracked:  hw/stat348-final-p1.Rmd
+    Untracked:  hw/stat348-final-p1.pdf
+    Untracked:  hw/stat348-final-p2.Rmd
+    Untracked:  hw/stat348-final-p2.pdf
+    Untracked:  hw/stat348_finalp1.RData
+    Untracked:  hw/stat348_finalp1_2.RData
+    Untracked:  hw/stat348_finalp2_1.RData
+    Untracked:  hw/stat348_finalp2_2.RData
+    Untracked:  infect-chance/
+
+Unstaged changes:
+    Modified:   analysis/AnchorPCA0.Rmd
+    Modified:   hw/stat348-final-script.R
+    Modified:   script/plot_ebnm_objective.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/prelim_data_2018.Rmd</code>) and HTML (<code>docs/prelim_data_2018.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/zihao12/statsNotes/blob/d0fa107c87364e4a92e6f7579e7cc552a9e6c187/analysis/prelim_data_2018.Rmd" target="_blank">d0fa107</a>
+</td>
+<td>
+zihao12
+</td>
+<td>
+2021-09-12
+</td>
+<td>
+2018 data
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Important things learned:</p>
+<ul>
+<li>LRT only works for nested model; definition of nested model: <span class="math inline">\(\Omega_1 \subset \Omega_2\)</span>. Other model comparisons (for maybe not nested models): AIC, BIC</li>
+<li>when comparing two group means, remember to control other covariates!! For example pairing samples.</li>
+<li>Think whether the p-values correspond to the right test. In p5.2 need to transform beta!!!</li>
+<li>BH procedure requires independence. BHY is more conservative and deals with dependency.</li>
+<li>Add a conclusion part.</li>
+</ul>
+<pre class="r"><code>rm(list = ls())
+load(&#39;data/neural.rda&#39;)
+attach(neural)</code></pre>
+</div>
+<div id="problem-2" class="section level2">
+<h2>Problem 2</h2>
+<pre class="r"><code>hist(y[NF == &#39;N&#39;], probability = TRUE, col =rgb(1,0,0,0.5), 
+     xlim = c(0, 20), xlab = &quot;y (firing)&quot;, main = &quot;distribution of firing&quot;)
+hist(y[NF == &#39;F&#39;], probability = TRUE, col =rgb(0,0,1,0.5), add = TRUE)
+legend(&quot;topright&quot;, legend=c(&quot;N&quot;,&quot;F&quot;), col=c(rgb(1,0,0,0.5), 
+     rgb(0,0,1,0.5)), pt.cex=2, pch=15 )</code></pre>
+<p><img src="figure/prelim_data_2018.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>function for LRT</p>
+<pre class="r"><code>lrt &lt;- function(fit1, fit2){
+  statistic = 2 * as.numeric(logLik(fit2) - logLik(fit1))
+  df = df.residual(fit1) - df.residual(fit2)
+  pval = 1 - pchisq(statistic, df = df)
+  print(sprintf(&quot;lr stat %f on chi-square with %d degree of freedom;&quot;, statistic, df))
+  print(sprintf(&quot;p value: %f&quot;, pval))
+}</code></pre>
+<pre class="r"><code>model2.0 &lt;- glm(y ~ 1, data = neural, family = &quot;poisson&quot;)
+model2 = glm(y ~ NF, data = neural, family = &quot;poisson&quot;)
+summary(model2)</code></pre>
+<pre><code>
+Call:
+glm(formula = y ~ NF, family = &quot;poisson&quot;, data = neural)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-4.2263  -1.0434   0.0231   0.8302   4.5549  
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) 1.770836   0.007829  226.20   &lt;2e-16 ***
+NFN         0.418674   0.010081   41.53   &lt;2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 13879  on 5552  degrees of freedom
+Residual deviance: 12116  on 5551  degrees of freedom
+AIC: 32218
+
+Number of Fisher Scoring iterations: 5</code></pre>
+<pre class="r"><code>anova(model2.0, model2)</code></pre>
+<pre><code>Analysis of Deviance Table
+
+Model 1: y ~ 1
+Model 2: y ~ NF
+  Resid. Df Resid. Dev Df Deviance
+1      5552      13879            
+2      5551      12116  1   1762.8</code></pre>
+<pre class="r"><code>lrt(model2.0, model2)</code></pre>
+<pre><code>[1] &quot;lr stat 1762.845056 on chi-square with 1 degree of freedom;&quot;
+[1] &quot;p value: 0.000000&quot;</code></pre>
+<pre class="r"><code>table(predict(model2, type = &quot;response&quot;))</code></pre>
+<pre><code>
+5.87576521426001 8.93083573487029 
+            2777             2776 </code></pre>
+Hypothesis: (Poisson assumption + log link)
+<span class="math display">\[\begin{align}
+  &amp; H_0: g(E(y_i)) = \beta_0\\
+  &amp; H_1: g(E(y_i)) = \beta_0 + \beta_{NF}
+\end{align}\]</span>
+<p>I did two tests: in lrt, the statistic is printed above; standard error is <span class="math inline">\(\sqrt(2)\)</span> (for <span class="math inline">\(X^2_1\)</span>) ; in the <code>summary()</code>, statistic is 0.418674 with standard error 0.010081 (asymptotically normal)</p>
+<p>More to do: Poisson may not be enough… Negative binomial or ZIP…</p>
+</div>
+<div id="problem-3" class="section level2">
+<h2>Problem 3</h2>
+<pre class="r"><code>model3.1 = glm(y ~ NF, data = neural, family = &quot;poisson&quot;)
+model3.2 = glm(y ~ imno, data = neural, family = &quot;poisson&quot;)
+anova(model3.1, model3.2)</code></pre>
+<pre><code>Analysis of Deviance Table
+
+Model 1: y ~ NF
+Model 2: y ~ imno
+  Resid. Df Resid. Dev  Df Deviance
+1      5551    12116.1             
+2      5433     7474.2 118   4641.9</code></pre>
+<pre class="r"><code>lrt(model3.1, model3.2)</code></pre>
+<pre><code>[1] &quot;lr stat 4641.944409 on chi-square with 118 degree of freedom;&quot;
+[1] &quot;p value: 0.000000&quot;</code></pre>
+<pre class="r"><code>#summary(model3.2)</code></pre>
+<p>There are differences among images of both F &amp; N groups, so NF cannot explain most of the variation</p>
+<pre class="r"><code>betas = coef(model3.2)
+hist(betas[2:60])</code></pre>
+<p><img src="figure/prelim_data_2018.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>hist(betas[61:120])</code></pre>
+<p><img src="figure/prelim_data_2018.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>hist(betas[2:60], probability = TRUE, col =rgb(1,0,0,0.5), 
+     xlim = c(-1.5, 1.5), xlab = &quot;betas&quot;, main = &quot;effects of image&quot;)
+hist(betas[61:120], probability = TRUE, col =rgb(0,0,1,0.5), add = TRUE)
+legend(&quot;topright&quot;, legend=c(&quot;F&quot;,&quot;N&quot;), col=c(rgb(1,0,0,0.5), 
+     rgb(0,0,1,0.5)), pt.cex=2, pch=15 )</code></pre>
+<p><img src="figure/prelim_data_2018.Rmd/unnamed-chunk-6-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="problem-4" class="section level2">
+<h2>Problem 4</h2>
+<p>NOTE: PAIRED!!!</p>
+<pre class="r"><code>data_sub = neural[NF == &quot;N&quot; &amp; repno  %in% c(0.02, 0.7),]
+dim(data_sub)</code></pre>
+<pre><code>[1] 120   6</code></pre>
+<pre class="r"><code>head(data_sub)</code></pre>
+<pre><code>     imno repno  y tint NF  n
+2778   61  0.02  9    0  N 21
+2812   61  0.70 10    3  N 21
+2827   62  0.02 14    4  N 21
+2861   62  0.70  6    1  N 21
+2872   63  0.02 12    3  N 21
+2906   63  0.70 15    0  N 21</code></pre>
+<pre class="r"><code>model4.0 = glm(y ~ imno, data = data_sub, family = &quot;poisson&quot;)
+model4 = glm(y ~ factor(repno) + imno, data = data_sub, family = &quot;poisson&quot;)
+summary(model4)</code></pre>
+<pre><code>
+Call:
+glm(formula = y ~ factor(repno) + imno, family = &quot;poisson&quot;, data = data_sub)
+
+Deviance Residuals: 
+     Min        1Q    Median        3Q       Max  
+-2.17209  -0.61915  -0.00041   0.57929   1.35482  
+
+Coefficients:
+                   Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)       2.306e+00  2.312e-01   9.977  &lt; 2e-16 ***
+factor(repno)0.7 -1.129e-01  5.994e-02  -1.884  0.05956 .  
+imno62            5.129e-02  3.204e-01   0.160  0.87279    
+imno63            3.514e-01  2.994e-01   1.173  0.24060    
+imno64           -6.419e-01  3.907e-01  -1.643  0.10040    
+imno65           -1.719e-01  3.393e-01  -0.506  0.61253    
+imno66           -1.335e+00  5.026e-01  -2.656  0.00791 ** 
+imno67           -7.472e-01  4.047e-01  -1.847  0.06481 .  
+imno68           -1.184e-14  3.244e-01   0.000  1.00000    
+imno69           -5.407e-02  3.289e-01  -0.164  0.86943    
+imno70            5.213e-01  2.896e-01   1.800  0.07187 .  
+imno71            1.466e-01  3.132e-01   0.468  0.63971    
+imno72            5.521e-01  2.880e-01   1.917  0.05524 .  
+imno73           -1.194e-14  3.244e-01   0.000  1.00000    
+imno74           -1.112e-01  3.338e-01  -0.333  0.73901    
+imno75            5.521e-01  2.880e-01   1.917  0.05524 .  
+imno76           -3.054e-01  3.522e-01  -0.867  0.38593    
+imno77           -4.595e-01  3.687e-01  -1.246  0.21268    
+imno78            4.895e-01  2.914e-01   1.680  0.09291 .  
+imno79           -1.335e+00  5.026e-01  -2.656  0.00791 ** 
+imno80           -1.719e-01  3.393e-01  -0.506  0.61253    
+imno81           -5.465e-01  3.789e-01  -1.443  0.14914    
+imno82           -3.054e-01  3.522e-01  -0.867  0.38593    
+imno83           -4.595e-01  3.687e-01  -1.246  0.21268    
+imno84           -1.112e-01  3.338e-01  -0.333  0.73901    
+imno85            2.336e-01  3.071e-01   0.761  0.44680    
+imno86           -3.054e-01  3.522e-01  -0.867  0.38593    
+imno87           -1.185e-14  3.244e-01   0.000  1.00000    
+imno88           -1.855e+01  1.486e+03  -0.012  0.99004    
+imno89           -1.719e-01  3.393e-01  -0.506  0.61253    
+imno90           -4.595e-01  3.687e-01  -1.246  0.21268    
+imno91            3.514e-01  2.994e-01   1.173  0.24060    
+imno92            4.229e-01  2.952e-01   1.433  0.15195    
+imno93           -8.650e-01  4.215e-01  -2.052  0.04013 *  
+imno94            3.137e-01  3.018e-01   1.039  0.29870    
+imno95            4.229e-01  2.952e-01   1.433  0.15195    
+imno96            2.744e-01  3.044e-01   0.902  0.36722    
+imno97            3.137e-01  3.018e-01   1.039  0.29870    
+imno98           -3.054e-01  3.522e-01  -0.867  0.38593    
+imno99            2.336e-01  3.071e-01   0.761  0.44680    
+imno100           1.001e-01  3.166e-01   0.316  0.75193    
+imno101           1.911e-01  3.100e-01   0.616  0.53771    
+imno102          -3.795e-01  3.599e-01  -1.054  0.29174    
+imno103           1.911e-01  3.100e-01   0.616  0.53771    
+imno104           1.911e-01  3.100e-01   0.616  0.53771    
+imno105           3.878e-01  2.972e-01   1.305  0.19203    
+imno106           1.001e-01  3.166e-01   0.316  0.75193    
+imno107           3.514e-01  2.994e-01   1.173  0.24060    
+imno108           1.001e-01  3.166e-01   0.316  0.75193    
+imno109          -2.364e-01  3.454e-01  -0.684  0.49372    
+imno110          -3.795e-01  3.599e-01  -1.054  0.29174    
+imno111          -6.419e-01  3.907e-01  -1.643  0.10040    
+imno112           1.001e-01  3.166e-01   0.316  0.75193    
+imno113          -1.558e+00  5.501e-01  -2.832  0.00462 ** 
+imno114           1.911e-01  3.100e-01   0.616  0.53771    
+imno115           1.001e-01  3.166e-01   0.316  0.75193    
+imno116           1.911e-01  3.100e-01   0.616  0.53771    
+imno117          -1.719e-01  3.393e-01  -0.506  0.61253    
+imno118           1.911e-01  3.100e-01   0.616  0.53771    
+imno119          -1.335e+00  5.026e-01  -2.656  0.00791 ** 
+imno120          -1.167e-14  3.244e-01   0.000  1.00000    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 300.83  on 119  degrees of freedom
+Residual deviance:  79.56  on  59  degrees of freedom
+AIC: 667.21
+
+Number of Fisher Scoring iterations: 14</code></pre>
+<pre class="r"><code>lrt(model4.0, model4)</code></pre>
+<pre><code>[1] &quot;lr stat 3.555154 on chi-square with 1 degree of freedom;&quot;
+[1] &quot;p value: 0.059361&quot;</code></pre>
+<p>At the borderline of significance. Help explain why in 3 NF label cannot explain lots of variation.</p>
+</div>
+<div id="problem-5" class="section level2">
+<h2>Problem 5</h2>
+<div id="do-images-have-different-repno-effects" class="section level3">
+<h3>Do images have different repno effects?</h3>
+<pre class="r"><code>model5.1 = glm(y ~ repno, data = neural, family = &quot;poisson&quot;)
+model5.2 = glm(y ~ repno + imno, data = neural, family = &quot;poisson&quot;)
+model5.3 = glm(y ~ repno * imno, data = neural, family = &quot;poisson&quot;)
+model5.4 = glm(y ~ repno * NF, data = neural, family = &quot;poisson&quot;)</code></pre>
+<div id="evidence-for-average-coefficient-being-non-zero" class="section level4">
+<h4>evidence for average coefficient being non-zero?</h4>
+<pre class="r"><code>summary(model5.1)</code></pre>
+<pre><code>
+Call:
+glm(formula = y ~ repno, family = &quot;poisson&quot;, data = neural)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-3.9179  -1.2980  -0.1155   0.9294   4.4734  
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  1.96776    0.01008 195.234  &lt; 2e-16 ***
+repno        0.07165    0.01836   3.903 9.48e-05 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 13879  on 5552  degrees of freedom
+Residual deviance: 13864  on 5551  degrees of freedom
+AIC: 33965
+
+Number of Fisher Scoring iterations: 5</code></pre>
+<p>Clearly there is evidence for the average coefficient being non-zero (the p-value is comparing intercept-only with intercept + repno)</p>
+</div>
+<div id="variation-of-coefficient-among-images" class="section level4">
+<h4>variation of coefficient among images</h4>
+<pre class="r"><code>lrt(model5.1, model5.2)</code></pre>
+<pre><code>[1] &quot;lr stat 6401.684088 on chi-square with 119 degree of freedom;&quot;
+[1] &quot;p value: 0.000000&quot;</code></pre>
+<pre class="r"><code>lrt(model5.2, model5.3)</code></pre>
+<pre><code>[1] &quot;lr stat 223.488095 on chi-square with 119 degree of freedom;&quot;
+[1] &quot;p value: 0.000000&quot;</code></pre>
+<pre class="r"><code># summary(model5.3)</code></pre>
+<p>there is evidence for variation in the coefficient among images (the second test is to test if coefficients all being equal). Just looking at the point estimates of effects also suggest they are quite different among images.</p>
+</div>
+<div id="variation-explained-by-nf-alone" class="section level4">
+<h4>variation explained by NF alone?</h4>
+<pre class="r"><code>lrt(model5.4, model5.3)</code></pre>
+<pre><code>[1] &quot;lr stat 4860.924401 on chi-square with 236 degree of freedom;&quot;
+[1] &quot;p value: 0.000000&quot;</code></pre>
+<p>So the variation cannot be explained by N/F factor alone</p>
+</div>
+</div>
+<div id="specific-images-with-strong-evidence-for-a-non-zero-coefficient" class="section level3">
+<h3>specific images with strong evidence for a non-zero coefficient</h3>
+<p>The parts below are wrong for two reason!! First is <span class="math inline">\(\beta_j\)</span>’s test if the coefficient is different from image 1. To get the right p-values, need to transform <span class="math inline">\(\beta\)</span>’s. Say <span class="math inline">\(\alpha = A \beta\)</span> and get the distribution (asymptotic) of <span class="math inline">\(\alpha\)</span>. 2. BH procudure requires independence. Use BHY procedure.</p>
+<pre class="r"><code>fdr.bh &lt;- function(pvals, alpha){
+  m = length(pvals)
+  gam &lt;- replicate(m, 0)
+  pvals_sorted = sort(pvals, decreasing = FALSE, index.return = TRUE) 
+  j.max = 0
+  for(j in m:1){
+    if(pvals_sorted$x[j] &lt; j * alpha/m){
+      j.max &lt;- j
+      break
+    } 
+  }
+  if(j.max == 0){return(gam)} 
+  gam[pvals_sorted$ix[1:j.max]] &lt;- 1 
+  return(gam)
+}</code></pre>
+<pre class="r"><code>Beta = summary(model5.3)$coefficient 
+pvals = Beta[122:nrow(Beta),4]
+names = rownames(Beta[122:nrow(Beta),])
+mask = fdr.bh(pvals, 0.005) ## set 0.05 gives me 81 significant
+sum(mask)</code></pre>
+<pre><code>[1] 18</code></pre>
+<pre class="r"><code>mask</code></pre>
+<pre><code>  [1] 0 0 0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 0 0 1 0 0 0 0
+ [38] 0 0 1 1 1 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ [75] 1 0 0 0 0 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0
+[112] 0 0 0 0 1 0 0 0</code></pre>
+<p>The one with smallest p-value (should repeat for all siginifant ones!)</p>
+<pre class="r"><code>idx = which.min(pvals) + 1
+mask2 &lt;- (neural$imno == idx)
+data_sub = neural[mask2, ] 
+plot(data_sub$repno, data_sub$y)
+yhat_null = predict(model5.2, type = &quot;response&quot;)[mask2]
+yhat = predict(model5.3, type = &quot;response&quot;)[mask2]
+lines(data_sub$repno, yhat_null, col = &quot;red&quot;)
+lines(data_sub$repno, yhat, col = &quot;blue&quot;)</code></pre>
+<p><img src="figure/prelim_data_2018.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>sum((data_sub$y - yhat_null)^2/yhat_null)</code></pre>
+<pre><code>[1] 35.54162</code></pre>
+<pre class="r"><code>sum((data_sub$y - yhat)^2/yhat)</code></pre>
+<pre><code>[1] 23.72247</code></pre>
+<p>the one with the largest p-value</p>
+<pre class="r"><code>idx = which.max(pvals) + 1
+mask2 &lt;- (neural$imno == idx)
+data_sub = neural[mask2, ] 
+plot(data_sub$repno, data_sub$y)
+yhat_null = predict(model5.2, type = &quot;response&quot;)[mask2]
+yhat = predict(model5.3, type = &quot;response&quot;)[mask2]
+lines(data_sub$repno, yhat_null, col = &quot;red&quot;)
+lines(data_sub$repno, yhat, col = &quot;blue&quot;)</code></pre>
+<p><img src="figure/prelim_data_2018.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>sum((data_sub$y - yhat_null)^2/yhat_null)</code></pre>
+<pre><code>[1] 114.323</code></pre>
+<pre class="r"><code>sum((data_sub$y - yhat)^2/yhat)</code></pre>
+<pre><code>[1] 102.4575</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS  10.15.7
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] workflowr_1.6.2
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.5      rprojroot_1.3-2 digest_0.6.25   later_1.1.0.1  
+ [5] R6_2.4.1        backports_1.1.7 git2r_0.26.1    magrittr_1.5   
+ [9] evaluate_0.14   stringi_1.6.2   rlang_0.4.5     fs_1.3.1       
+[13] promises_1.1.1  whisker_0.3-2   rmarkdown_2.1   tools_3.5.1    
+[17] stringr_1.4.0   glue_1.4.1      httpuv_1.5.4    xfun_0.8       
+[21] yaml_2.2.0      compiler_3.5.1  htmltools_0.5.0 knitr_1.28     </code></pre>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
