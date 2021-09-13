@@ -1,0 +1,206 @@
+---
+title: "prelim_data_2018"
+author: "zihao12"
+date: "2021-09-03"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+Important things learned:
+
+- LRT only works for nested model; definition of nested model: $\Omega_1 \subset \Omega_2$. Other model comparisons (for maybe not nested models): AIC, BIC
+- when comparing two group means, remember to control other covariates!! For example pairing samples. 
+- Think whether the p-values correspond to the right test. In p5.2 need to transform beta!!! 
+- BH procedure requires independence. BHY is more conservative and deals with dependency. 
+- Add a conclusion part. 
+
+
+```{r}
+rm(list = ls())
+load('data/neural.rda')
+attach(neural)
+```
+
+
+
+## Problem 2
+```{r}
+hist(y[NF == 'N'], probability = TRUE, col =rgb(1,0,0,0.5), 
+     xlim = c(0, 20), xlab = "y (firing)", main = "distribution of firing")
+hist(y[NF == 'F'], probability = TRUE, col =rgb(0,0,1,0.5), add = TRUE)
+legend("topright", legend=c("N","F"), col=c(rgb(1,0,0,0.5), 
+     rgb(0,0,1,0.5)), pt.cex=2, pch=15 )
+```
+
+function for LRT
+```{r}
+lrt <- function(fit1, fit2){
+  statistic = 2 * as.numeric(logLik(fit2) - logLik(fit1))
+  df = df.residual(fit1) - df.residual(fit2)
+  pval = 1 - pchisq(statistic, df = df)
+  print(sprintf("lr stat %f on chi-square with %d degree of freedom;", statistic, df))
+  print(sprintf("p value: %f", pval))
+}
+```
+
+```{r}
+model2.0 <- glm(y ~ 1, data = neural, family = "poisson")
+model2 = glm(y ~ NF, data = neural, family = "poisson")
+summary(model2)
+anova(model2.0, model2)
+lrt(model2.0, model2)
+table(predict(model2, type = "response"))
+```
+
+Hypothesis: (Poisson assumption + log link) 
+\begin{align}
+  & H_0: g(E(y_i)) = \beta_0\\
+  & H_1: g(E(y_i)) = \beta_0 + \beta_{NF}
+\end{align}
+
+I did two tests: in lrt, the statistic is printed above; standard error is $\sqrt(2)$ (for $X^2_1$)  ; in the `summary()`, statistic is 0.418674  with standard error 0.010081 (asymptotically normal)
+
+More to do: Poisson may not be enough... Negative binomial or ZIP...
+
+## Problem 3
+```{r}
+model3.1 = glm(y ~ NF, data = neural, family = "poisson")
+model3.2 = glm(y ~ imno, data = neural, family = "poisson")
+anova(model3.1, model3.2)
+lrt(model3.1, model3.2)
+#summary(model3.2)
+```
+There are differences among images of both F & N groups, so NF cannot explain most of the variation
+
+
+```{r}
+betas = coef(model3.2)
+hist(betas[2:60])
+hist(betas[61:120])
+
+hist(betas[2:60], probability = TRUE, col =rgb(1,0,0,0.5), 
+     xlim = c(-1.5, 1.5), xlab = "betas", main = "effects of image")
+hist(betas[61:120], probability = TRUE, col =rgb(0,0,1,0.5), add = TRUE)
+legend("topright", legend=c("F","N"), col=c(rgb(1,0,0,0.5), 
+     rgb(0,0,1,0.5)), pt.cex=2, pch=15 )
+```
+
+## Problem 4
+NOTE: PAIRED!!!
+```{r}
+data_sub = neural[NF == "N" & repno  %in% c(0.02, 0.7),]
+dim(data_sub)
+head(data_sub)
+
+model4.0 = glm(y ~ imno, data = data_sub, family = "poisson")
+model4 = glm(y ~ factor(repno) + imno, data = data_sub, family = "poisson")
+summary(model4)
+lrt(model4.0, model4)
+
+
+```
+
+At the borderline of significance. Help explain why in 3 NF label cannot explain lots of variation. 
+
+## Problem 5
+
+### Do images have different repno effects?
+```{r}
+model5.1 = glm(y ~ repno, data = neural, family = "poisson")
+model5.2 = glm(y ~ repno + imno, data = neural, family = "poisson")
+model5.3 = glm(y ~ repno * imno, data = neural, family = "poisson")
+model5.4 = glm(y ~ repno * NF, data = neural, family = "poisson")
+
+```
+
+#### evidence for average coefficient being non-zero?
+```{r}
+summary(model5.1)
+```
+Clearly there is evidence for the average coefficient being non-zero (the p-value is comparing intercept-only with intercept + repno)
+
+#### variation of coefficient among images
+```{r}
+lrt(model5.1, model5.2)
+lrt(model5.2, model5.3)
+
+# summary(model5.3)
+```
+
+there is evidence for variation in the coefficient among images (the second test is to test if coefficients all being equal). Just looking at the point estimates of effects also suggest they are quite different among images. 
+
+#### variation explained by NF alone?
+
+```{r}
+lrt(model5.4, model5.3)
+```
+
+So the variation cannot be explained by N/F factor alone
+
+### specific images with strong evidence for a non-zero coefficient
+
+The parts below are wrong for two reason!!
+First is $\beta_j$'s test if the coefficient is different from image 1. To get the right p-values, need to transform $\beta$'s. Say $\alpha = A \beta$ and get the distribution (asymptotic) of $\alpha$. 2. BH procudure requires independence. Use BHY procedure. 
+
+```{r}
+fdr.bh <- function(pvals, alpha){
+  m = length(pvals)
+  gam <- replicate(m, 0)
+  pvals_sorted = sort(pvals, decreasing = FALSE, index.return = TRUE) 
+  j.max = 0
+  for(j in m:1){
+    if(pvals_sorted$x[j] < j * alpha/m){
+      j.max <- j
+      break
+    } 
+  }
+  if(j.max == 0){return(gam)} 
+  gam[pvals_sorted$ix[1:j.max]] <- 1 
+  return(gam)
+}
+
+
+```
+
+```{r}
+Beta = summary(model5.3)$coefficient 
+pvals = Beta[122:nrow(Beta),4]
+names = rownames(Beta[122:nrow(Beta),])
+mask = fdr.bh(pvals, 0.005) ## set 0.05 gives me 81 significant
+sum(mask)
+mask
+```
+
+The one with smallest p-value (should repeat for all siginifant ones!)
+```{r}
+idx = which.min(pvals) + 1
+mask2 <- (neural$imno == idx)
+data_sub = neural[mask2, ] 
+plot(data_sub$repno, data_sub$y)
+yhat_null = predict(model5.2, type = "response")[mask2]
+yhat = predict(model5.3, type = "response")[mask2]
+lines(data_sub$repno, yhat_null, col = "red")
+lines(data_sub$repno, yhat, col = "blue")
+
+sum((data_sub$y - yhat_null)^2/yhat_null)
+sum((data_sub$y - yhat)^2/yhat)
+
+```
+
+the one with the largest p-value
+```{r}
+idx = which.max(pvals) + 1
+mask2 <- (neural$imno == idx)
+data_sub = neural[mask2, ] 
+plot(data_sub$repno, data_sub$y)
+yhat_null = predict(model5.2, type = "response")[mask2]
+yhat = predict(model5.3, type = "response")[mask2]
+lines(data_sub$repno, yhat_null, col = "red")
+lines(data_sub$repno, yhat, col = "blue")
+
+sum((data_sub$y - yhat_null)^2/yhat_null)
+sum((data_sub$y - yhat)^2/yhat)
+```
