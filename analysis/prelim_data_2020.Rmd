@@ -21,7 +21,6 @@ traits = read.csv("data/Traits_73_species.csv")
 
 Statistical Issues: look at the data processing part. The raw data records individual ringing events. Authors aggregate them into event for a nest. There are a lot of assumptions and ad hoc decisions. Moreover, the possible bias and variance introduced by preprocessing is not modeled. 
 
-
 ## problem 2
 Below I only show 1 species as an example...
 ```{r}
