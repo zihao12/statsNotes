@@ -15,6 +15,7 @@ library(lmerTest)
 library(ordinal)
 library(dplyr)
 library(extraDistr)
+library("iZID")
 ```
 
 ```{r}
@@ -150,7 +151,7 @@ s_n <- summarise(by_id,
 
 ```{r}
 obj <- function(par, s, n, fix_mean){
-  a = (par[1])**2
+  a = exp(par[1])
   b = a * (1/fix_mean - 1)  
   nll = -sum(dbbinom(x = s, size = n, alpha = a, beta = b, log = TRUE))
   return(nll)
@@ -161,18 +162,17 @@ mle <- function(s, n, fix_mean){
   val = -Inf
   for(i in 1:30){
     # a = exp(10*rnorm(1))
-    # a = exp(-10*runif(1))
-    a = 3
-    fit = optim(par = c(sqrt(a)),fn = obj, s = s, n = n, 
-                fix_mean = fix_mean, 
-                method = "BFGS")
+    a = exp(-10*runif(1))
+    # a = runif(1)
+    fit = optim(par = c(log(a)),fn = obj, s = s, n = n, 
+                fix_mean = fix_mean)
     # print(fit$value)
     if(fit$value > val){
       val = fit$value
       curr = fit
     }
   }
-  a = curr$par**2
+  a = exp(curr$par)
   b = a * (1/fix_mean - 1)  
   return(c(a, b, val))
 }
@@ -192,11 +192,7 @@ EB <- function(s, n){
               posterior_mean = posterior_mean, posterior_var = posterior_var, 
               nll = fit[3]))
 }
-```
 
-
-
-```{r}
 fitted = list()
 for(i in 1:5){
   J = sprintf("Journal %d", i)
