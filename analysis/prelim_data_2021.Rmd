@@ -164,7 +164,7 @@ mle <- function(s, n, fix_mean){
     # a = exp(10*rnorm(1))
     a = exp(-10*runif(1))
     # a = runif(1)
-    fit = optim(par = c(log(a)),fn = obj, s = s, n = n, 
+    fit = optim(par = c(log(a)),fn = obj, s = s, n = n,
                 fix_mean = fix_mean)
     # print(fit$value)
     if(fit$value > val){
@@ -173,9 +173,10 @@ mle <- function(s, n, fix_mean){
     }
   }
   a = exp(curr$par)
-  b = a * (1/fix_mean - 1)  
+  b = a * (1/fix_mean - 1)
   return(c(a, b, val))
 }
+
 
 EB <- function(s, n){
   ## fix prior at mean
@@ -193,6 +194,28 @@ EB <- function(s, n){
               nll = fit[3]))
 }
 
+compute_obj <- function(data_sub, a){
+  s = data_sub$s
+  n = data_sub$n
+  fix_mean = sum(s)/sum(n)
+  return(obj(c(log(a)), s, n, fix_mean))
+}
+
+```
+
+
+```{r}
+i = 1
+J = sprintf("Journal %d", i)
+data_sub = subset(s_n, journal == J)
+a = c(seq(0, 10, 0.1), seq(10, 10000, 10))
+objs <- sapply(a, compute_obj, data_sub = data_sub)
+plot(a, objs)
+a[which.max(objs)]
+```
+
+
+```{r}
 fitted = list()
 for(i in 1:5){
   J = sprintf("Journal %d", i)
@@ -214,10 +237,8 @@ out = as.data.frame(out)
 rownames(out) <- paste("J", 1:5)
 colnames(out) <- c("a", "b", "mean", "var", "nll")
 round(out, 5)
-```
 
 
-```{r}
 i = 1
 J = sprintf("Journal %d", i)
 data_sub = subset(s_n, journal == J)
