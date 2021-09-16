@@ -1,0 +1,241 @@
+---
+title: "prelim_data_2021"
+author: "zihao12"
+date: "2021-09-15"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+```{r}
+rm(list = ls())
+library(lmerTest)
+library(ordinal)
+library(dplyr)
+library(extraDistr)
+```
+
+```{r}
+# Data upload and preparation
+round1 <- read.csv("prelim_21/RevData.csv")
+round1$id <- as.character(round1$id)
+round1$journal <- factor(round1$journal, labels=c("Journal 1", "Journal 2", "Journal 3", "Journal 4", "Journal 5"))
+round1$open.review <- factor(round1$open.review, labels=c("No", "Yes"))
+round1$review.complete <- factor(round1$review.complete, labels=c("No", "Yes"))
+round1$name.published <- factor(round1$name.published, labels=c("No", "Yes"))
+round1$recommendation <- factor(round1$recommendation, labels=c("Reject", "Major revisions", "Minor revisions", "Accept"))
+round1$accepted <- factor(round1$accepted, labels=c("No", "Yes"))
+round1$reviewer.status <- factor(round1$reviewer.status, labels=c("Professor", "Other", "Dr."))
+round1$gender <- factor(round1$gender, labels=c("Female", "Male", "Uncertain"))
+round1$invitation.date = as.Date(round1$invitation.date)
+summary(round1)
+```
+
+## Problem 2
+```{r}
+# J = "Journal 1"
+# data_sub = round1[round1$journal == J, ]
+by_date = group_by(round1, journal, invitation.date)
+prop <- summarise(by_date,
+                   proportion = mean(accepted == "Yes"))
+prop_by_journal <- group_by(prop, journal)
+prop_by_journal$invitation.date = as.Date(prop_by_journal$invitation.date)
+# tail(unique(prop_by_journal$invitation.date), 20)
+## rm last 6 months
+prop_by_journal = prop_by_journal[prop_by_journal$invitation.date < "2017-05-01", ]
+# tail(unique(prop_by_journal$invitation.date), 20)
+```
+
+```{r}
+my_cols = c("purple", "blue", "cyan", "green", "yellow")
+
+i = 1
+J = sprintf("Journal %d", i)
+data_sub = prop_by_journal[prop_by_journal$journal == J, ]
+attach(data_sub)
+prop_sm = predict(loess(proportion ~ as.numeric(invitation.date), data = data_sub))
+
+plot(invitation.date, proportion, 
+     type = "l", col = my_cols[i],
+     ylim = c(0, 0.8), xlab = "Date", ylab = "proportion of accpectance",
+     main = toString(paste("J",1:5, my_cols)),
+     cex.main=0.8)
+lines(invitation.date, prop_sm, col = my_cols[i])
+detach(data_sub)
+
+for(i in 2:5){
+  J = sprintf("Journal %d", i)
+  data_sub = prop_by_journal[prop_by_journal$journal == J, ]
+  attach(data_sub)
+  prop_sm = predict(loess(proportion ~ as.numeric(invitation.date), data = data_sub))
+  
+  lines(invitation.date, proportion, type = "l", col = my_cols[i])
+  lines(invitation.date, prop_sm, col = my_cols[i])
+  detach(data_sub)
+}
+```
+
+Visual assessmen of smoothing: the chosen level of smoothing reflects the long term trend (and this supports the claim author makes) but neglects more local variabilities. There seems to be some "seasonal" fluctuations that are flattend out as noise. 
+
+## Problem 3
+We can find the equivalent models. Why? In (5.5) the score function for logistic regression, we can see they are the same. So we have the same $\hat{\pi}_i$ for both models. Then in (5.6), because of the block structure in $X$, the covariance matrix of $\beta$ is also blocked, with the sub-block of the bigger model the same as the smaller model. 
+
+To confirm. Numerically i choose the baseline sub group. The predicted values are the same, and the estimated $\beta$ are the same. 
+```{r}
+acceptance_sub <- glm(accepted ~ open.review , 
+                  family=binomial, data=round1, subset= gender=="Female" & reviewer.status == "Professor")
+p1 = predict.glm(acceptance_sub, type = "link")
+
+acceptance <- glm(accepted ~ open.review * gender * reviewer.status, 
+                  family=binomial, data=round1)
+
+p2 = predict.glm(acceptance, type = "link")[which(round1$gender == "Female" & round1$reviewer.status == "Professor")]
+
+max(abs(p1 - p2))
+
+# summary(acceptance_sub)$coefficients["open.reviewYes",]
+# summary(acceptance)$coefficients["open.reviewYes:genderMale:reviewer.statusDr.",]
+
+summary(acceptance_sub)$coefficients["(Intercept)",]
+summary(acceptance)$coefficients["(Intercept)",]
+
+summary(acceptance_sub)$coefficients["open.reviewYes",]
+summary(acceptance)$coefficients["open.reviewYes",]
+```
+
+
+## Problem 4
+Of course not. Separately fitting 9 models results in each models having their own cutoff points, whereas fitting them in one model will have one set of cutoff points. 
+
+
+## Problem 5
+```{r}
+data_sub = subset(round1, journal %in% paste("Journal", c(1,3,5)) & invitation.date < "2014-11-01")
+data_sub$journal = factor(data_sub$journal) ## make the levels right
+
+# time <- lmer(review.time ~ open.review  + reviewer.status + gender + factor(year) + open.review:reviewer.status + open.review:gender + (1 | id) + (1 | journal), data=data_sub, subset=review.complete=="Yes")
+# summary(time)
+
+time1 <- lm(review.time ~ open.review + journal + factor(year), data=data_sub, subset=review.complete=="Yes")
+summary(time1)
+```
+
+## Problem 6
+
+Model 
+
+\begin{align}
+ & p_j \sim \text{Beta}(a, b)\\
+ & s_j \sim \text{Bin}(n_j, p_j)
+\end{align}
+The posterior is
+\begin{align}
+ & p_j |s_j, n_j, a, b  \sim \text{Beta}(a + s_j, b + n_j - s_j)\\
+\end{align}
+
+where $n_j$ is the number of invited reviewers and $s_j$ is the number of accepted invitations, for paper $j$. I use EB approach.
+
+
+```{r}
+by_id = group_by(round1, id, journal)
+s_n <- summarise(by_id,
+                 n = n(),
+                 s = sum(accepted == "Yes"),
+                 mle = s/n)
+```
+
+
+
+```{r}
+obj <- function(par, s, n, fix_mean){
+  a = (par[1])**2
+  b = a * (1/fix_mean - 1)  
+  nll = -sum(dbbinom(x = s, size = n, alpha = a, beta = b, log = TRUE))
+  return(nll)
+}
+
+mle <- function(s, n, fix_mean){
+  # browser()
+  val = -Inf
+  for(i in 1:30){
+    # a = exp(10*rnorm(1))
+    # a = exp(-10*runif(1))
+    a = 3
+    fit = optim(par = c(sqrt(a)),fn = obj, s = s, n = n, 
+                fix_mean = fix_mean, 
+                method = "BFGS")
+    # print(fit$value)
+    if(fit$value > val){
+      val = fit$value
+      curr = fit
+    }
+  }
+  a = curr$par**2
+  b = a * (1/fix_mean - 1)  
+  return(c(a, b, val))
+}
+
+EB <- function(s, n){
+  ## fix prior at mean
+  fix_mean = sum(s)/sum(n)
+  print(fix_mean)
+  fit = mle(s, n, fix_mean)
+  a = fit[1]
+  b = fit[2]
+  alpha = a + s
+  beta = b + n - s
+  posterior_mean = alpha/(alpha + beta)
+  posterior_var = alpha*beta/((alpha + beta)^2 * (alpha + beta + 1))
+  return(list(a = a, b = b, alpha = alpha, beta = beta, 
+              posterior_mean = posterior_mean, posterior_var = posterior_var, 
+              nll = fit[3]))
+}
+```
+
+
+
+```{r}
+fitted = list()
+for(i in 1:5){
+  J = sprintf("Journal %d", i)
+  data_sub = subset(s_n, journal == J)
+  #print(J)
+  fitted[[i]] = EB(data_sub$s, data_sub$n)
+}
+
+
+out <- c()
+for(i in 1:5){
+  mod = fitted[[i]]
+  a_b = mod$a + mod$b
+  tmp <- c(mod$a, mod$b, mod$a/a_b, mod$a*mod$b/(a_b^2 * (a_b+1)),mod$nll)
+  out = rbind(out, tmp)
+}
+
+out = as.data.frame(out)
+rownames(out) <- paste("J", 1:5)
+colnames(out) <- c("a", "b", "mean", "var", "nll")
+round(out, 5)
+```
+
+
+```{r}
+i = 1
+J = sprintf("Journal %d", i)
+data_sub = subset(s_n, journal == J)
+
+# hist(fitted[[i]]$alpha/(fitted[[i]]$alpha + fitted[[i]]$beta))
+# pm = fitted[[i]]$alpha/(fitted[[i]]$alpha + fitted[[i]]$beta)
+plot(data_sub$mle, fitted[[i]]$posterior_mean, xlim = c(0, 1), ylim = c(0,1))
+abline(a = 0, b = 1, col = "red")
+
+```
+
+
+
+
+
+
+
