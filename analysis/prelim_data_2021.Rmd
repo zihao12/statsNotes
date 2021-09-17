@@ -81,178 +81,250 @@ for(i in 2:5){
 Visual assessmen of smoothing: the chosen level of smoothing reflects the long term trend (and this supports the claim author makes) but neglects more local variabilities. There seems to be some "seasonal" fluctuations that are flattend out as noise. 
 
 ## Problem 3
-We can find the equivalent models. Why? In (5.5) the score function for logistic regression, we can see they are the same. So we have the same $\hat{\pi}_i$ for both models. Then in (5.6), because of the block structure in $X$, the covariance matrix of $\beta$ is also blocked, with the sub-block of the bigger model the same as the smaller model. 
+Yes, we can find a regression model that has the same assumption as fitting the 9 subgroups separately. 
 
-To confirm. Numerically i choose the baseline sub group. The predicted values are the same, and the estimated $\beta$ are the same. 
-```{r}
-acceptance_sub <- glm(accepted ~ open.review , 
-                  family=binomial, data=round1, subset= gender=="Female" & reviewer.status == "Professor")
-p1 = predict.glm(acceptance_sub, type = "link")
+### Analytical justification
 
+
+For sample $i$, let $s_i$ denote the status and $g_i$ denote gender, both taking values from $\{1, 2, 3\}$; let $o_i$ denote the oen review, taking values from $\{1, 2\}$. If we fit the 9 subgroups separately, we can write the model as:
+\begin{align}
+  & \text{logit}(\pi_i) = \alpha^0_{s_i, g_i} + \alpha^1_{s_i, g_i} 1_{o_i = 2}
+\end{align}
+
+We can fit the models above in one model:
+\begin{align}
+   \text{logit}(\pi_i) = & \beta^0 + \sum_{s \geq 2} \beta^{0, S}_s 1_{s_i = s} + \sum_{g \geq 2} \beta^{0, G}_g 1_{g_i = s} + \sum_{s \geq 2, g \geq 2} \beta^{0, SG}_s 1_{s_i = s, g_i = g}\\
+   & + (\beta^1 + \sum_{s \geq 2} \beta^{1, S}_s 1_{s_i = s} + \sum_{g \geq 2} \beta^{1, G}_g 1_{g_i = s} + \sum_{s \geq 2, g \geq 2} \beta^{1, SG}_s 1_{s_i = s, g_i = g}) 1_{o_i = 2}
+\end{align}
+
+Then to show that the two models have the same assumptions, it suffices to show, for any $\alpha^{k}_{sg}$ we can express $\pi_i$ equivalently with a set of $\beta$'s, and vice versa. In fact, it's easy to see
+
+\begin{align}
+  & \alpha^0_{11} = \beta^0\\
+  & \alpha^0_{s1} = \beta^0 + \beta^{0, S}_s, \forall s \geq 2\\
+  & \alpha^0_{1g} = \beta^0 + \beta^{0, G}_g, \forall g \geq 2\\
+  & \alpha^0_{sg} = \beta^0 + \beta^{0, S}_s + \beta^{0, G}_g + \beta^{0, SG}_sg, \forall s \geq 2, g \geq 2
+\end{align}
+
+Similarly for intercept terms
+\begin{align}
+  & \alpha^1_{11} = \beta^1\\
+  & \alpha^1_{s1} = \beta^1 + \beta^{1, S}_s, \forall s \geq 2\\
+  & \alpha^1_{1g} = \beta^1 + \beta^{1, G}_g, \forall g \geq 2\\
+  & \alpha^1_{sg} = \beta^1 + \beta^{1, S}_s + \beta^{1, G}_g + \beta^{1, SG}_sg, \forall s \geq 2, g \geq 2
+\end{align}
+If we flatten the $\alpha$'s and $\beta$'s and express as vectors, we can find $\alpha = L \beta$ where $L$ is full rank (with some ordering it's upper triangular with diagonal elements all 1). Once we see the linear 1-1 correspondence between $\alpha, \beta$, we can easily see the ML estimate should be the same. Also since $\hat{\alpha}, \hat{\beta}$ are both asymptotically normal, from one covariance matrix we can recover the other (if $\hat{\beta} - \beta \longrightarrow N(0, \Sigma)$, we have $\hat{\alpha} - \alpha \longrightarrow N(0, L\Sigma L^T)$). Thus after doing some transformation we can recover the same SE and thus the same confidence interval. 
+
+### Numerical check
+
+* First, I check to see that the $\hat{\pi}_i$'s are the same for the two models (I compared two subgroups). (I didn't show the result)
+* Next, I should how to compute $\alpha$'s SE from $\beta$ using the examples below
+
+```{r echo=FALSE}
+## compare \pi_i's
 acceptance <- glm(accepted ~ open.review * gender * reviewer.status, 
                   family=binomial, data=round1)
 
-p2 = predict.glm(acceptance, type = "link")[which(round1$gender == "Female" & round1$reviewer.status == "Professor")]
+acceptance_sub <- glm(accepted ~ open.review , 
+                  family=binomial, data=round1, subset= gender=="Female" & reviewer.status == "Professor")
+p1 = predict.glm(acceptance_sub, type = "response")
 
-max(abs(p1 - p2))
+acceptance_sub2 <- glm(accepted ~ open.review , 
+                  family=binomial, data=round1, subset= gender=="Male" & reviewer.status == "Professor")
+p2 = predict.glm(acceptance_sub2, type = "response")
 
-# summary(acceptance_sub)$coefficients["open.reviewYes",]
-# summary(acceptance)$coefficients["open.reviewYes:genderMale:reviewer.statusDr.",]
+p0 = predict.glm(acceptance, type = "response")[which(round1$gender == "Female" & round1$reviewer.status == "Professor")]
+d1 = max(abs(p1 - p0))
+p0 = predict.glm(acceptance, type = "response")[which(round1$gender == "Male" & round1$reviewer.status == "Professor")]
+d2 = max(abs(p2 - p0))
+c(d1, d2)
+```
 
+```{r}
 summary(acceptance_sub)$coefficients["(Intercept)",]
 summary(acceptance)$coefficients["(Intercept)",]
 
 summary(acceptance_sub)$coefficients["open.reviewYes",]
 summary(acceptance)$coefficients["open.reviewYes",]
-```
 
 
-## Problem 4
-Of course not. Separately fitting 9 models results in each models having their own cutoff points, whereas fitting them in one model will have one set of cutoff points. 
-
-
-## Problem 5
-```{r}
-data_sub = subset(round1, journal %in% paste("Journal", c(1,3,5)) & invitation.date < "2014-11-01")
-data_sub$journal = factor(data_sub$journal) ## make the levels right
-
-# time <- lmer(review.time ~ open.review  + reviewer.status + gender + factor(year) + open.review:reviewer.status + open.review:gender + (1 | id) + (1 | journal), data=data_sub, subset=review.complete=="Yes")
-# summary(time)
-
-time1 <- lm(review.time ~ open.review + journal + factor(year), data=data_sub, subset=review.complete=="Yes")
-summary(time1)
-```
-
-## Problem 6
-
-Model 
-
-\begin{align}
- & p_j \sim \text{Beta}(a, b)\\
- & s_j \sim \text{Bin}(n_j, p_j)
-\end{align}
-The posterior is
-\begin{align}
- & p_j |s_j, n_j, a, b  \sim \text{Beta}(a + s_j, b + n_j - s_j)\\
-\end{align}
-
-where $n_j$ is the number of invited reviewers and $s_j$ is the number of accepted invitations, for paper $j$. I use EB approach.
-
-
-```{r}
-by_id = group_by(round1, id, journal)
-s_n <- summarise(by_id,
-                 n = n(),
-                 s = sum(accepted == "Yes"),
-                 mle = s/n)
-```
-
-
-
-```{r}
-obj <- function(par, s, n, fix_mean){
-  a = exp(par[1])
-  b = a * (1/fix_mean - 1)  
-  nll = -sum(dbbinom(x = s, size = n, alpha = a, beta = b, log = TRUE))
-  return(nll)
-}
-
-mle <- function(s, n, fix_mean){
-  # browser()
-  val = -Inf
-  for(i in 1:30){
-    # a = exp(10*rnorm(1))
-    a = exp(-10*runif(1))
-    # a = runif(1)
-    fit = optim(par = c(log(a)),fn = obj, s = s, n = n,
-                fix_mean = fix_mean)
-    # print(fit$value)
-    if(fit$value > val){
-      val = fit$value
-      curr = fit
-    }
-  }
-  a = exp(curr$par)
-  b = a * (1/fix_mean - 1)
-  return(c(a, b, val))
-}
-
-
-EB <- function(s, n){
-  ## fix prior at mean
-  fix_mean = sum(s)/sum(n)
-  print(fix_mean)
-  fit = mle(s, n, fix_mean)
-  a = fit[1]
-  b = fit[2]
-  alpha = a + s
-  beta = b + n - s
-  posterior_mean = alpha/(alpha + beta)
-  posterior_var = alpha*beta/((alpha + beta)^2 * (alpha + beta + 1))
-  return(list(a = a, b = b, alpha = alpha, beta = beta, 
-              posterior_mean = posterior_mean, posterior_var = posterior_var, 
-              nll = fit[3]))
-}
-
-compute_obj <- function(data_sub, a){
-  s = data_sub$s
-  n = data_sub$n
-  fix_mean = sum(s)/sum(n)
-  return(obj(c(log(a)), s, n, fix_mean))
-}
-
-```
-
-
-```{r}
-i = 1
-J = sprintf("Journal %d", i)
-data_sub = subset(s_n, journal == J)
-a = c(seq(0, 10, 0.1), seq(10, 10000, 10))
-objs <- sapply(a, compute_obj, data_sub = data_sub)
-plot(a, objs)
-a[which.max(objs)]
-```
-
-
-```{r}
-fitted = list()
-for(i in 1:5){
-  J = sprintf("Journal %d", i)
-  data_sub = subset(s_n, journal == J)
-  #print(J)
-  fitted[[i]] = EB(data_sub$s, data_sub$n)
-}
-
-
-out <- c()
-for(i in 1:5){
-  mod = fitted[[i]]
-  a_b = mod$a + mod$b
-  tmp <- c(mod$a, mod$b, mod$a/a_b, mod$a*mod$b/(a_b^2 * (a_b+1)),mod$nll)
-  out = rbind(out, tmp)
-}
-
-out = as.data.frame(out)
-rownames(out) <- paste("J", 1:5)
-colnames(out) <- c("a", "b", "mean", "var", "nll")
-round(out, 5)
-
-
-i = 1
-J = sprintf("Journal %d", i)
-data_sub = subset(s_n, journal == J)
-
-# hist(fitted[[i]]$alpha/(fitted[[i]]$alpha + fitted[[i]]$beta))
-# pm = fitted[[i]]$alpha/(fitted[[i]]$alpha + fitted[[i]]$beta)
-plot(data_sub$mle, fitted[[i]]$posterior_mean, xlim = c(0, 1), ylim = c(0,1))
-abline(a = 0, b = 1, col = "red")
-
+summary(acceptance_sub2)$coefficients["open.reviewYes",]
+betas = coefficients(acceptance)
+M = vcov(acceptance)
+v = replicate(18, 0)
+v[2] = v[7] = 1
+c(t(v) %*% betas, sqrt(t(v) %*% M %*% v))
 ```
 
 
 
 
+<!-- ## Problem 4 -->
+<!-- Of course not. Separately fitting 9 models results in each models having their own cutoff points, whereas fitting them in one model will have one set of cutoff points.  -->
+
+
+<!-- ## Problem 5 -->
+<!-- ```{r} -->
+<!-- data_sub = subset(round1, journal %in% paste("Journal", c(1,3,5)) & invitation.date < "2014-11-01") -->
+<!-- data_sub$journal = factor(data_sub$journal) ## make the levels right -->
+
+<!-- # time <- lmer(review.time ~ open.review  + reviewer.status + gender + factor(year) + open.review:reviewer.status + open.review:gender + (1 | id) + (1 | journal), data=data_sub, subset=review.complete=="Yes") -->
+<!-- # summary(time) -->
+
+<!-- time1 <- lm(review.time ~ open.review + journal + factor(year), data=data_sub, subset=review.complete=="Yes") -->
+<!-- summary(time1) -->
+<!-- ``` -->
+
+<!-- ## Problem 6 -->
+
+<!-- Model  -->
+
+<!-- \begin{align} -->
+<!--  & p_j \sim \text{Beta}(a, b)\\ -->
+<!--  & s_j \sim \text{Bin}(n_j, p_j) -->
+<!-- \end{align} -->
+<!-- The posterior is -->
+<!-- \begin{align} -->
+<!--  & p_j |s_j, n_j, a, b  \sim \text{Beta}(a + s_j, b + n_j - s_j)\\ -->
+<!-- \end{align} -->
+
+<!-- where $n_j$ is the number of invited reviewers and $s_j$ is the number of accepted invitations, for paper $j$. I use EB approach. -->
+
+
+<!-- ```{r} -->
+<!-- by_id = group_by(round1, journal, id) -->
+<!-- s_n <- summarise(by_id, -->
+<!--                  n = n(), -->
+<!--                  s = sum(accepted == "Yes"), -->
+<!--                  mle = s/n) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- s_n_journal <- group_by(s_n, journal) -->
+<!-- s_n_journal <- summarise(s_n_journal, -->
+<!--                          n = sum(n), -->
+<!--                          s = sum(s), -->
+<!--                          prop = s/n) -->
+<!-- s_n_journal -->
+<!-- ``` -->
 
 
 
+
+<!-- ```{r} -->
+<!-- obj <- function(par, s, n, fix_mean){ -->
+<!--   a = (par[1])**2 -->
+<!--   b = a * (1/fix_mean - 1)   -->
+<!--   nll = -sum(dbbinom(x = s, size = n, alpha = a, beta = b, log = TRUE)) -->
+<!--   return(nll) -->
+<!-- } -->
+
+<!-- mle <- function(s, n, fix_mean){ -->
+<!--   # browser() -->
+<!--   val = -Inf -->
+<!--   # for(i in 1:30){ -->
+<!--   #   # a = exp(10*rnorm(1)) -->
+<!--   #   a = exp(-10*runif(1)) -->
+<!--   #   # a = runif(1) -->
+<!--   #   fit = optim(par = c(sqrt(a)),fn = obj, s = s, n = n, -->
+<!--   #               fix_mean = fix_mean) -->
+<!--   #   # fit = optimize(f = obj, c(0, 10000), s = s, n = n, fix_mean = fix_mean) -->
+<!--   #   # print(fit$value) -->
+<!--   #   if(fit$value > val){ -->
+<!--   #     val = fit$value -->
+<!--   #     curr = fit -->
+<!--   #   } -->
+<!--   # } -->
+<!--   # a = (curr$par)**2 -->
+<!--   fit = optimize(f = obj, c(0, 10000), s = s, n = n, fix_mean = fix_mean) -->
+<!--   val = fit$objective -->
+<!--   a = fit$minimum**2 -->
+<!--   b = a * (1/fix_mean - 1) -->
+<!--   return(c(a, b, val)) -->
+<!-- } -->
+
+<!-- is_significant <- function(ab, lower.tail, q, p = 0.95){ -->
+<!--   pbeta(q = q, shape1 = ab[1], shape2 = ab[2], lower.tail = lower.tail) > p -->
+<!-- } -->
+
+
+<!-- EB <- function(s, n){ -->
+<!--   ## fix prior at mean -->
+<!--   fix_mean = sum(s)/sum(n) -->
+<!--   print(fix_mean) -->
+<!--   fit = mle(s, n, fix_mean) -->
+<!--   a = fit[1] -->
+<!--   b = fit[2] -->
+<!--   alpha = a + s -->
+<!--   beta = b + n - s -->
+<!--   posterior_mean = alpha/(alpha + beta) -->
+<!--   posterior_var = alpha*beta/((alpha + beta)^2 * (alpha + beta + 1)) -->
+<!--   pH = mean(apply(cbind(alpha, beta), 1,  -->
+<!--                  is_significant, lower.tail = FALSE, q = fix_mean)) -->
+<!--   pL = mean(apply(cbind(alpha, beta), 1,  -->
+<!--                  is_significant, lower.tail = TRUE, q = fix_mean)) -->
+<!--   return(list(a = a, b = b, alpha = alpha, beta = beta, -->
+<!--               sample_mean = fix_mean,  -->
+<!--               posterior_mean = posterior_mean,  -->
+<!--               posterior_var = posterior_var,  -->
+<!--               pH = pH, pL = pL,  -->
+<!--               nll = fit[3])) -->
+<!-- } -->
+
+<!-- compute_obj <- function(data_sub, a){ -->
+<!--   s = data_sub$s -->
+<!--   n = data_sub$n -->
+<!--   fix_mean = sum(s)/sum(n) -->
+<!--   return(obj(c(sqrt(a)), s, n, fix_mean)) -->
+<!-- } -->
+
+<!-- ``` -->
+
+
+
+
+<!-- ```{r} -->
+<!-- fitted = list() -->
+<!-- for(i in 1:5){ -->
+<!--   J = sprintf("Journal %d", i) -->
+<!--   data_sub = subset(s_n, journal == J) -->
+<!--   #print(J) -->
+<!--   fitted[[i]] = EB(data_sub$s, data_sub$n) -->
+<!-- } -->
+
+<!-- out <- c() -->
+<!-- for(i in 1:5){ -->
+<!--   mod = fitted[[i]] -->
+<!--   a_b = mod$a + mod$b -->
+<!--   tmp <- c(mod$a, mod$b, mod$a/a_b, mod$a*mod$b/(a_b^2 * (a_b+1)), -->
+<!--            mod$pH, mod$pL, mod$nll) -->
+<!--   out = rbind(out, tmp) -->
+<!-- } -->
+
+<!-- out = as.data.frame(out) -->
+<!-- rownames(out) <- paste("J", 1:5) -->
+<!-- colnames(out) <- c("a", "b", "mean", "var", "pH","pL","nll") -->
+<!-- round(out, 5) -->
+<!-- ``` -->
+
+
+<!-- ```{r fig.width=15, fig.height=35} -->
+<!-- par(mfrow = c(5, 2)) -->
+<!-- for(i in 1:5){ -->
+<!--   J = sprintf("Journal %d", i) -->
+<!--   data_sub = subset(s_n, journal == J) -->
+<!--   mod = fitted[[i]] -->
+<!--   plot(data_sub$mle, mod$posterior_mean,  -->
+<!--        xlim = c(0,1), ylim = c(0,1), -->
+<!--        xlab = "mle", ylab = "posterior mean") -->
+<!--   abline(a = 0, b = 1, col = "blue") -->
+<!--   hist(mod$posterior_mean, probability = TRUE,  -->
+<!--        xlab = "proportion (posterior mean)", xlim = c(0,1)) -->
+<!--   abline(v = mod$sample_mean, col = "blue") -->
+<!-- } -->
+<!-- ``` -->
+
+
+<!-- * I show the percentage of the papers with much higher/lower acceptance probability for each journal (the journal mean probability is not covered in the paper's 90% credible interval)  -->
+
+<!-- * Journal 5  has the greatest variability: the shrinkage effect is weakest, and has the most papers with much higher/lower acceptance probability.  -->
