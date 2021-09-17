@@ -209,33 +209,38 @@ data_sub = na.omit(data_sub)
 time1 <- lmer(review.time ~ open.review  + reviewer.status + factor(year) + open.review:reviewer.status + 
                 (1 | id) + (1 | journal), data=data_sub, REML = FALSE)
 plot(time1)
-
-# time2 <- lmer(review.time ~ open.review  + reviewer.status + factor(year) + 
-#                 (1 | id) + (1 | journal), data=data_sub, REML = FALSE)
-# time3 <- lmer(review.time ~ reviewer.status + factor(year) + 
-#                 (1 | id) + (1 | journal), data=data_sub, REML = FALSE)
-# 
-# lrt(time2, time1)
-# lrt(time3, time1)
 ```
 
-* However, the residual plot is problematic: residual variance increases with fitted values. Since the response `review.time` is counts of days, I will try with Poisson GLM
+* However, the residual plot is problematic: residual variance increases with fitted values. Since the response `review.time` is counts of days, I will use Poisson GLM instead.
+
+* I do the same nested model as outlined above, and find that for journal 3, `open.review` intercepts and interaction with `reviewer.status` are both significant. 
 
 ```{r}
 time2 <- glmer(review.time ~ open.review  + reviewer.status + factor(year) + open.review:reviewer.status +
                 (1 | id) + (1 | journal), data=data_sub, family = poisson(link = "log"))
-plot(time2)
-
 time3 <- glmer(review.time ~ open.review  + reviewer.status + factor(year) +
                 (1 | id) + (1 | journal), data=data_sub, family = poisson(link = "log"))
-
 time4 <- glmer(review.time ~ reviewer.status + factor(year) +
                 (1 | id) + (1 | journal), data=data_sub, family = poisson(link = "log"))
 
-lrt(time3, time2)
-lrt(time4, time2)
+summary(time2)$AICtab
+summary(time3)$AICtab
+summary(time4)$AICtab
 ```
 
+### Potential confounding of `year`
+
+* `Year` is a confounder for `open.review`. In the coefficients below, we can see the `year` effects are mostly small, but become much bigger in year 4, during the pilot period for journal 1. Its effect is big compared to the effect sizes for `open.review` so it's concerning. 
+```{r}
+summary(time2)$coefficients
+```
+
+* However, then I fit the model using only data for journal 3 & 5, and I find a similarly large effect for year 4, so maybe indeed there is a significant effect of year 4 on review time. 
+```{r}
+time5 <- glmer(review.time ~ reviewer.status + factor(year) +
+                (1 | id) + (1 | journal), data=data_sub, subset = journal != "Journal 1",family = poisson(link = "log"))
+summary(time5)$coefficients
+```
 
 
 ## Problem 6
