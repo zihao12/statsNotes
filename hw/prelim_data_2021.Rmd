@@ -13,6 +13,11 @@ rm(list = ls())
 knitr::opts_chunk$set(message = FALSE, warning = -1)
 library(dplyr)
 library(extraDistr)
+library(lmerTest)
+library(ordinal)
+library(ggplot2)
+library(lattice)
+library("GGally")
 ```
 
 ## Problem 1
@@ -181,17 +186,57 @@ Now it's obvious how to find estimates and SE from for other $\alpha$'s from sep
 It's not possible. Separately fitting 9 models, each subgroup has their own cutoff points (for cumulative-logit link), whereas fitting them in one model will give us one set of cutoff points for all the sugroups. Therefore can't find the same model. 
 
 
-<!-- ## Problem 5 -->
-<!-- ```{r} -->
-<!-- data_sub = subset(round1, journal %in% paste("Journal", c(1,3,5)) & invitation.date < "2014-11-01") -->
-<!-- data_sub$journal = factor(data_sub$journal) ## make the levels right -->
+## Problem 5
 
-<!-- # time <- lmer(review.time ~ open.review  + reviewer.status + gender + factor(year) + open.review:reviewer.status + open.review:gender + (1 | id) + (1 | journal), data=data_sub, subset=review.complete=="Yes") -->
-<!-- # summary(time) -->
+```{r echo=FALSE}
+lrt <- function(fit1, fit2){
+  1 - pchisq(2 * as.numeric(logLik(fit2) - logLik(fit1)), df = df.residual(fit1) - df.residual(fit2))
+}
 
-<!-- time1 <- lm(review.time ~ open.review + journal + factor(year), data=data_sub, subset=review.complete=="Yes") -->
-<!-- summary(time1) -->
-<!-- ``` -->
+data_sub = subset(round1, journal %in% paste("Journal", c(1,3,5)) & invitation.date < "2014-11-01" & review.complete=="Yes")
+data_sub$journal = factor(data_sub$journal) ## make the levels right
+data_sub$year = factor(data_sub$year)
+data_sub = na.omit(data_sub)
+
+# ggpairs(data_sub[,c("review.time","journal", "year", "open.review", "reviewer.status")])
+# bwplot(year ~ review.time, data = data_sub)
+```
+
+* First, I did pairwise barplot (not shown here) and find `review.time` differ across `journal`, `reviewer.status` and `open.review`. The `year` differences seem small but I will still include it as a factor as it is a confounder. The differences across `gender` is not obvious. 
+
+* To start, I will use `journal` and `id` as random effect, and `year`, `reviewer.status` and `open.review` as fixed, and include the interaction between `reviewer.status` and `open.review`. (Note the high correlation for observations of one journal or one paper, 0.18 and 0.32 respectively).
+```{r}
+time1 <- lmer(review.time ~ open.review  + reviewer.status + factor(year) + open.review:reviewer.status + 
+                (1 | id) + (1 | journal), data=data_sub, REML = FALSE)
+plot(time1)
+
+# time2 <- lmer(review.time ~ open.review  + reviewer.status + factor(year) + 
+#                 (1 | id) + (1 | journal), data=data_sub, REML = FALSE)
+# time3 <- lmer(review.time ~ reviewer.status + factor(year) + 
+#                 (1 | id) + (1 | journal), data=data_sub, REML = FALSE)
+# 
+# lrt(time2, time1)
+# lrt(time3, time1)
+```
+
+* However, the residual plot is problematic: residual variance increases with fitted values. Since the response `review.time` is counts of days, I will try with Poisson GLM
+
+```{r}
+time2 <- glmer(review.time ~ open.review  + reviewer.status + factor(year) + open.review:reviewer.status +
+                (1 | id) + (1 | journal), data=data_sub, family = poisson(link = "log"))
+plot(time2)
+
+time3 <- glmer(review.time ~ open.review  + reviewer.status + factor(year) +
+                (1 | id) + (1 | journal), data=data_sub, family = poisson(link = "log"))
+
+time4 <- glmer(review.time ~ reviewer.status + factor(year) +
+                (1 | id) + (1 | journal), data=data_sub, family = poisson(link = "log"))
+
+lrt(time3, time2)
+lrt(time4, time2)
+```
+
+
 
 ## Problem 6
 
@@ -296,8 +341,8 @@ round(out, 5)
 ```
 
 
-```{r fig.width=15, fig.height=35, fig.align='center', echo=FALSE}
-par(mfrow = c(5, 2), mar=c(3,10,3,10))
+```{r fig.width=30, fig.height=70, fig.align='center', echo=FALSE}
+par(mfrow = c(5, 2), mar=c(3,3,3,3))
 for(i in 1:5){
   J = sprintf("Journal %d", i)
   data_sub = subset(s_n, journal == J)
@@ -312,7 +357,8 @@ for(i in 1:5){
 }
 ```
 
-The plots above are MLE vs posterior mean (blue line is prior mean) and histogram of posterior mean. 
+The plots above are MLE vs posterior mean and histogram of posterior mean ((blue lines are both prior mean)). 
+
 * The histogram of posterior mean for $p_j$ shows Journal 5 has the largest variance; Journal 1 & 3 has a heavy left tail. 
 * Compared against MLE, we can see a strong shrinkage effect from the EB, but Journal 5 is shrunk less, which is consistent with the posterior mean distribution. Similarly, there are some small $p_j$ not shrunk heavily in journal 1 & 3, corresponding to the left tail in histogram (these samples have large $n_j$). On the contrary, Journal 4 is shrunk very heavily, indictating less variability. 
 * Finally, Journal 5 & 2 have the most significantly different $p_j$'s (4.8% and 3.7%, from the `pH` and `pL` in the table above). The significant papers mostly have significantly lower acceptance probabilities.  
