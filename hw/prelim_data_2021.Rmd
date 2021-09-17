@@ -189,6 +189,7 @@ Now it's obvious how to find estimates and SE from for other $\alpha$'s from sep
 It's not possible. Separately fitting 9 models, each subgroup has their own cutoff points (for cumulative-logit link), whereas fitting them in one model will give us one set of cutoff points for all the sugroups. Therefore can't find the same model. 
 
 
+
 ## Problem 5
 
 ```{r echo=FALSE}
@@ -207,22 +208,18 @@ data_sub = na.omit(data_sub)
 
 * First, I did pairwise barplot (not shown here) and find `review.time` differ across `journal`, `reviewer.status` and `open.review`. The `year` differences seem small but I will still include it as a factor as it is a confounder. The differences across `gender` is not obvious. 
 
-* To start, I will use `journal` and `id` as random effect, and `year`, `reviewer.status` and `open.review` as fixed, and include the interaction between `reviewer.status` and `open.review`. (Note the high correlation for observations of one journal or one paper, 0.18 and 0.32 respectively).
+* I will use `journal` and `id` as random effect, and `year`, `reviewer.status` and `open.review` as fixed, and include the interaction between `reviewer.status` and `open.review`. 
+
+* Although the paper uses gaussian mixed effect model, I prefer using Poisson GLM mixed effect model. The response `review.time` is counts of days and its distribution looks like Poisson. 
 ```{r}
 time1 <- lmer(review.time ~ open.review  + reviewer.status + 
                 factor(year) + open.review:reviewer.status + 
                 (1 | id) + (1 | journal), data=data_sub, REML = FALSE)
+
+# plot(time1)
 ```
 
-* However, the residual plot below is problematic: residual variance increases with fitted values. Since the response `review.time` is counts of days (and distribution look like Poisson), I will use Poisson GLM instead.
-
-```{r}
-plot(time1)
-```
-
-
-* I do the same nested models as outlined above
-
+* I build the following nested models:
 ```{r}
 time2 <- glmer(review.time ~ open.review  + reviewer.status + 
                  factor(year) + open.review:reviewer.status +
@@ -236,10 +233,11 @@ time4 <- glmer(review.time ~ reviewer.status + factor(year) +
 
 
 * Comparing the models below I find that for journal 1, `open.review` intercepts and interaction with `reviewer.status` are both significant. 
-```{r echo=FALSE}
+```{r}
+c(lrt(time3, time2), lrt(time4, time3))
 df <- data.frame(rbind(summary(time2)$AICtab, summary(time3)$AICtab, summary(time4)$AICtab))
 rownames(df) <- paste("time", 2:4)
-#print(df)
+print(df)
 ```
 
 
@@ -312,6 +310,12 @@ is_significant <- function(ab, lower.tail, q, p = 0.95){
   pbeta(q = q, shape1 = ab[1], shape2 = ab[2], lower.tail = lower.tail) > p
 }
 
+ci <- function(ab){
+  l = qbeta(p = 0.05, shape1 = ab[1], shape2 = ab[2], lower.tail = TRUE)
+  u = qbeta(p = 0.05, shape1 = ab[1], shape2 = ab[2], lower.tail = FALSE)
+  return(c(l, u))
+}
+
 
 EB <- function(s, n){
   ## fix prior at mean
@@ -327,18 +331,19 @@ EB <- function(s, n){
                  is_significant, lower.tail = FALSE, q = fix_mean))
   pL = mean(apply(cbind(alpha, beta), 1,
                  is_significant, lower.tail = TRUE, q = fix_mean))
+  LU = t(apply(cbind(alpha, beta), 1, ci))
   return(list(a = a, b = b, alpha = alpha, beta = beta,
               sample_mean = fix_mean,
               posterior_mean = posterior_mean,
               posterior_var = posterior_var,
-              pH = pH, pL = pL,
+              pH = pH, pL = pL,LU = LU, 
               nll = fit[3]))
 }
 ```
 
 
 
-After fitting model, I assess the variability of $p_j$ in each journal by: (1) how many papers have significantly different $p_j$ (that their 90% credible interval do not contain the average probability for that journal); (2) check the shrinkage effect of EB (stronger shrinkage towards the mean indicates less ovrall variation); (3) look at the distrbution of posterior mean of $p_j$. 
+After fitting model, I assess the variability of $p_j$ in each journal by: (1) how many papers have significantly different $p_j$ (that their 90% credible interval do not contain the average probability for that journal): I show the exact proportions and also show the distribution of the left and right end points of $p_j$'s posterior credible intervals; (2) check the shrinkage effect of EB (stronger shrinkage towards the mean indicates less overall variation); (3) look at the distribution of posterior mean of $p_j$. 
 ```{r echo=FALSE}
 fitted = list()
 for(i in 1:5){
@@ -363,7 +368,7 @@ round(out, 5)
 
 
 ```{r fig.width=30, fig.height=70, fig.align='center', echo=FALSE}
-par(mfrow = c(5, 2), mar=c(3,3,3,3))
+par(mfrow = c(5, 3), mar=c(1,1,1,1))
 for(i in 1:5){
   J = sprintf("Journal %d", i)
   data_sub = subset(s_n, journal == J)
@@ -372,16 +377,19 @@ for(i in 1:5){
        xlim = c(0,1), ylim = c(0,1),
        xlab = "mle", ylab = "posterior mean", main = J)
   abline(h = mod$sample_mean, col = "blue")
-  hist(mod$posterior_mean, probability = TRUE, breaks = 50, 
+  hist(mod$posterior_mean, probability = TRUE, breaks = 30, 
        xlab = "proportion (posterior mean)", main = J,  xlim = c(0,1))
+  abline(v = mod$sample_mean, col = "blue")
+  hist(mod$LU[,1], probability = TRUE, breaks = 30,  col = "red", xlim = c(0,1), main = J)
+  hist(mod$LU[,2], probability = TRUE, breaks = 30, col = "green", add = TRUE)
   abline(v = mod$sample_mean, col = "blue")
 }
 ```
 
-The plots above are MLE vs posterior mean and histogram of posterior mean ((blue lines are both prior mean)). 
+The plots above are MLE vs posterior mean; histogram of posterior mean; histogram of left (red) and right (green) end points of the 90% credible interval. The blue lines are all prior mean. 
 
 * The histogram of posterior mean for $p_j$ shows Journal 5 has the largest variance; Journal 1 & 3 has a heavy left tail. 
-* Compared against MLE, we can see a strong shrinkage effect from the EB, but Journal 5 is shrunk less, which is consistent with the posterior mean distribution. Similarly, there are some small $p_j$ not shrunk heavily in journal 1 & 3, corresponding to the left tail in histogram (these samples have large $n_j$). On the contrary, Journal 4 is shrunk very heavily, indictating less variability. 
-* Finally, Journal 5 & 2 have the most significantly different $p_j$'s (4.8% and 3.7%, from the `pH` and `pL` in the table above). The significant papers mostly have significantly lower acceptance probabilities.  
+* Compared against MLE, we can see a strong shrinkage effect from the EB, but Journal 5 is shrunk less, which is consistent with the posterior mean distribution. On the contrary, Journal 4 is shrunk very heavily, indictating less variability. 
+* Finally, Journal 5 & 2 have the most significantly different $p_j$'s (4.8% and 3.7%, from the `pH` and `pL` in the table above). The significant papers mostly have significantly lower acceptance probabilities.  This can also be seen on the histogram of the left and right end points of credible interval. 
 
 
